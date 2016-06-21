@@ -23,10 +23,10 @@ See documentation below on how to use additional features.
 
 #### Minimum Requirements
 
-* WordPress 3.9.1 or greater
-* WooCommerce 2.1.11 or greater
-* PHP version 5.4 or greater
-* MySQL version 5.0 or greater
+* WordPress v3.9.1 or greater (tested up to v4.5.x)
+* WooCommerce v2.1.11 or greater (tested up to v2.5.x)
+* PHP version v5.4 or greater
+* MySQL version v5.0 or greater
 
 #### Manual Instalation
 
@@ -35,14 +35,12 @@ The manual installation method involves downloading our feature-rich plugin and 
 1. Download the plugin file to your computer and unzip it
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's wp-content/plugins/ directory.
 3. Activate the plugin from the Plugins menu within the WordPress admin.
-4. Insert http://[your web]/?wc-api=WC_Gateway_Veritrans as your Payment Notification URL in your MAP
-5. Insert http://[your web]/?wc-api=WC_Gateway_Veritrans link as Finish/Unfinish/Error Redirect URL in your MAP configuration.
+4. Insert http://[your web]/?wc-api=WC_Gateway_Midtrans as your Payment Notification URL in your MAP
+5. Insert http://[your web]/?wc-api=WC_Gateway_Midtrans link as Finish/Unfinish/Error Redirect URL in your MAP configuration.
 
 #### Get help
 
 * [Veritrans registration](https://my.veritrans.co.id/register)
 * [Veritrans documentation](http://docs.veritrans.co.id)
 * [Veritrans Woocommerce Documentation](http://docs.veritrans.co.id/en/vtweb/integration_woocommerce.html)
-* [Veritrans Woocommerce Installment Documentation](https://support.veritrans.co.id/hc/en-us/articles/215949477-Woocommerce-Installment-Feature)
-* [Veritrans Woocommerce BIN Promo Documentation](https://support.veritrans.co.id/hc/en-us/articles/217649088-Woocommerce-BIN-Promo)
 * Technical support [support@veritrans.co.id](mailto:support@veritrans.co.id)

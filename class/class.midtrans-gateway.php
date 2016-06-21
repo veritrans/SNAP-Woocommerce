@@ -64,7 +64,7 @@
         add_action( 'admin_print_scripts-woocommerce_page_woocommerce_settings', array( &$this, 'midtrans_admin_scripts' ));
         add_action( 'admin_print_scripts-woocommerce_page_wc-settings', array( &$this, 'midtrans_admin_scripts' ));
         add_action( 'valid-midtrans-web-request', array( $this, 'successful_request' ) );
-        add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );// Payment form hook
+        add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );// Payment page hook
       }
 
       /**
@@ -280,30 +280,10 @@
       }
 
       /**
-       * Process the payment and return the result
-       * Method ini akan dipanggil ketika customer akan melakukan pembayaran
-       * Return value dari method ini adalah link yang akan digunakan untuk
-       * me-redirect customer ke halaman pembayaran Midtrans
+       * Call Veritrans SNAP API to return SNAP token
+       * using parameter from cart & configuration
        */
-      function process_payment( $order_id ) {
-        global $woocommerce;
-        
-        //create the order object
-        $order = new WC_Order( $order_id );
-
-        return array(
-          'result'  => 'success',
-          // 'redirect' => $this->charge_payment( $order_id )
-          'redirect' => $order->get_checkout_payment_url( true )
-        );
-      }
-
-      /**
-       * Charge Payment
-       * Method ini digunakan untuk mendapatkan link halaman pembayaran Midtrans
-       * dengan mengirimkan JSON yang berisi data transaksi
-       */
-      function receipt_page( $order_id ) {
+      function get_snap_token( $order_id ){
         global $woocommerce;
         $order_items = array();
         $cart = $woocommerce->cart;
@@ -489,14 +469,66 @@
         
         $woocommerce->cart->empty_cart();
         // error_log(print_r($params,true)); //debug
-        // return Veritrans_Snap::getSnapToken($params);
+        
         $snapToken = Veritrans_Snap::getSnapToken($params);
+        return $snapToken;
+      }
+
+      /**
+       * Process the payment and return the result
+       * Method ini akan dipanggil ketika customer akan melakukan pembayaran
+       * Return value dari method ini adalah link yang akan digunakan untuk
+       * me-redirect customer ke halaman pembayaran Midtrans
+       */
+      function process_payment( $order_id ) {
+        global $woocommerce;
+        
+        //create the order object
+        $order = new WC_Order( $order_id );
+
+        //get SNAP token
+        $snapToken = $this->get_snap_token($order_id);
+
+        return array(
+          'result'  => 'success',
+          // 'redirect' => $this->charge_payment( $order_id )
+          'redirect' => $order->get_checkout_payment_url( true )."&snap_token=".$snapToken
+        );
+      }
+
+      /**
+       * receipt_page
+       * Method ini digunakan untuk menampilkan SNAP popout berdasarkan token SNAP
+       */
+      function receipt_page( $order_id ) {
+        global $woocommerce;
+        // $order_items = array();
+        // $cart = $woocommerce->cart;
+        $snapToken = $_GET['snap_token'];
+
+        ($this->environment == 'production') ? 
+          $instruction_url_prefix = '//app.veritrans.co.id' : 
+          $instruction_url_prefix = '//app.sandbox.veritrans.co.id';
+
+          $wp_base_url = home_url( '/' );
+          $finish_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
+          $error_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
 
         ?>
 
         <a id="pay-button" title="Do Payment!" class="button alt">
           Proceed to Payment
         </a>
+        
+        <div id="payment-instruction" style="display:none;">
+          <h3 class="alert alert-info"> Awaiting Your Payment </h3>
+          <!-- <br> -->
+          <p> Please complete your payment as instructed </p>
+          <!-- <br> -->
+          <a href="#" id="payment-instruction-btn" title="Do Payment!" class="button alt" >
+            Payment Instruction
+          </a>
+        </div>
 
         <script type="text/javascript">
         //* #############======= Load JS with JS way, no need js load from php or JQuery - simpler version ======= Worked with some retry
@@ -512,7 +544,28 @@
           var callbackTimer = setInterval(function() {
             var snapExecuted = false;
             try{
-              snap.pay("<?php echo $snapToken; ?>", { env: "sandbox"});
+              snap.pay("<?php echo $snapToken; ?>", 
+              {
+                onSuccess: function(result){
+                  console.log(result);
+                  window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+                },
+                onPending: function(result){
+                  console.log(result);
+                  
+                  if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
+                    window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+                  }
+
+                  document.getElementById('payment-instruction-btn').href = "<?php echo $instruction_url_prefix;?>"+result.pdf_url;
+                  document.getElementById('pay-button').style.display = "none";
+                  document.getElementById('payment-instruction').style.display = "block";
+                },
+                  onError: function(result){
+                  console.log(result);
+                  window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+                }
+              });
               snapExecuted = true; // if SNAP popup executed, change flag to stop the retry.
             } catch (e){ 
               console.log(e);
@@ -588,13 +641,13 @@
         } else {    // else if GET, redirect to order complete/failed
           // error_log('status_code '. $_GET['status_code']); //debug
           // error_log('status_code '. $_GET['transaction_status']); //debug
-          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && ($_GET['transaction_status'] == 'capture' || $_GET['transaction_status'] == 'pending' || $_GET['transaction_status'] == 'settlement'))  //if capture or pending or challenge or settlement, redirect to order received page
+          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] == 200)  //if capture or pending or challenge or settlement, redirect to order received page
           {
             $order_id = $_GET['order_id'];
             // error_log($this->get_return_url( $order )); //debug
             $order = new WC_Order( $order_id );
             wp_redirect($order->get_checkout_order_received_url());
-          }else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['transaction_status'] == 'deny')  //if deny, redirect to order checkout page again
+          }else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] != 200)  //if deny, redirect to order checkout page again
           {
             $order_id = $_GET['order_id'];
             $order = new WC_Order( $order_id );
