@@ -1,6 +1,6 @@
 <?php
-    // require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); // activate this later
-    require_once(dirname(__FILE__) . '/../../veritrans-woocommerce-2.1.0/lib/veritrans/Veritrans.php'); // use this for the time being
+    // require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); // TODO use this 
+    require_once(dirname(__FILE__) . '/../../veritrans-woocommerce-2.1.0/lib/veritrans/Veritrans.php'); // TODO remove this, use this for the time being
 
     /**
        * Midtrans Payment Gateway Class
@@ -506,10 +506,7 @@
         // $cart = $woocommerce->cart;
         $snapToken = $_GET['snap_token'];
 
-        ($this->environment == 'production') ? 
-          $instruction_url_prefix = '//app.veritrans.co.id' : 
-          $instruction_url_prefix = '//app.sandbox.veritrans.co.id';
-
+          // TODO evaluate whether finish & error url need to be hardcoded
           $wp_base_url = home_url( '/' );
           $finish_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
           $error_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
@@ -531,7 +528,7 @@
         </div>
 
         <script type="text/javascript">
-        //* #############======= Load JS with JS way, no need js load from php or JQuery - simpler version ======= Worked with some retry
+        // Safely load the snap.js
         function loadExtScript(src) {
           // Append script to doc
           var s = document.createElement("script");
@@ -547,22 +544,23 @@
               snap.pay("<?php echo $snapToken; ?>", 
               {
                 onSuccess: function(result){
-                  console.log(result);
+                  // console.log(result); // debug
                   window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
                 },
-                onPending: function(result){
-                  console.log(result);
+                onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
+                  // console.log(result); // debug
                   
                   if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
                     window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
                   }
 
-                  document.getElementById('payment-instruction-btn').href = "<?php echo $instruction_url_prefix;?>"+result.pdf_url;
+                  // Show payment instruction and hide payment button
+                  document.getElementById('payment-instruction-btn').href = result.pdf_url;
                   document.getElementById('pay-button').style.display = "none";
                   document.getElementById('payment-instruction').style.display = "block";
                 },
                   onError: function(result){
-                  console.log(result);
+                  // console.log(result); // debug
                   window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
                 }
               });
