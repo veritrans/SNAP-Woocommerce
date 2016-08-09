@@ -195,9 +195,9 @@
             'default' => 'no'
           ), 
           'bank_transfer' => array(
-            'title' => __( 'Enable Permata VA', 'woocommerce' ),
+            'title' => __( 'Enable Bank Transfer', 'woocommerce' ),
             'type' => 'checkbox',
-            'label' => __( 'Enable Permata VA?', 'woocommerce' ),
+            'label' => __( 'Enable Bank Transfer?', 'woocommerce' ),
             'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
             'default' => 'no'
           ),

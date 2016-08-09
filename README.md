@@ -1,23 +1,15 @@
-Veritrans WooCommerce Payment Gateway
+Midtrans WooCommerce - Wordpress Payment Gateway Module
 =====================================
 
-Let your WooCommerce store integrated with Veritrans payment gateway.
+Midtrans :heart: WooCommerce!
+Let your WooCommerce store integrated with Midtrans payment gateway.
 
 ### Description
 
-Veritrans payment gateway is an online payment gateway that is highly concerned with customer experience (UX). They strive to make payments simple for both the merchant and customers. With this plugin you can make your WooCommerce store using Veritrans payment.
+Midtrans payment gateway is an online payment gateway. They strive to make payments simple for both the merchant and customers. With this plugin you can allow online payment on your WooCommerce store using Midtrans payment gateway.
 
 Payment Method Feature:
-
-- VT Web
-
-Additional & Optional feature:
-
-- VT Web Online Installment
-- VT Web Offline Installment
-- VT Web BIN Promo (discount)
-
-See documentation below on how to use additional features.
+- Midtrans Snap Fullpayment
 
 ### Installation
 
@@ -30,13 +22,22 @@ See documentation below on how to use additional features.
 
 #### Manual Instalation
 
-The manual installation method involves downloading our feature-rich plugin and uploading it to your webserver via your favourite FTP application..
-
-1. Download the plugin file to your computer and unzip it
+1. [Download](/archive/master.zip) the plugin from this repository.
+2. Extract the plugin, then rename the folder modules as **midtrans-woocommerce**
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's wp-content/plugins/ directory.
-3. Activate the plugin from the Plugins menu within the WordPress admin.
-4. Insert http://[your web]/?wc-api=WC_Gateway_Midtrans as your Payment Notification URL in your MAP
-5. Insert http://[your web]/?wc-api=WC_Gateway_Midtrans link as Finish/Unfinish/Error Redirect URL in your MAP configuration.
+3. Install & Activate the plugin from the Plugins menu within the WordPress admin panel.
+4. Go to menu **WooCommerce > Settings > Checkout > Midtrans**, fill the configuration fields.
+  * Fill **Title** with text button that you want to display to customer
+  * Select **Environment**, Sandbox is for testing transaction, Production is for real transaction
+  * Fill in the **client key** & **server key** with your corresonding [Midtrans account](https://my.veritrans.co.id/) credentials
+  * Note: key for Sandbox & Production is different, make sure you use the correct one.
+  * Other configuration are optional, you may leave it as is.
+
+### Midtrans MAP Configuration
+
+1. Login to your [Midtrans Acount](https://my.veritrans.co.id), select your environment (sandbox/production), go to menu `settings > configuration`
+  * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` as your Payment Notification URL.
+  * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` link as Finish/Unfinish/Error Redirect URL.
 
 #### Get help
 
