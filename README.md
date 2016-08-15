@@ -35,7 +35,7 @@ Payment Method Feature:
 
 ### Midtrans MAP Configuration
 
-1. Login to your [Midtrans Acount](https://my.veritrans.co.id), select your environment (sandbox/production), go to menu `settings > configuration`
+1. Login to your [Midtrans Account](https://my.veritrans.co.id), select your environment (sandbox/production), go to menu `settings > configuration`
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` as your Payment Notification URL.
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` link as Finish/Unfinish/Error Redirect URL.
 
