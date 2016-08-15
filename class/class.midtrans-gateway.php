@@ -2,10 +2,10 @@
     // TODO refactor backend config fields, getrid of enabled payments etc.
 
     // TODO uncomment these, use the real snap php library class (make sure to do this on other file too)
-    // require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
+     require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
     
     // TODO remove this
-    require_once(dirname(__FILE__) . '/../../veritrans-woocommerce-2.1.0/lib/veritrans/Veritrans.php');
+    // require_once(dirname(__FILE__) . '/../../veritrans-woocommerce-2.1.0/lib/veritrans/Veritrans.php');
 
     /**
        * Midtrans Payment Gateway Class
