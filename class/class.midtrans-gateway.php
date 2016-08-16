@@ -563,6 +563,10 @@
                   document.getElementById('payment-instruction-btn').href = result.pdf_url;
                   document.getElementById('pay-button').style.display = "none";
                   document.getElementById('payment-instruction').style.display = "block";
+                  // if no pdf instruction, hide the btn
+                  if(!result.hasOwnProperty("pdf_url")){
+                    document.getElementById('payment-instruction-btn').style.display = "none";
+                  }
                 },
                   onError: function(result){
                   // console.log(result); // debug
@@ -631,7 +635,7 @@
         // check whether the request is GET or POST, 
         // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
         // else if request == POST, request is for payment notification, then update the payment status
-        if(!isset($_GET['order_id'])){    // Check if POST, then create new notification
+        if(!isset($_GET['order_id']) && !isset($_POST['response'])){    // Check if POST, then create new notification
           $midtrans_notification = new Veritrans_Notification();
 
           if (in_array($midtrans_notification->status_code, array(200, 201, 202))) {
@@ -654,15 +658,23 @@
           {
             $order_id = $_GET['order_id'];
             $order = new WC_Order( $order_id );
-            wp_redirect($order->get_checkout_payment_url(false));
+            wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
           } else if( isset($_GET['order_id']) && !isset($_GET['transaction_status'])){ // if customer click "back" button, redirect to checkout page again
             $order_id = $_GET['order_id'];
             $order = new WC_Order( $order_id );
-            wp_redirect($order->get_checkout_payment_url(false));
+            wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+          } else if ( isset($_POST['response']) ){ // if customer redirected from async payment
+            $responses = json_decode( stripslashes($_POST['response']), true);
+            $order = new WC_Order( $responses['order_id'] );
+            if ( $responses['status_code'] == 200) { // async payment success
+              wp_redirect($order->get_checkout_order_received_url());
+            } else {
+              wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+            }
           }
         }
 
-        }
+      }
  
       /**
        * Method ini akan dipanggil jika customer telah sukses melakukan
