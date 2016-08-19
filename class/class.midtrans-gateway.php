@@ -173,90 +173,83 @@
             'default' => '',
             'class' => 'production_settings toggle-midtrans'
           ),
-          'credit_card' => array(
-            'title' => __( 'Enable credit card', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Credit card?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          'mandiri_clickpay' => array(
-            'title' => __( 'Enable Mandiri Clickpay', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Mandiri Clickpay?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          'cimb_clicks' => array(
-            'title' => __( 'Enable CIMB Clicks', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable CIMB Clicks?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ), 
-          'bank_transfer' => array(
-            'title' => __( 'Enable Bank Transfer', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Bank Transfer?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          'bri_epay' => array(
-            'title' => __( 'Enable Bri e-pay', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable BRI e-pay?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          'telkomsel_cash' => array(
-            'title' => __( 'Enable T-cash', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable T-cash?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          'xl_tunai' => array(
-            'title' => __( 'Enable XL tunai', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable XL tunai?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          'mandiri_bill' => array(
-            'title' => __( 'Enable Mandiri Bill', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Mandiri Bill?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          // 'bbmmoney' => array(
-          //   'title' => __( 'Enable BBM Money', 'woocommerce' ),
+          // 'credit_card' => array(
+          //   'title' => __( 'Enable credit card', 'woocommerce' ),
           //   'type' => 'checkbox',
-          //   'label' => __( 'Enable BBM Money?', 'woocommerce' ),
+          //   'label' => __( 'Enable Credit card?', 'woocommerce' ),
           //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
           //   'default' => 'no'
           // ),
-          'cstore' => array(
-            'title' => __( 'Enable Indomaret', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Indomaret?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          'indosat_dompetku' => array(
-            'title' => __( 'Enable Indosat Dompetku', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Indosat Dompetku?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
-          'mandiri_ecash' => array(
-            'title' => __( 'Enable Mandiri Ecash', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Mandiri Ecash?', 'woocommerce' ),
-            'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-            'default' => 'no'
-          ),
+          // 'mandiri_clickpay' => array(
+          //   'title' => __( 'Enable Mandiri Clickpay', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable Mandiri Clickpay?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
+          // 'cimb_clicks' => array(
+          //   'title' => __( 'Enable CIMB Clicks', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable CIMB Clicks?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ), 
+          // 'bank_transfer' => array(
+          //   'title' => __( 'Enable Bank Transfer', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable Bank Transfer?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
+          // 'bri_epay' => array(
+          //   'title' => __( 'Enable Bri e-pay', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable BRI e-pay?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
+          // 'telkomsel_cash' => array(
+          //   'title' => __( 'Enable T-cash', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable T-cash?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
+          // 'xl_tunai' => array(
+          //   'title' => __( 'Enable XL tunai', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable XL tunai?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
+          // 'mandiri_bill' => array(
+          //   'title' => __( 'Enable Mandiri Bill', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable Mandiri Bill?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
+          // 'cstore' => array(
+          //   'title' => __( 'Enable Indomaret', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable Indomaret?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
+          // 'indosat_dompetku' => array(
+          //   'title' => __( 'Enable Indosat Dompetku', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable Indosat Dompetku?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
+          // 'mandiri_ecash' => array(
+          //   'title' => __( 'Enable Mandiri Ecash', 'woocommerce' ),
+          //   'type' => 'checkbox',
+          //   'label' => __( 'Enable Mandiri Ecash?', 'woocommerce' ),
+          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
+          //   'default' => 'no'
+          // ),
           'enable_3d_secure' => array(
             'title' => __( 'Enable 3D Secure', 'woocommerce' ),
             'type' => 'checkbox',
@@ -346,7 +339,7 @@
           $enabled_payments[] = 'mandiri_ecash';
         }
 
-        $params['enabled_payments'] = $enabled_payments;
+        // $params['enabled_payments'] = $enabled_payments; // Disable customize payment method from config
 
         $customer_details = array();
         $customer_details['first_name'] = $order->billing_first_name;
@@ -527,7 +520,7 @@
           <!-- <br> -->
           <p> Please complete your payment as instructed </p>
           <!-- <br> -->
-          <a href="#" id="payment-instruction-btn" title="Do Payment!" class="button alt" >
+          <a target="_blank" href="#" id="payment-instruction-btn" title="Do Payment!" class="button alt" >
             Payment Instruction
           </a>
         </div>
