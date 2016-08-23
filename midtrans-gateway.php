@@ -3,7 +3,7 @@
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/veritrans-woocommerce
 Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a href="http://midtrans.co.id" target="_blank">Midtrans.co.id</a>
-Version: 2.2.3
+Version: 1.1.0
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
@@ -37,11 +37,21 @@ function midtrans_gateway_init() {
   DEFINE ('VT_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
 
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentmigs.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-migs.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
 }
 
 function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans';
+  $methods[] = 'WC_Gateway_Midtrans_Installment';
+  $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
+  $methods[] = 'WC_Gateway_Midtrans_InstallmentMIGS';
+  $methods[] = 'WC_Gateway_Midtrans_MIGS';
+  $methods[] = 'WC_Gateway_Midtrans_Promo';
   return $methods;
 }

@@ -1,5 +1,4 @@
 <?php
-    // TODO refactor backend config fields, getrid of enabled payments etc.
 
     // TODO uncomment these, use the real snap php library class (make sure to do this on other file too)
      require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
@@ -10,17 +9,17 @@
     /**
        * Midtrans Payment Gateway Class
        */
-    class WC_Gateway_Midtrans extends WC_Payment_Gateway {
+    class WC_Gateway_Midtrans_Promo extends WC_Payment_Gateway {
 
       /**
        * Constructor
        */
       function __construct() {
-        $this->id           = 'midtrans';
+        $this->id           = 'midtrans_promo';
         $this->icon         = apply_filters( 'woocommerce_midtrans_icon', '' );
-        $this->method_title = __( 'Midtrans', 'Midtrans' );
+        $this->method_title = __( 'Midtrans Promo Payment', 'Midtrans' );
         $this->has_fields   = true;
-        $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans', home_url( '/' ) ) );
+        $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_Promo', home_url( '/' ) ) );
 
         // Load the settings
         $this->init_form_fields();
@@ -29,13 +28,8 @@
         // Get Settings
         $this->title              = $this->get_option( 'title' );
         $this->description        = $this->get_option( 'description' );
-        $this->select_midtrans_payment = $this->get_option( 'select_midtrans_payment' );
-        
-        $this->client_key_v2_sandbox         = $this->get_option( 'client_key_v2_sandbox' );
         $this->server_key_v2_sandbox         = $this->get_option( 'server_key_v2_sandbox' );
-        $this->client_key_v2_production         = $this->get_option( 'client_key_v2_production' );
         $this->server_key_v2_production         = $this->get_option( 'server_key_v2_production' );
-
         $this->api_version        = 2;
         $this->environment        = $this->get_option( 'select_midtrans_environment' );
         
@@ -43,27 +37,14 @@
 
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
-        $this->enable_credit_card = $this->get_option( 'credit_card' );
-        $this->enable_mandiri_clickpay = $this->get_option( 'mandiri_clickpay' );
-        $this->enable_cimb_clicks = $this->get_option( 'cimb_clicks' );
-        $this->enable_permata_va = $this->get_option( 'bank_transfer' );
-        $this->enable_bri_epay = $this->get_option( 'bri_epay' );
-        $this->enable_telkomsel_cash = $this->get_option( 'telkomsel_cash' );
-        $this->enable_xl_tunai = $this->get_option( 'xl_tunai' );
-        $this->enable_bbmmoney = $this->get_option( 'bbmmoney' );
-        $this->enable_mandiri_bill = $this->get_option( 'mandiri_bill' );
-        $this->enable_indomaret = $this->get_option('cstore');
-        $this->enable_indosat_dompetku = $this->get_option('indosat_dompetku');
-        $this->enable_mandiri_ecash = $this->get_option('mandiri_ecash');
-
-        $this->client_key         = ($this->environment == 'production')
-            ? $this->client_key_v2_production
-            : $this->client_key_v2_sandbox;
+        $this->bin_number         = $this->get_option( 'bin_number' );
+        $this->cc_enabled         = $this->get_option( 'cc_enabled' );
+        $this->bank_transfer_enabled         = $this->get_option( 'bank_transfer_enabled' );
 
         $this->log = new WC_Logger();
 
         // Payment listener/API hook
-        add_action( 'woocommerce_api_wc_gateway_midtrans', array( &$this, 'midtrans_vtweb_response' ) );
+        // add_action( 'woocommerce_api_wc_gateway_midtrans', array( &$this, 'midtrans_vtweb_response' ) );
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) ); 
         add_action( 'wp_enqueue_scripts', array( &$this, 'midtrans_scripts' ) );
         add_action( 'admin_print_scripts-woocommerce_page_woocommerce_settings', array( &$this, 'midtrans_admin_scripts' ));
@@ -95,8 +76,8 @@
        * @return void
        */
       public function admin_options() { ?>
-        <h3><?php _e( 'Midtrans', 'woocommerce' ); ?></h3>
-        <p><?php _e('Allows payments using Midtrans.', 'woocommerce' ); ?></p>
+        <h3><?php _e( 'Midtrans Promo Payment', 'woocommerce' ); ?></h3>
+        <p><?php _e('Allows online payments with promo using Midtrans.', 'woocommerce' ); ?></p>
         <table class="form-table">
           <?php
             // Generate the HTML For the settings form.
@@ -119,14 +100,14 @@
           'enabled' => array(
             'title' => __( 'Enable/Disable', 'woocommerce' ),
             'type' => 'checkbox',
-            'label' => __( 'Enable Midtrans Payment', 'woocommerce' ),
-            'default' => 'yes'
+            'label' => __( 'Enable Midtrans Promo Payment', 'woocommerce' ),
+            'default' => 'no'
           ),
           'title' => array(
             'title' => __( 'Title', 'woocommerce' ),
             'type' => 'text',
             'description' => __( 'This controls the title which the user sees during checkout.', 'woocommerce' ),
-            'default' => __( 'Online Payment via Midtrans', 'woocommerce' ),
+            'default' => __( 'Credit Card Promo via Midtrans', 'woocommerce' ),
             'desc_tip'      => true,
           ),
           'description' => array(
@@ -145,26 +126,12 @@
               'production'   => __( 'Production', 'woocommerce' ),
             ),
           ),
-          'client_key_v2_sandbox' => array(
-            'title' => __("Client Key", 'woocommerce'),
-            'type' => 'text',
-            'description' => sprintf(__('Input your <b>Sandbox</b> Midtrans Client Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_sandbox_key_url),
-            'default' => '',
-            'class' => 'sandbox_settings toggle-midtrans',
-          ),
           'server_key_v2_sandbox' => array(
             'title' => __("Server Key", 'woocommerce'),
             'type' => 'text',
             'description' => sprintf(__('Input your <b>Sandbox</b> Midtrans Server Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_sandbox_key_url),
             'default' => '',
             'class' => 'sandbox_settings toggle-midtrans'
-          ),
-          'client_key_v2_production' => array(
-            'title' => __("Client Key", 'woocommerce'),
-            'type' => 'text',
-            'description' => sprintf(__('Input your <b>Production</b> Midtrans Client Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_production_key_url),
-            'default' => '',
-            'class' => 'production_settings toggle-midtrans',
           ),
           'server_key_v2_production' => array(
             'title' => __("Server Key", 'woocommerce'),
@@ -173,83 +140,20 @@
             'default' => '',
             'class' => 'production_settings toggle-midtrans'
           ),
-          // 'credit_card' => array(
-          //   'title' => __( 'Enable credit card', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Credit card?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'mandiri_clickpay' => array(
-          //   'title' => __( 'Enable Mandiri Clickpay', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Mandiri Clickpay?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'cimb_clicks' => array(
-          //   'title' => __( 'Enable CIMB Clicks', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable CIMB Clicks?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ), 
-          // 'bank_transfer' => array(
-          //   'title' => __( 'Enable Bank Transfer', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Bank Transfer?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'bri_epay' => array(
-          //   'title' => __( 'Enable Bri e-pay', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable BRI e-pay?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'telkomsel_cash' => array(
-          //   'title' => __( 'Enable T-cash', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable T-cash?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'xl_tunai' => array(
-          //   'title' => __( 'Enable XL tunai', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable XL tunai?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'mandiri_bill' => array(
-          //   'title' => __( 'Enable Mandiri Bill', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Mandiri Bill?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'cstore' => array(
-          //   'title' => __( 'Enable Indomaret', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Indomaret?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'indosat_dompetku' => array(
-          //   'title' => __( 'Enable Indosat Dompetku', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Indosat Dompetku?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'mandiri_ecash' => array(
-          //   'title' => __( 'Enable Mandiri Ecash', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Mandiri Ecash?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
+          'cc_enabled' => array(
+            'title' => __( 'Enable Credit Card', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => __( 'Enable Credit Card?', 'woocommerce' ),
+            'description' => __( 'Enable Credit Card payment method for this promo button', 'woocommerce' ),
+            'default' => 'yes'
+          ),
+          'bank_transfer_enabled' => array(
+            'title' => __( 'Enable Bank Transfer', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => __( 'Enable Bank Transfer?', 'woocommerce' ),
+            'description' => __( 'Enable Bank Transfer payment method for this promo button', 'woocommerce' ),
+            'default' => 'no'
+          ),
           'enable_3d_secure' => array(
             'title' => __( 'Enable 3D Secure', 'woocommerce' ),
             'type' => 'checkbox',
@@ -257,13 +161,20 @@
             'description' => __( 'You must enable 3D Secure.
                 Please contact us if you wish to disable this feature in the Production environment.', 'woocommerce' ),
             'default' => 'yes'
-          )
+          ),
           // 'enable_sanitization' => array(
           //   'title' => __( 'Enable Sanitization', 'woocommerce' ),
           //   'type' => 'checkbox',
           //   'label' => __( 'Enable Sanitization?', 'woocommerce' ),
           //   'default' => 'yes'
-          // )
+          // ),
+          'bin_number' => array(
+            'title' => __( 'Allowed CC BINs', 'woocommerce'),
+            'type' => 'text',
+            'label' => __( 'Allowed CC BINs', 'woocommerce' ),
+            'description' => __( 'Fill with CC BIN numbers (or bank name) that you want to allow to use this payment button. </br> Separate BIN number with coma Example: 4,5,4811,bni,mandiri', 'woocommerce' ),
+            'default' => ''
+          )
         );
 
         if (get_woocommerce_currency() != 'IDR')
@@ -287,7 +198,19 @@
         $cart = $woocommerce->cart;
 
         $order = new WC_Order( $order_id );     
-      
+        
+        // add discount with coupon named ** onlinepromo **
+        // WC()->cart->add_discount( 'veritrans' );
+        $cart->add_discount('onlinepromo');
+        $order->add_coupon( 'onlinepromo', WC()->cart->get_coupon_discount_amount( 'onlinepromo' ), WC()->cart->get_coupon_discount_tax_amount( 'onlinepromo' ) );
+        $order->set_total( WC()->cart->shipping_total, 'shipping' );
+        $order->set_total( WC()->cart->get_cart_discount_total(), 'cart_discount' );
+        $order->set_total( WC()->cart->get_cart_discount_tax_total(), 'cart_discount_tax' );
+        $order->set_total( WC()->cart->tax_total, 'tax' );
+        $order->set_total( WC()->cart->shipping_tax_total, 'shipping_tax' );
+        $order->set_total( WC()->cart->total );
+        // end of add discount
+
         Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
         Veritrans_Config::$serverKey = (Veritrans_Config::$isProduction) ? $this->server_key_v2_production : $this->server_key_v2_sandbox;     
         Veritrans_Config::$is3ds = ($this->enable_3d_secure == 'yes') ? true : false;
@@ -301,45 +224,13 @@
           'vtweb' => array()
         );
 
-        $enabled_payments = array();
-        if ($this->enable_credit_card == 'yes'){
+        // check enabled payment
+        if ($this->cc_enabled == 'yes')
           $enabled_payments[] = 'credit_card';
-        }
-        if ($this->enable_mandiri_clickpay =='yes'){
-          $enabled_payments[] = 'mandiri_clickpay';
-        }
-        if ($this->enable_cimb_clicks =='yes'){
-          $enabled_payments[] = 'cimb_clicks';
-        }
-        if ($this->enable_permata_va =='yes'){
-          $enabled_payments[] = 'bank_transfer';   
-        }
-        if ($this->enable_bri_epay =='yes'){
-          $enabled_payments[] = 'bri_epay';
-        }
-        if ($this->enable_telkomsel_cash =='yes'){
-          $enabled_payments[] = 'telkomsel_cash';
-        }
-        if ($this->enable_xl_tunai =='yes'){
-          $enabled_payments[] = 'xl_tunai';
-        }
-        if ($this->enable_mandiri_bill =='yes'){
-          $enabled_payments[] = 'echannel';
-        }
-        if ($this->enable_bbmmoney =='yes'){
-          $enabled_payments[] = 'bbm_money';
-        }
-        if ($this->enable_indomaret =='yes'){
-          $enabled_payments[] = 'cstore';
-        }
-        if ($this->enable_indosat_dompetku =='yes'){
-          $enabled_payments[] = 'indosat_dompetku';
-        }
-        if ($this->enable_mandiri_ecash =='yes'){
-          $enabled_payments[] = 'mandiri_ecash';
-        }
+        if ($this->bank_transfer_enabled == 'yes')
+          $enabled_payments[] = 'permata_va';
 
-        // $params['enabled_payments'] = $enabled_payments; // Disable customize payment method from config
+        $params['enabled_payments'] = $enabled_payments; // Disable customize payment method from config
 
         $customer_details = array();
         $customer_details['first_name'] = $order->billing_first_name;
@@ -464,7 +355,13 @@
         $params['transaction_details']['gross_amount'] = $total_amount;
 
         $params['item_details'] = $items;
-        
+
+        if (strlen($this->bin_number) > 0){
+          // add bin params
+          $bins = explode(',', $this->bin_number);
+          $params['credit_card']['whitelist_bins'] = $bins;
+        }
+
         $woocommerce->cart->empty_cart();
         // error_log(print_r($params,true)); //debug
         
