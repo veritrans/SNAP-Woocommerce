@@ -38,6 +38,7 @@
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->min_amount         = $this->get_option( 'min_amount' );
+        $this->bin_number         = $this->get_option( 'bin_number' );
 
         $this->log = new WC_Logger();
 
@@ -144,6 +145,13 @@
             'label' => __( 'Minimal Transaction Amount', 'woocommerce' ),
             'description' => __( 'Minimal transaction amount allowed to be paid with installment. (amount in IDR, without comma or period) example: 500000 </br> if the transaction amount is below this value, customer will be redirected to Credit Card fullpayment page', 'woocommerce' ),
             'default' => '500000'
+          ),
+          'bin_number' => array(
+            'title' => __( 'Allowed CC BINs', 'woocommerce'),
+            'type' => 'text',
+            'label' => __( 'Allowed CC BINs', 'woocommerce' ),
+            'description' => __( 'Fill with CC BIN numbers (or bank name) that you want to allow to use this payment button. </br> Separate BIN number with coma Example: 4,5,4811,bni,mandiri', 'woocommerce' ),
+            'default' => ''
           ),
           'enable_3d_secure' => array(
             'title' => __( 'Enable 3D Secure', 'woocommerce' ),
@@ -335,6 +343,12 @@
             array(
               'offline' => $terms
               );
+        }
+
+        if (strlen($this->bin_number) > 0){
+          // add bin params
+          $bins = explode(',', $this->bin_number);
+          $params['credit_card']['whitelist_bins'] = $bins;
         }
 
         $woocommerce->cart->empty_cart();
