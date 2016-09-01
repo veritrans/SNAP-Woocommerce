@@ -143,7 +143,7 @@
             'title' => __( 'Acquring Bank', 'woocommerce'),
             'type' => 'text',
             'label' => __( 'Acquring Bank', 'woocommerce' ),
-            'description' => __( 'Specify your acquiring bank for this credit card channel. </br> Options: BCA, BRI, DANAMON, MAYBANK (Only choose 1 bank)' , 'woocommerce' ),
+            'description' => __( 'Leave blank for default. </br> Specify your acquiring bank for this credit card channel. </br> Options: BCA, BRI, DANAMON, MAYBANK (Only choose 1 bank).' , 'woocommerce' ),
             'default' => 'BCA'
           ),
           'enable_3d_secure' => array(
@@ -331,8 +331,9 @@
 
         $params['item_details'] = $items;
         
-        // add bank & channel params
-        $params['credit_card']['bank'] = strtoupper ($this->acquring_bank);
+        // add bank & channel migs params
+        if (strlen($this->acquring_bank)>0)
+          $params['credit_card']['bank'] = strtoupper ($this->acquring_bank);
         $params['credit_card']['channel'] = "migs";
 
         if (strlen($this->bin_number) > 0){

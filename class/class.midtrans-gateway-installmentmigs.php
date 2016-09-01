@@ -38,7 +38,7 @@
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->min_amount         = $this->get_option( 'min_amount' );
-        // $this->acquring_bank         = $this->get_option( 'acquring_bank' );
+        $this->acquring_bank         = $this->get_option( 'acquring_bank' );
 
         $this->log = new WC_Logger();
 
@@ -146,13 +146,13 @@
             'description' => __( 'Minimal transaction amount allowed to be paid with installment. (amount in IDR, without comma or period) example: 500000 </br> if the transaction amount is below this value, customer will be redirected to Credit Card fullpayment page', 'woocommerce' ),
             'default' => '500000'
           ),
-          // 'acquring_bank' => array(
-          //   'title' => __( 'Acquring Bank', 'woocommerce'),
-          //   'type' => 'text',
-          //   'label' => __( 'Acquring Bank', 'woocommerce' ),
-          //   'description' => __( 'Specify your acquiring bank for this credit card channel. </br> Options: BCA, BRI, DANAMON, MAYBANK (Only choose 1 bank)' , 'woocommerce' ),
-          //   'default' => 'BCA'
-          // ),
+          'acquring_bank' => array(
+            'title' => __( 'Acquring Bank', 'woocommerce'),
+            'type' => 'text',
+            'label' => __( 'Acquring Bank', 'woocommerce' ),
+            'description' => __( 'Leave blank for default. </br> Specify your acquiring bank for this credit card channel. </br> Options: BCA, BRI, DANAMON, MAYBANK (Only choose 1 bank).' , 'woocommerce' ),
+            'default' => 'BCA'
+          ),
           'enable_3d_secure' => array(
             'title' => __( 'Enable 3D Secure', 'woocommerce' ),
             'type' => 'checkbox',
@@ -331,8 +331,9 @@
 
         $params['item_details'] = $items;
         
-        // add bank & channel params
-        // $params['credit_card']['bank'] = strtoupper ($this->acquring_bank);
+        // add bank & channel migs params
+        if (strlen($this->acquring_bank)>0)
+          $params['credit_card']['bank'] = strtoupper ($this->acquring_bank);
         $params['credit_card']['channel'] = "migs";
 
         // add installment params with all possible months & banks
