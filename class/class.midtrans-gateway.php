@@ -1,6 +1,4 @@
 <?php
-    // TODO refactor backend config fields, getrid of enabled payments etc.
-
     // TODO uncomment these, use the real snap php library class (make sure to do this on other file too)
      require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
     
@@ -508,6 +506,7 @@
           $wp_base_url = home_url( '/' );
           $finish_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
           $error_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
+          $snap_script_url = ($this->environment == 'production') ? "https://app.veritrans.co.id/snap/snap.js" : "https://app.sandbox.veritrans.co.id/snap/snap.js";
 
         ?>
 
@@ -579,7 +578,7 @@
 
         console.log("Loading snap JS library now!");
         // Loading SNAP JS Library to the page    
-        loadExtScript("https://app.sandbox.veritrans.co.id/snap/snap.js");
+        loadExtScript("<?php echo $snap_script_url;?>");
         console.log("Snap library is loaded now");
         // Call execSnapCont() 
         execSnapCont();

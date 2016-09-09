@@ -394,7 +394,7 @@
           $wp_base_url = home_url( '/' );
           $finish_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
           $error_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
-
+          $snap_script_url = ($this->environment == 'production') ? "https://app.veritrans.co.id/snap/snap.js" : "https://app.sandbox.veritrans.co.id/snap/snap.js";
         ?>
 
         <a id="pay-button" title="Do Payment!" class="button alt">
@@ -465,7 +465,7 @@
 
         console.log("Loading snap JS library now!");
         // Loading SNAP JS Library to the page    
-        loadExtScript("https://app.sandbox.veritrans.co.id/snap/snap.js");
+        loadExtScript("<?php echo $snap_script_url;?>");
         console.log("Snap library is loaded now");
         // Call execSnapCont() 
         execSnapCont();
