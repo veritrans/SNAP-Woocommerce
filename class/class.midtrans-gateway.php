@@ -1,4 +1,5 @@
 <?php
+
     // TODO uncomment these, use the real snap php library class (make sure to do this on other file too)
      require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
     
@@ -457,8 +458,8 @@
           // error_log('|||| Per item[]' . print_r($item,true)); //debugan
         }
 
-        error_log('order get total = '.$order->get_total());
-        error_log('total amount = '.$total_amount);
+        // error_log('order get total = '.$order->get_total());
+        // error_log('total amount = '.$total_amount);
         $params['transaction_details']['gross_amount'] = $total_amount;
 
         $params['item_details'] = $items;
