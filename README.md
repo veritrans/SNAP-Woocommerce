@@ -44,7 +44,7 @@ Payment Method Feature:
 
 #### Get help
 
+* [SNAP-Woocommerce Wiki](https://github.com/veritrans/SNAP-Woocommerce/wiki)
 * [Veritrans registration](https://my.veritrans.co.id/register)
-* [Veritrans documentation](http://docs.veritrans.co.id)
-* [Veritrans Woocommerce Documentation](http://docs.veritrans.co.id/en/vtweb/integration_woocommerce.html)
-* Technical support [support@veritrans.co.id](mailto:support@veritrans.co.id)
+* [SNAP documentation](http://snap-docs.veritrans.co.id)
+* Can't find answer you looking for? email to [support@veritrans.co.id](mailto:support@veritrans.co.id)
