@@ -1,4 +1,29 @@
 <?php
+  /**
+   * ### Veritrans Payment Plugin for Wordrpress-WooCommerce ###
+   *
+   * This plugin allow your Wordrpress-WooCommerce to accept payment from customer using Veritrans Payment Gateway solution.
+   *
+   * @category   Wordrpress-WooCommerce Payment Plugin
+   * @author     Rizda Dwi Prasetya <rizda.prasetya@veritrans.co.id>
+   * @version    1.1.0
+   * @link       http://docs.veritrans.co.id
+   * (This plugin is made based on Payment Plugin Template by WooCommerce)
+   *
+   * LICENSE: This program is free software; you can redistribute it and/or
+   * modify it under the terms of the GNU General Public License
+   * as published by the Free Software Foundation; either version 2
+   * of the License, or (at your option) any later version.
+   * 
+   * This program is distributed in the hope that it will be useful,
+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   * GNU General Public License for more details.
+   * 
+   * You should have received a copy of the GNU General Public License
+   * along with this program; if not, write to the Free Software
+   * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+   */
 
     // TODO uncomment these, use the real snap php library class (make sure to do this on other file too)
      require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
