@@ -57,13 +57,13 @@
        * Enqueue Javascripts
        */
       function midtrans_admin_scripts() {
-        wp_enqueue_script( 'admin-midtrans', VT_PLUGIN_DIR . 'js/admin-scripts.js', array('jquery') );
+        wp_enqueue_script( 'admin-midtrans', MT_PLUGIN_DIR . 'js/admin-scripts.js', array('jquery') );
       }
 
       function midtrans_scripts() {
         if( is_checkout() ) {
           // wp_enqueue_script( 'midtrans', 'https://api.veritrans.co.id/v2/assets/js/veritrans.min.js', array('jquery') );
-          //wp_enqueue_script( 'midtrans-integration', VT_PLUGIN_DIR . 'js/script.js', array('jquery') );
+          //wp_enqueue_script( 'midtrans-integration', MT_PLUGIN_DIR . 'js/script.js', array('jquery') );
           //wp_localize_script( 'midtrans-integration', 'wc_midtrans_client_key', $this->client_key );
         }
       }
