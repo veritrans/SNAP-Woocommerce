@@ -1,15 +1,15 @@
-Veritrans&nbsp; WooCommerce - Wordpress Payment Gateway Module
+Midtrans&nbsp; WooCommerce - Wordpress Payment Gateway Module
 =====================================
 
-Veritrans&nbsp; :heart: WooCommerce!
-Let your WooCommerce store integrated with Veritrans&nbsp; payment gateway.
+Midtrans&nbsp; :heart: WooCommerce!
+Let your WooCommerce store integrated with Midtrans&nbsp; payment gateway.
 
 ### Description
 
-Veritrans&nbsp; payment gateway is an online payment gateway. They strive to make payments simple for both the merchant and customers. With this plugin you can allow online payment on your WooCommerce store using Veritrans&nbsp; payment gateway.
+Midtrans&nbsp; payment gateway is an online payment gateway. They strive to make payments simple for both the merchant and customers. With this plugin you can allow online payment on your WooCommerce store using Midtrans&nbsp; payment gateway.
 
 Payment Method Feature:
-- Veritrans&nbsp; Snap all payment method fullpayment
+- Midtrans&nbsp; Snap all payment method fullpayment
 - Credit card online & offline installment payment
 - Credit card BIN & bank transfer promo payment
 - Credit card MIGS acquiring channel
@@ -32,19 +32,19 @@ Payment Method Feature:
 4. Go to menu **WooCommerce > Settings > Checkout > Midtrans**, fill the configuration fields.
   * Fill **Title** with text button that you want to display to customer
   * Select **Environment**, Sandbox is for testing transaction, Production is for real transaction
-  * Fill in the **client key** & **server key** with your corresonding [Veritrans&nbsp; account](https://my.veritrans.co.id/) credentials
+  * Fill in the **client key** & **server key** with your corresonding [Midtrans&nbsp; account](https://dashboard.midtrans.com/) credentials
   * Note: key for Sandbox & Production is different, make sure you use the correct one.
   * Other configuration are optional, you may leave it as is.
 
-### Veritrans&nbsp; MAP Configuration
+### Midtrans&nbsp; MAP Configuration
 
-1. Login to your [Veritrans&nbsp; Account](https://my.veritrans.co.id), select your environment (sandbox/production), go to menu **settings > configuration**
+1. Login to your [Midtrans&nbsp; Account](https://dashboard.midtrans.com), select your environment (sandbox/production), go to menu **settings > configuration**
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` as your Payment Notification URL.
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` link as Finish/Unfinish/Error Redirect URL.
 
 #### Get help
 
 * [SNAP-Woocommerce Wiki](https://github.com/veritrans/SNAP-Woocommerce/wiki)
-* [Veritrans registration](https://my.veritrans.co.id/register)
-* [SNAP documentation](http://snap-docs.veritrans.co.id)
-* Can't find answer you looking for? email to [support@veritrans.co.id](mailto:support@veritrans.co.id)
+* [Veritrans registration](https://dashboard.midtrans.com/register)
+* [SNAP documentation](http://snap-docs.midtrans.com)
+* Can't find answer you looking for? email to [support@midtrans.com](mailto:support@midtrans.com)
