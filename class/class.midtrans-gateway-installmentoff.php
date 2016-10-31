@@ -7,8 +7,8 @@
     // require_once(dirname(__FILE__) . '/../../veritrans-woocommerce-2.1.0/lib/veritrans/Veritrans.php');
 
     /**
-       * Midtrans Payment Gateway Class
-       */
+     * Midtrans Payment Gateway Class
+     */
     class WC_Gateway_Midtrans_InstallmentOff extends WC_Payment_Gateway {
 
       /**
@@ -92,8 +92,8 @@
        */
       function init_form_fields() {
         
-        $v2_sandbox_key_url = 'https://my.sandbox.veritrans.co.id/settings/config_info';
-        $v2_production_key_url = 'https://my.veritrans.co.id/settings/config_info';
+        $v2_sandbox_key_url = 'https://dashboard.sandbox.midtrans.com/settings/config_info';
+        $v2_production_key_url = 'https://dashboard.midtrans.com/settings/config_info';
 
         $this->form_fields = array(
           'enabled' => array(
@@ -181,7 +181,7 @@
       }
 
       /**
-       * Call Veritrans SNAP API to return SNAP token
+       * Call Midtrans SNAP API to return SNAP token
        * using parameter from cart & configuration
        */
       function get_snap_token( $order_id ){
@@ -392,9 +392,9 @@
 
           // TODO evaluate whether finish & error url need to be hardcoded
           $wp_base_url = home_url( '/' );
-          $finish_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
-          $error_url = $wp_base_url."?wc-api=WC_Gateway_Veritrans";
-          $snap_script_url = ($this->environment == 'production') ? "https://app.veritrans.co.id/snap/snap.js" : "https://app.sandbox.veritrans.co.id/snap/snap.js";
+          $finish_url = $wp_base_url."?wc-api=WC_Gateway_Midtrans";
+          $error_url = $wp_base_url."?wc-api=WC_Gateway_Midtrans";
+          $snap_script_url = ($this->environment == 'production') ? "https://app.midtrans.com/snap/snap.js" : "https://app.sandbox.midtrans.com/snap/snap.js";
         ?>
 
         <a id="pay-button" title="Do Payment!" class="button alt">
