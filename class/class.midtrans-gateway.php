@@ -366,18 +366,18 @@
         // $params['enabled_payments'] = $enabled_payments; // Disable customize payment method from config
 
         $customer_details = array();
-        $customer_details['first_name'] = $order->billing_first_name;
-        $customer_details['last_name'] = $order->billing_last_name;
-        $customer_details['email'] = $order->billing_email;
-        $customer_details['phone'] = $order->billing_phone;
+        $customer_details['first_name'] = (string)$order->billing_first_name;
+        $customer_details['last_name'] = (string)$order->billing_last_name;
+        $customer_details['email'] = (string)$order->billing_email;
+        $customer_details['phone'] = (string)$order->billing_phone;
 
         $billing_address = array();
-        $billing_address['first_name'] = $order->billing_first_name;
-        $billing_address['last_name'] = $order->billing_last_name;
-        $billing_address['address'] = $order->billing_address_1;
-        $billing_address['city'] = $order->billing_city;
-        $billing_address['postal_code'] = $order->billing_postcode;
-        $billing_address['phone'] = $order->billing_phone;
+        $billing_address['first_name'] = (string)$order->billing_first_name;
+        $billing_address['last_name'] = (string)$order->billing_last_name;
+        $billing_address['address'] = (string)$order->billing_address_1;
+        $billing_address['city'] = (string)$order->billing_city;
+        $billing_address['postal_code'] = (string)$order->billing_postcode;
+        $billing_address['phone'] = (string)$order->billing_phone;
         $billing_address['country_code'] = (strlen($this->convert_country_code($order->billing_country) != 3 ) ? 'IDN' : $this->convert_country_code($order->billing_country) );
 
         $customer_details['billing_address'] = $billing_address;
@@ -385,12 +385,12 @@
         
         if ( isset ( $_POST['ship_to_different_address'] ) ) {
           $shipping_address = array();
-          $shipping_address['first_name'] = $order->shipping_first_name;
-          $shipping_address['last_name'] = $order->shipping_last_name;
-          $shipping_address['address'] = $order->shipping_address_1;
-          $shipping_address['city'] = $order->shipping_city;
-          $shipping_address['postal_code'] = $order->shipping_postcode;
-          $shipping_address['phone'] = $order->billing_phone;
+          $shipping_address['first_name'] = (string)$order->shipping_first_name;
+          $shipping_address['last_name'] = (string)$order->shipping_last_name;
+          $shipping_address['address'] = (string)$order->shipping_address_1;
+          $shipping_address['city'] = (string)$order->shipping_city;
+          $shipping_address['postal_code'] = (string)$order->shipping_postcode;
+          $shipping_address['phone'] = (string)$order->billing_phone;
           $shipping_address['country_code'] = (strlen($this->convert_country_code($order->shipping_country) != 3 ) ? 'IDN' : $this->convert_country_code($order->billing_country) );
           
           $customer_details['shipping_address'] = $shipping_address;
