@@ -534,92 +534,116 @@
           $error_url = $wp_base_url."?wc-api=WC_Gateway_Midtrans";
           $snap_script_url = ($this->environment == 'production') ? "https://app.midtrans.com/snap/snap.js" : "https://app.sandbox.midtrans.com/snap/snap.js";
 
-        ?>
+          // ## Print HTML
+          ?>
 
-        <a id="pay-button" title="Do Payment!" class="button alt">
-          Proceed to Payment
-        </a>
-        
-        <div id="payment-instruction" style="display:none;">
-          <h3 class="alert alert-info"> Awaiting Your Payment </h3>
-          <!-- <br> -->
-          <p> Please complete your payment as instructed </p>
-          <!-- <br> -->
-          <a target="_blank" href="#" id="payment-instruction-btn" title="Do Payment!" class="button alt" >
-            Payment Instruction
+          <a id="pay-button" title="Do Payment!" class="button alt">
+            Proceed to Payment
           </a>
-        </div>
+          
+          <div id="payment-instruction" style="display:none;">
+            <h3 class="alert alert-info"> Awaiting Your Payment </h3>
+            <!-- <br> -->
+            <p> Please complete your payment as instructed </p>
+            <!-- <br> -->
+            <a target="_blank" href="#" id="payment-instruction-btn" title="Do Payment!" class="button alt" >
+              Payment Instruction
+            </a>
+          </div>
 
-        <script type="text/javascript">
-        // Safely load the snap.js
-        function loadExtScript(src) {
-          // Append script to doc
-          var s = document.createElement("script");
-          s.src = src;
-          document.body.appendChild(s);
-        }
+          <script type="text/javascript">
+          // Safely load the snap.js
+          function loadExtScript(src) {
+            // Append script to doc
+            var s = document.createElement("script");
+            s.src = src;
+            document.body.appendChild(s);
+          }
 
-        // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
-        function execSnapCont(){
-          var callbackTimer = setInterval(function() {
-            var snapExecuted = false;
-            try{
-              snap.pay("<?php echo $snapToken; ?>", 
-              {
-                onSuccess: function(result){
-                  // console.log(result); // debug
-                  window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
-                },
-                onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
-                  // console.log(result); // debug
-                  
-                  if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
+          // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
+          function execSnapCont(){
+            var callbackTimer = setInterval(function() {
+              var snapExecuted = false;
+              try{
+                snap.pay("<?php echo $snapToken; ?>", 
+                {
+                  onSuccess: function(result){
+                    // console.log(result); // debug
                     window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
-                  }
+                  },
+                  onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
+                    // console.log(result); // debug
+                    
+                    if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
+                      window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+                    }
 
-                  // Show payment instruction and hide payment button
-                  document.getElementById('payment-instruction-btn').href = result.pdf_url;
-                  document.getElementById('pay-button').style.display = "none";
-                  document.getElementById('payment-instruction').style.display = "block";
-                  // if no pdf instruction, hide the btn
-                  if(!result.hasOwnProperty("pdf_url")){
-                    document.getElementById('payment-instruction-btn').style.display = "none";
+                    // Show payment instruction and hide payment button
+                    document.getElementById('payment-instruction-btn').href = result.pdf_url;
+                    document.getElementById('pay-button').style.display = "none";
+                    document.getElementById('payment-instruction').style.display = "block";
+                    // if no pdf instruction, hide the btn
+                    if(!result.hasOwnProperty("pdf_url")){
+                      document.getElementById('payment-instruction-btn').style.display = "none";
+                    }
+                  },
+                    onError: function(result){
+                    // console.log(result); // debug
+                    window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
                   }
-                },
-                  onError: function(result){
-                  // console.log(result); // debug
-                  window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
-                }
-              });
-              snapExecuted = true; // if SNAP popup executed, change flag to stop the retry.
-            } catch (e){ 
-              console.log(e);
-              console.log("Snap s.goHome not ready yet... Retrying in 1000ms!");
-            }
-            if (snapExecuted) {
-              clearInterval(callbackTimer);
-            }
-          }, 1000);
-        };
+                });
+                snapExecuted = true; // if SNAP popup executed, change flag to stop the retry.
+              } catch (e){ 
+                console.log(e);
+                console.log("Snap s.goHome not ready yet... Retrying in 1000ms!");
+              }
+              if (snapExecuted) {
+                clearInterval(callbackTimer);
+              }
+            }, 1000);
+          };
 
-        console.log("Loading snap JS library now!");
-        // Loading SNAP JS Library to the page    
-        loadExtScript("<?php echo $snap_script_url;?>");
-        console.log("Snap library is loaded now");
-        // Call execSnapCont() 
-        execSnapCont();
-        /**
-         */
-        
-        var payButton = document.getElementById("pay-button");
-        payButton.onclick = function(){
+          console.log("Loading snap JS library now!");
+          // Loading SNAP JS Library to the page    
+          loadExtScript("<?php echo $snap_script_url;?>");
+          console.log("Snap library is loaded now");
+          // Call execSnapCont() 
           execSnapCont();
-        };
-        </script>
-        
-        <?php
+          /**
+           */
+          
+          var payButton = document.getElementById("pay-button");
+          payButton.onclick = function(){
+            execSnapCont();
+          };
+          </script>
+          
+          <?php
+          // ## End of print HTML
 
       }
+
+      // Response early with 200 OK status for Midtrans notification & handle HTTP GET
+      public function earlyResponse(){
+        if ( $_SERVER['REQUEST_METHOD'] == 'GET' ){
+          die('This endpoint should not be opened using browser (HTTP GET). This endpoint is for Midtrans notification URL (HTTP POST)');
+          exit();
+        }
+
+        ob_start();
+
+        $input_source = "php://input";
+        $raw_notification = json_decode(file_get_contents($input_source), true);
+        echo "Notification Received: \n";
+        print_r($raw_notification);
+        
+        header('Connection: close');
+        header('Content-Length: '.ob_get_length());
+        ob_end_flush();
+        ob_flush();
+        flush();
+      }
+
 
       /**
        * Check for Midtrans Web Response
@@ -654,15 +678,17 @@
         // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
         // else if request == POST, request is for payment notification, then update the payment status
         if(!isset($_GET['order_id']) && !isset($_POST['response'])){    // Check if POST, then create new notification
+          $this->earlyResponse();
           $midtrans_notification = new Veritrans_Notification();
 
           if (in_array($midtrans_notification->status_code, array(200, 201, 202))) {
-              header( 'HTTP/1.1 200 OK' );
             if ($order->get_order($midtrans_notification->order_id) == true) {
               $midtrans_confirmation = Veritrans_Transaction::status($midtrans_notification->order_id);             
               do_action( "valid-midtrans-web-request", $midtrans_notification );
             }
           }
+          exit;
+
         } else {    // else if GET, redirect to order complete/failed
           // error_log('status_code '. $_GET['status_code']); //debug
           // error_log('status_code '. $_GET['transaction_status']); //debug

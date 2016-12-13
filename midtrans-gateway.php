@@ -31,9 +31,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    * This plugin allow your Wordrpress-WooCommerce to accept payment from customer using Midtrans Payment Gateway solution.
    *
    * @category   Wordrpress-WooCommerce Payment Plugin
-   * @author     Rizda Dwi Prasetya <rizda.prasetya@veritrans.co.id>
+   * @author     Rizda Dwi Prasetya <rizda.prasetya@midtrans.com>
    * @version    1.1.0
-   * @link       http://docs.veritrans.co.id
+   * @link       http://docs.midtrans.com
    * (This plugin is made based on Payment Plugin Template by WooCommerce)
    */
 
