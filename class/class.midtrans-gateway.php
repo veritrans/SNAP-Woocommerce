@@ -492,7 +492,14 @@
         $woocommerce->cart->empty_cart();
         // error_log(print_r($params,true)); //debug
         
-        $snapToken = Veritrans_Snap::getSnapToken($params);
+        try {
+          $snapToken = Veritrans_Snap::getSnapToken($params);
+        } catch (Exception $e) {
+          error_log("Error : ".$e->getMessage());
+          echo 'Error exception: ',  $e->getMessage().". \n";
+          echo 'Please redo transaction by using another cart'."\n";
+          exit();
+        }
         return $snapToken;
       }
 
@@ -677,13 +684,12 @@
         // check whether the request is GET or POST, 
         // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
         // else if request == POST, request is for payment notification, then update the payment status
-        if(!isset($_GET['order_id']) && !isset($_POST['response'])){    // Check if POST, then create new notification
+        if(!isset($_GET['order_id']) && !isset($_GET['id']) && !isset($_POST['response'])){    // Check if POST, then create new notification
           $this->earlyResponse();
           $midtrans_notification = new Veritrans_Notification();
 
           if (in_array($midtrans_notification->status_code, array(200, 201, 202))) {
             if ($order->get_order($midtrans_notification->order_id) == true) {
-              $midtrans_confirmation = Veritrans_Transaction::status($midtrans_notification->order_id);             
               do_action( "valid-midtrans-web-request", $midtrans_notification );
             }
           }
@@ -700,12 +706,8 @@
             wp_redirect($order->get_checkout_order_received_url());
           }else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] != 200)  //if deny, redirect to order checkout page again
           {
-            $order_id = $_GET['order_id'];
-            $order = new WC_Order( $order_id );
             wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
           } else if( isset($_GET['order_id']) && !isset($_GET['transaction_status'])){ // if customer click "back" button, redirect to checkout page again
-            $order_id = $_GET['order_id'];
-            $order = new WC_Order( $order_id );
             wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
           } else if ( isset($_POST['response']) ){ // if customer redirected from async payment
             $responses = json_decode( stripslashes($_POST['response']), true);
@@ -715,6 +717,17 @@
             } else {
               wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
             }
+          } else if (isset($_GET['id']) ){ // if customer redirected form bca klikpay
+            $midtrans_notification = Veritrans_Transaction::status($_GET['id']);
+            $order_id = $midtrans_notification->order_id;
+            if ($midtrans_notification->transaction_status == 'settlement'){
+              $order = new WC_Order( $order_id );
+              wp_redirect($order->get_checkout_order_received_url());              
+            } else {
+              wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+            }
+          } else {
+            wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
           }
         }
 
