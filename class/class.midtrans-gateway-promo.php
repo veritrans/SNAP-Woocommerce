@@ -429,7 +429,8 @@
           // Append script to doc
           var s = document.createElement("script");
           s.src = src;
-          document.body.appendChild(s);
+          a = document.body.appendChild(s);
+          a.setAttribute('data-client-key','<?php echo $this->client_key; ?>');
         }
 
         // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
