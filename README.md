@@ -25,7 +25,7 @@ Payment Method Feature:
 
 #### Manual Installation
 
-1. [Download](/archive/master.zip) the plugin from this repository.
+1. [Download](https://github.com/veritrans/SNAP-Woocommerce/archive/master.zip) the plugin from this repository.
 2. Extract the plugin, then rename the folder modules as **midtrans-woocommerce**
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's `wp-content/plugins/` directory.
 3. Install & Activate the plugin from the Plugins menu within the WordPress admin panel.
