@@ -36,6 +36,7 @@
         $this->to_idr_rate        = $this->get_option( 'to_idr_rate' );
 
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
+        $this->enable_savecard   = $this->get_option( 'enable_savecard' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->min_amount         = $this->get_option( 'min_amount' );
 
@@ -152,6 +153,13 @@
             'description' => __( 'You must enable 3D Secure.
                 Please contact us if you wish to disable this feature in the Production environment.', 'woocommerce' ),
             'default' => 'yes'
+          ),
+          'enable_savecard' => array(
+            'title' => __( 'Enable Save Card', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => __( 'Enable Save Card?', 'woocommerce' ),
+            'description' => __( 'This will allow your customer to save their card on the payment popup, for faster payment flow on the following purchase', 'woocommerce' ),
+            'default' => 'no'
           )
           // 'enable_sanitization' => array(
           //   'title' => __( 'Enable Sanitization', 'woocommerce' ),
@@ -322,6 +330,10 @@
         $params['transaction_details']['gross_amount'] = $total_amount;
 
         $params['item_details'] = $items;
+        if ($this->enable_savecard =='yes'){
+          $params['user_id'] = crypt( (string)$customer_details['email'] , Veritrans_Config::$serverKey );
+          $params['credit_card']['save_card'] = true;
+        }
         
         // add installment params with all possible months & banks
         if($params['transaction_details']['gross_amount'] >= $this->min_amount)
