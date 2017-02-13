@@ -37,6 +37,7 @@
 
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         $this->enable_savecard   = $this->get_option( 'enable_savecard' );
+        $this->custom_expiry   = $this->get_option( 'custom_expiry' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->bin_number         = $this->get_option( 'bin_number' );
         $this->cc_enabled         = $this->get_option( 'cc_enabled' );
@@ -163,13 +164,6 @@
                 Please contact us if you wish to disable this feature in the Production environment.', 'woocommerce' ),
             'default' => 'yes'
           ),
-          'enable_savecard' => array(
-            'title' => __( 'Enable Save Card', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Save Card?', 'woocommerce' ),
-            'description' => __( 'This will allow your customer to save their card on the payment popup, for faster payment flow on the following purchase', 'woocommerce' ),
-            'default' => 'no'
-          ),
           // 'enable_sanitization' => array(
           //   'title' => __( 'Enable Sanitization', 'woocommerce' ),
           //   'type' => 'checkbox',
@@ -182,7 +176,20 @@
             'label' => __( 'Allowed CC BINs', 'woocommerce' ),
             'description' => __( 'Fill with CC BIN numbers (or bank name) that you want to allow to use this payment button. </br> Separate BIN number with coma Example: 4,5,4811,bni,mandiri', 'woocommerce' ),
             'default' => ''
-          )
+          ),
+          'enable_savecard' => array(
+            'title' => __( 'Enable Save Card', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => __( 'Enable Save Card?', 'woocommerce' ),
+            'description' => __( 'This will allow your customer to save their card on the payment popup, for faster payment flow on the following purchase', 'woocommerce' ),
+            'default' => 'no'
+          ),
+          'custom_expiry' => array(
+            'title' => __( 'Custom Expiry', 'woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'This will allow you to set custom duration on how long the transaction available to be paid.<br> example: 45 minutes', 'woocommerce' ),
+            'default' => 'disabled'
+          ),
         );
 
         if (get_woocommerce_currency() != 'IDR')
@@ -363,6 +370,19 @@
         $params['transaction_details']['gross_amount'] = $total_amount;
 
         $params['item_details'] = $items;
+
+        // add custom expiry params
+        $custom_expiry_params = explode(" ",$this->custom_expiry);
+        if ( !empty($custom_expiry_params[1]) && !empty($custom_expiry_params[0]) ){
+          $time = time();
+          $time += 30; // add 30 seconds to allow margin of error
+          $params['expiry'] = array(
+            'start_time' => date("Y-m-d H:i:s O",$time), 
+            'unit' => $custom_expiry_params[1], 
+            'duration'  => (int)$custom_expiry_params[0],
+          );
+        }
+        // add savecard params
         if ($this->enable_savecard =='yes'){
           $params['user_id'] = crypt( (string)$customer_details['email'] , Veritrans_Config::$serverKey );
           $params['credit_card']['save_card'] = true;

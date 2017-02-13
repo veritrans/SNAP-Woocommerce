@@ -13,6 +13,8 @@ Payment Method Feature:
 - Online & offline installment payment
 - BIN, bank transfer, and other channel promo payment
 - MIGS acquiring channel
+- Custom expiry
+
 
 ### Installation
 
