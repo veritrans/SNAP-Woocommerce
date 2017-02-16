@@ -481,6 +481,7 @@
               try{
                 snap.pay("<?php echo $snapToken; ?>", 
                 {
+                  skipOrderSummary : true,
                   onSuccess: function(result){
                     // console.log(result); // debug
                     window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
