@@ -443,73 +443,75 @@
           </a>
         </div>
 
-        <script type="text/javascript">
-        // Safely load the snap.js
-        function loadExtScript(src) {
-          // Append script to doc
-          var s = document.createElement("script");
-          s.src = src;
-          a = document.body.appendChild(s);
-          a.setAttribute('data-client-key','<?php echo $this->client_key; ?>');
-        }
+          <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function(event) { 
+          // Safely load the snap.js
+          function loadExtScript(src) {
+            // Append script to doc
+            var s = document.createElement("script");
+            s.src = src;
+            a = document.body.appendChild(s);
+            a.setAttribute('data-client-key','<?php echo $this->client_key; ?>');
+          }
 
-        // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
-        function execSnapCont(){
-          var callbackTimer = setInterval(function() {
-            var snapExecuted = false;
-            try{
-              snap.pay("<?php echo $snapToken; ?>", 
-              {
-                onSuccess: function(result){
-                  // console.log(result); // debug
-                  window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
-                },
-                onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
-                  // console.log(result); // debug
-                  
-                  if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
+          // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
+          function execSnapCont(){
+            var callbackTimer = setInterval(function() {
+              var snapExecuted = false;
+              try{
+                snap.pay("<?php echo $snapToken; ?>", 
+                {
+                  onSuccess: function(result){
+                    // console.log(result); // debug
                     window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
-                  }
+                  },
+                  onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
+                    // console.log(result); // debug
+                    
+                    if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
+                      window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+                    }
 
-                  // Show payment instruction and hide payment button
-                  document.getElementById('payment-instruction-btn').href = result.pdf_url;
-                  document.getElementById('pay-button').style.display = "none";
-                  document.getElementById('payment-instruction').style.display = "block";
-                  // if no pdf instruction, hide the btn
-                  if(!result.hasOwnProperty("pdf_url")){
-                    document.getElementById('payment-instruction-btn').style.display = "none";
+                    // Show payment instruction and hide payment button
+                    document.getElementById('payment-instruction-btn').href = result.pdf_url;
+                    document.getElementById('pay-button').style.display = "none";
+                    document.getElementById('payment-instruction').style.display = "block";
+                    // if no pdf instruction, hide the btn
+                    if(!result.hasOwnProperty("pdf_url")){
+                      document.getElementById('payment-instruction-btn').style.display = "none";
+                    }
+                  },
+                    onError: function(result){
+                    // console.log(result); // debug
+                    window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
                   }
-                },
-                  onError: function(result){
-                  // console.log(result); // debug
-                  window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
-                }
-              });
-              snapExecuted = true; // if SNAP popup executed, change flag to stop the retry.
-            } catch (e){ 
-              console.log(e);
-              console.log("Snap s.goHome not ready yet... Retrying in 1000ms!");
-            }
-            if (snapExecuted) {
-              clearInterval(callbackTimer);
-            }
-          }, 1000);
-        };
+                });
+                snapExecuted = true; // if SNAP popup executed, change flag to stop the retry.
+              } catch (e){ 
+                console.log(e);
+                console.log("Snap s.goHome not ready yet... Retrying in 1000ms!");
+              }
+              if (snapExecuted) {
+                clearInterval(callbackTimer);
+              }
+            }, 1000);
+          };
 
-        console.log("Loading snap JS library now!");
-        // Loading SNAP JS Library to the page    
-        loadExtScript("<?php echo $snap_script_url;?>");
-        console.log("Snap library is loaded now");
-        // Call execSnapCont() 
-        execSnapCont();
-        /**
-         */
-        
-        var payButton = document.getElementById("pay-button");
-        payButton.onclick = function(){
+          console.log("Loading snap JS library now!");
+          // Loading SNAP JS Library to the page    
+          loadExtScript("<?php echo $snap_script_url;?>");
+          console.log("Snap library is loaded now");
+          // Call execSnapCont() 
           execSnapCont();
-        };
-        </script>
+          /**
+           */
+          
+          var payButton = document.getElementById("pay-button");
+          payButton.onclick = function(){
+            execSnapCont();
+          };
+        });
+          </script>
         
         <?php
 
