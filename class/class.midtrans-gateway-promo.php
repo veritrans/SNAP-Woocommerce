@@ -28,7 +28,9 @@
         // Get Settings
         $this->title              = $this->get_option( 'title' );
         $this->description        = $this->get_option( 'description' );
+        $this->client_key_v2_sandbox         = $this->get_option( 'client_key_v2_sandbox' );
         $this->server_key_v2_sandbox         = $this->get_option( 'server_key_v2_sandbox' );
+        $this->client_key_v2_production         = $this->get_option( 'client_key_v2_production' );
         $this->server_key_v2_production         = $this->get_option( 'server_key_v2_production' );
         $this->api_version        = 2;
         $this->environment        = $this->get_option( 'select_midtrans_environment' );
@@ -42,6 +44,10 @@
         $this->bin_number         = $this->get_option( 'bin_number' );
         $this->cc_enabled         = $this->get_option( 'cc_enabled' );
         $this->bank_transfer_enabled         = $this->get_option( 'bank_transfer_enabled' );
+        
+        $this->client_key         = ($this->environment == 'production')
+          ? $this->client_key_v2_production
+          : $this->client_key_v2_sandbox;
 
         $this->log = new WC_Logger();
 
@@ -128,12 +134,26 @@
               'production'   => __( 'Production', 'woocommerce' ),
             ),
           ),
+          'client_key_v2_sandbox' => array(
+            'title' => __("Client Key", 'woocommerce'),
+            'type' => 'text',
+            'description' => sprintf(__('Input your <b>Sandbox</b> Midtrans Client Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_sandbox_key_url),
+            'default' => '',
+            'class' => 'sandbox_settings toggle-midtrans',
+          ),
           'server_key_v2_sandbox' => array(
             'title' => __("Server Key", 'woocommerce'),
             'type' => 'text',
             'description' => sprintf(__('Input your <b>Sandbox</b> Midtrans Server Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_sandbox_key_url),
             'default' => '',
             'class' => 'sandbox_settings toggle-midtrans'
+          ),
+          'client_key_v2_production' => array(
+            'title' => __("Client Key", 'woocommerce'),
+            'type' => 'text',
+            'description' => sprintf(__('Input your <b>Production</b> Midtrans Client Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_production_key_url),
+            'default' => '',
+            'class' => 'production_settings toggle-midtrans',
           ),
           'server_key_v2_production' => array(
             'title' => __("Server Key", 'woocommerce'),
