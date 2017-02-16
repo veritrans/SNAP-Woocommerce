@@ -42,8 +42,7 @@
         $this->custom_expiry   = $this->get_option( 'custom_expiry' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->bin_number         = $this->get_option( 'bin_number' );
-        $this->cc_enabled         = $this->get_option( 'cc_enabled' );
-        $this->bank_transfer_enabled         = $this->get_option( 'bank_transfer_enabled' );
+        $this->method_enabled         = $this->get_option( 'method_enabled' );
         
         $this->client_key         = ($this->environment == 'production')
           ? $this->client_key_v2_production
@@ -162,20 +161,6 @@
             'default' => '',
             'class' => 'production_settings toggle-midtrans'
           ),
-          'cc_enabled' => array(
-            'title' => __( 'Enable Credit Card', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Credit Card?', 'woocommerce' ),
-            'description' => __( 'Enable Credit Card payment method for this promo button', 'woocommerce' ),
-            'default' => 'yes'
-          ),
-          'bank_transfer_enabled' => array(
-            'title' => __( 'Enable Bank Transfer', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable Bank Transfer?', 'woocommerce' ),
-            'description' => __( 'Enable Bank Transfer payment method for this promo button', 'woocommerce' ),
-            'default' => 'no'
-          ),
           'enable_3d_secure' => array(
             'title' => __( 'Enable 3D Secure', 'woocommerce' ),
             'type' => 'checkbox',
@@ -190,6 +175,12 @@
           //   'label' => __( 'Enable Sanitization?', 'woocommerce' ),
           //   'default' => 'yes'
           // ),
+          'method_enabled' => array(
+            'title' => __( 'Allowed Payment Method', 'woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'Customize allowed payment method, separate payment method code with coma. e.g: bank_transfer,credit_card. <br>Leave it default if you are not sure.', 'woocommerce' ),
+            'default' => 'credit_card'
+          ),
           'bin_number' => array(
             'title' => __( 'Allowed CC BINs', 'woocommerce'),
             'type' => 'text',
@@ -260,10 +251,10 @@
         );
 
         // check enabled payment
-        if ($this->cc_enabled == 'yes')
+        $enabled_payments = explode(',', $this->method_enabled);
+        if (empty($enabled_payments[0]))
           $enabled_payments[] = 'credit_card';
-        if ($this->bank_transfer_enabled == 'yes')
-          $enabled_payments[] = 'permata_va';
+        var_dump($enabled_payments);
 
         $params['enabled_payments'] = $enabled_payments; // Disable customize payment method from config
 
