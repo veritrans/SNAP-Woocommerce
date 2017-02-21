@@ -194,6 +194,7 @@
             'type' => 'checkbox',
             'label' => __( 'Enable Save Card?', 'woocommerce' ),
             'description' => __( 'This will allow your customer to save their card on the payment popup, for faster payment flow on the following purchase', 'woocommerce' ),
+            'class' => 'toggle-advanced',
             'default' => 'no'
           ),
           'custom_expiry' => array(
