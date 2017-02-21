@@ -40,6 +40,7 @@
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         $this->enable_savecard   = $this->get_option( 'enable_savecard' );
         $this->custom_expiry   = $this->get_option( 'custom_expiry' );
+        $this->custom_fields   = $this->get_option( 'custom_fields' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->bin_number         = $this->get_option( 'bin_number' );
         $this->method_enabled         = $this->get_option( 'method_enabled' );
@@ -200,6 +201,12 @@
             'type' => 'text',
             'description' => __( 'This will allow you to set custom duration on how long the transaction available to be paid.<br> example: 45 minutes', 'woocommerce' ),
             'default' => 'disabled'
+          ),
+          'custom_fields' => array(
+            'title' => __( 'Custom Fields', 'woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'This will allow you to set custom fields that will be displayed on Midtrans dashboard. <br>Up to 3 fields are available, separate by coma (,) <br> Example:  Order from web, Woocommerce, Processed', 'woocommerce' ),
+            'default' => ''
           ),
         );
 
@@ -392,6 +399,13 @@
             'unit' => $custom_expiry_params[1], 
             'duration'  => (int)$custom_expiry_params[0],
           );
+        }
+        // add custom fields params
+        $custom_fields_params = explode(",",$this->custom_fields);
+        if ( !empty($custom_fields_params[0]) ){
+          $params['custom_field1'] = $custom_fields_params[0];
+          $params['custom_field2'] = !empty($custom_fields_params[1]) ? $custom_fields_params[1] : null;
+          $params['custom_field3'] = !empty($custom_fields_params[2]) ? $custom_fields_params[2] : null;
         }
         // add savecard params
         if ($this->enable_savecard =='yes'){
