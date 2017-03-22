@@ -529,8 +529,8 @@
           $params['custom_field3'] = !empty($custom_fields_params[2]) ? $custom_fields_params[2] : null;
         }
         // add savecard params
-        if ($this->enable_savecard =='yes'){
-          $params['user_id'] = crypt( (string)$customer_details['email'] , Veritrans_Config::$serverKey );
+        if ($this->enable_savecard =='yes' && is_user_logged_in()){
+          $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , Veritrans_Config::$serverKey );
           $params['credit_card']['save_card'] = true;
         }
         
