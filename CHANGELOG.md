@@ -22,6 +22,10 @@
 - Clientkey to snap payment page added
 - Payment method for promo config added
 
-2.1.0
+2.3.0
 -----
 - Custom fields feature added
+
+2.4.0
+-----
+- Two-click & One-click feature added
