@@ -534,9 +534,15 @@
           /**
            */
           
+          var clickCount = 0;
           var payButton = document.getElementById("pay-button");
           payButton.onclick = function(){
+            if(clickCount >= 2){
+              location.reload();
+              return;
+            }
             execSnapCont();
+            clickCount++;
           };
         });
           </script>
