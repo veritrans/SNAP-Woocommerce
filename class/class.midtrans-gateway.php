@@ -588,9 +588,9 @@
 
           // ## Print HTML
           ?>
-
+          <script id="snap_script" src="<?php echo $snap_script_url;?>" data-client-key="<?php echo $this->client_key; ?>"></script>
           <a id="pay-button" title="Do Payment!" class="button alt">
-            Proceed to Payment
+            Loading Payment...
           </a>
           
           <div id="payment-instruction" style="display:none;">
@@ -607,6 +607,9 @@
           document.addEventListener("DOMContentLoaded", function(event) { 
             // Safely load the snap.js
             function loadExtScript(src) {
+              // if snap.js is loaded from html script tag, don't load again
+              if (document.getElementById('snap_script'))
+                return;
               // Append script to doc
               var s = document.createElement("script");
               s.src = src;
@@ -662,13 +665,11 @@
             // Loading SNAP JS Library to the page    
             loadExtScript("<?php echo $snap_script_url;?>");
             console.log("Snap library is loaded now");
-            // Call execSnapCont() 
-            execSnapCont();
-            /**
-             */
-            
+
             var clickCount = 0;
             var payButton = document.getElementById("pay-button");
+            payButton.innerHTML = "Proceed To Payment";
+
             payButton.onclick = function(){
               if(clickCount >= 2){
                 location.reload();
@@ -677,6 +678,9 @@
               execSnapCont();
               clickCount++;
             };
+
+            // Call execSnapCont() 
+            execSnapCont();
           });
           </script>
           
