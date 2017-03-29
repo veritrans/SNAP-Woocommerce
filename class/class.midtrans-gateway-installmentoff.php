@@ -465,7 +465,7 @@
 
           // ## Print HTML
           ?>
-          <script id="snap_script" src="<?php echo $snap_script_url;?>" data-client-key="<?php echo $this->client_key; ?>"></script>
+          <script data-cfasync="false" id="snap_script" src="<?php echo $snap_script_url;?>" data-client-key="<?php echo $this->client_key; ?>"></script>
           <a id="pay-button" title="Do Payment!" class="button alt">
             Loading Payment...
           </a>
@@ -480,7 +480,7 @@
             </a>
           </div>
 
-          <script type="text/javascript">
+          <script data-cfasync="false" type="text/javascript">
           document.addEventListener("DOMContentLoaded", function(event) { 
             // Safely load the snap.js
             function loadExtScript(src) {
@@ -492,6 +492,7 @@
               s.src = src;
               a = document.body.appendChild(s);
               a.setAttribute('data-client-key','<?php echo $this->client_key; ?>');
+              a.setAttribute('data-cfasync','false');
             }
 
             // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
@@ -545,11 +546,11 @@
 
             var clickCount = 0;
             var payButton = document.getElementById("pay-button");
-            payButton.innerHTML = "Proceed To Payment";
 
             payButton.onclick = function(){
               if(clickCount >= 2){
                 location.reload();
+                payButton.innerHTML = "Loading...";
                 return;
               }
               execSnapCont();
@@ -558,6 +559,7 @@
 
             // Call execSnapCont() 
             execSnapCont();
+            payButton.innerHTML = "Proceed To Payment";
           });
           </script>
           
