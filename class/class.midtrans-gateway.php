@@ -778,8 +778,12 @@
             } else {
               wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
             }
-          } else if (isset($_GET['id']) ){ // if customer redirected form bca klikpay
-            $midtrans_notification = Veritrans_Transaction::status($_GET['id']);
+          } else if (isset($_GET['id']) || (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) ){ // if customer redirected form bca klikpay
+            if (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) // if papi id get-query still in wrong format, need to manually substring
+              $id = str_replace("WC_Gateway_Midtrans?id=", "", $_GET['wc-api']);
+            else
+              $id = $_GET['id'];
+            $midtrans_notification = Veritrans_Transaction::status($id);
             $order_id = $midtrans_notification->order_id;
             if ($midtrans_notification->transaction_status == 'settlement'){
               $order = new WC_Order( $order_id );
