@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    *
    * @category   Wordrpress-WooCommerce Payment Plugin
    * @author     Rizda Dwi Prasetya <rizda.prasetya@midtrans.com>
-   * @version    2.3.0
+   * @version    2.4.1
    * @link       http://docs.midtrans.com
    * (This plugin is made based on Payment Plugin Template by WooCommerce)
    */

@@ -29,3 +29,7 @@
 2.4.0
 -----
 - Two-click & One-click feature added
+
+2.4.1
+-----
+- Backward compatibility for both WC v3 & v2
