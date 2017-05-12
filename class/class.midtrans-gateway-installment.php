@@ -258,7 +258,7 @@
         $customer_details['phone'] = $this->getOrderProperty($order,'billing_phone');
 
         $billing_address = array();
-        $customer_details['first_name'] = $this->getOrderProperty($order,'billing_first_name');
+        $billing_address['first_name'] = $this->getOrderProperty($order,'billing_first_name');
         $billing_address['last_name'] = $this->getOrderProperty($order,'billing_last_name');
         $billing_address['address'] = $this->getOrderProperty($order,'billing_address_1');
         $billing_address['city'] = $this->getOrderProperty($order,'billing_city');
