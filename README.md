@@ -6,15 +6,20 @@ Let your WooCommerce store integrated with Midtrans&nbsp; payment gateway.
 
 ### Description
 
-Midtrans&nbsp; Snap is an online payment gateway. They strive to make payments simple for both the merchant and customers. This plugin will allow online payment on your WooCommerce store using various online payment channel.
+This plugin will allow secure online payment on your WooCommerce store, without your customer ever need to leave your WooCommerce store! 
+Midtrans&nbsp; is an online payment gateway. They strive to make payments simple for both the merchant and customers.
+Support various online payment channel.
+Support WooCommerce v3 & v2.
 
 Payment Method Feature:
-- Midtrans&nbsp; Snap all payment method fullpayment
-- Online & offline installment payment
-- BIN, bank transfer, and other channel promo payment
-- MIGS acquiring channel
-- Custom expiry
-- Two-click & One-click feature
+* Credit card fullpayment and other payment methods.
+* Bank transfer, internet banking vor various banks
+* Credit card Online & offline installment payment.
+* Credit card BIN, bank transfer, and other channel promo payment.
+* Credit card MIGS acquiring channel.
+* Custom expiry.
+* Two-click & One-click feature.
+* Midtrans Snap all payment method fullpayment.
 
 
 ### Installation
