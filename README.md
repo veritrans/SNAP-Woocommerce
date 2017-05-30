@@ -12,8 +12,9 @@ Support various online payment channel.
 Support WooCommerce v3 & v2.
 
 Payment Method Feature:
+
 * Credit card fullpayment and other payment methods.
-* Bank transfer, internet banking vor various banks
+* Bank transfer, internet banking for various banks
 * Credit card Online & offline installment payment.
 * Credit card BIN, bank transfer, and other channel promo payment.
 * Credit card MIGS acquiring channel.

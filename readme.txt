@@ -1,6 +1,6 @@
 === Midtrans-WooCommerce ===
-Contributors: yocki
-Tags: midtrans, snap, payment
+Contributors: yocki, rizdaprasetya
+Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 4.7.2
 Stable tag: 2.4.1
@@ -12,15 +12,14 @@ Midtrans-WooCommerce is plugin for Midtrans, Indonesian Payment Gateway. Brings 
 == Description ==
 
 This plugin will allow secure online payment on your WooCommerce store, without your customer ever need to leave your WooCommerce store! 
-Midtrans-WooCommerce is official plugin from [Midtrans](https://midtrans.com), Indonesian Payment Gateway. 
-Brings safety and highly dedicated to customer experience (UX) to WooCommerce.
-Support various online payment channel.
+
+Midtrans-WooCommerce is official plugin from [Midtrans](https://midtrans.com), Indonesian Payment Gateway. Brings safety and highly dedicated to customer experience (UX) to WooCommerce.Support various online payment channel.
 Support WooCommerce v3 & v2.
 
 Payment Method Feature:
 
 * Credit card fullpayment and other payment methods.
-* Bank transfer, internet banking vor various banks
+* Bank transfer, internet banking for various banks
 * Credit card Online & offline installment payment.
 * Credit card BIN, bank transfer, and other channel promo payment.
 * Credit card MIGS acquiring channel.
