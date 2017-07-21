@@ -760,7 +760,7 @@
           $this->earlyResponse();
           $midtrans_notification = new Veritrans_Notification();
 
-          if (in_array($midtrans_notification->status_code, array(200, 201, 202))) {
+          if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
             if ($order->get_order($midtrans_notification->order_id) == true) {
               do_action( "valid-midtrans-web-request", $midtrans_notification );
             }
