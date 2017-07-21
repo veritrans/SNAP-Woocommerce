@@ -833,6 +833,9 @@
         else if ($midtrans_notification->transaction_status == 'cancel') {
           $order->update_status('cancelled');
         }
+        else if ($midtrans_notification->transaction_status == 'expire') {
+          $order->update_status('cancelled');
+        }
         else if ($midtrans_notification->transaction_status == 'deny') {
           $order->update_status('failed');
         }
