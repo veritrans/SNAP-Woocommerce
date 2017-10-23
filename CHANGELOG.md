@@ -25,3 +25,7 @@
 
 = 2.4.1 =
 * Backward compatibility for both WC v3 & v2
+
+= 2.4.2 =
+* Fix Expire notification Handler
+* Separate payment page into a file
