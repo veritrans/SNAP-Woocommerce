@@ -33,6 +33,7 @@
           </div>
 
           <script data-cfasync="false" type="text/javascript">
+          var payButton = document.getElementById("pay-button");
 
           document.addEventListener("DOMContentLoaded", function(event) { 
             function MixpanelTrackResult(token, merchant_id, cms_name, cms_version, plugin_name, status, result) {
@@ -96,12 +97,14 @@
                     onSuccess: function(result){
                       MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, 'success', result);
                       // console.log(result?result:'no result');
+                      payButton.innerHTML = "Loading...";
                       window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
                     },
                     onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
                       MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, 'pending', result);
                       // console.log(result?result:'no result');
                       if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
+                        payButton.innerHTML = "Loading...";
                         window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
                       }
 
@@ -117,6 +120,7 @@
                     onError: function(result){
                       MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, 'error', result);
                       // console.log(result?result:'no result');
+                      payButton.innerHTML = "Loading...";
                       window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
                     },
                     onClose: function(){
@@ -141,7 +145,6 @@
             console.log("Snap library is loaded now");
 
             var clickCount = 0;
-            var payButton = document.getElementById("pay-button");
 
             payButton.onclick = function(){
               if(clickCount >= 2){
