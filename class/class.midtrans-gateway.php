@@ -171,6 +171,12 @@
               'production'   => __( 'Production', 'woocommerce' ),
             ),
           ),
+          'merchant_id' => array(
+            'title' => __("Merchant ID", 'woocommerce'),
+            'type' => 'text',
+            'description' => sprintf(__('Input your Midtrans Merchant ID (e.g M012345). Get the ID <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_sandbox_key_url),
+            'default' => '',
+          ),
           'client_key_v2_sandbox' => array(
             'title' => __("Client Key", 'woocommerce'),
             'type' => 'text',
@@ -587,7 +593,8 @@
        */
       function receipt_page( $order_id ) {
         global $woocommerce;
-        include 'payment-page.php';
+        $pluginName = 'fullpayment';
+        include_once 'payment-page.php';
 
       }
 
