@@ -241,23 +241,23 @@
        * Call Midtrans SNAP API to return SNAP token
        * using parameter from cart & configuration
        */
-      function get_snap_token( $order_id ){
+      function get_snap_token( $order_id,&$order ){
         global $woocommerce;
         $order_items = array();
         $cart = $woocommerce->cart;
-
-        $order = new WC_Order( $order_id );     
         
         // add discount with coupon named ** onlinepromo **
         // WC()->cart->add_discount( 'veritrans' );
         $cart->add_discount('onlinepromo');
-        $order->add_coupon( 'onlinepromo', WC()->cart->get_coupon_discount_amount( 'onlinepromo' ), WC()->cart->get_coupon_discount_tax_amount( 'onlinepromo' ) );
-        $order->set_total( WC()->cart->shipping_total, 'shipping' );
-        $order->set_total( WC()->cart->get_cart_discount_total(), 'cart_discount' );
-        $order->set_total( WC()->cart->get_cart_discount_tax_total(), 'cart_discount_tax' );
-        $order->set_total( WC()->cart->tax_total, 'tax' );
-        $order->set_total( WC()->cart->shipping_tax_total, 'shipping_tax' );
+        // $order->add_coupon( 'onlinepromo', WC()->cart->get_coupon_discount_amount( 'onlinepromo' ), WC()->cart->get_coupon_discount_tax_amount( 'onlinepromo' ) );
+        $order->set_shipping_total( WC()->cart->shipping_total );
+        $order->set_discount_total( WC()->cart->get_cart_discount_total() );
+        $order->set_discount_tax( WC()->cart->get_cart_discount_tax_total() );
+        $order->set_cart_tax( WC()->cart->tax_total);
+        $order->set_shipping_tax( WC()->cart->shipping_tax_total );
         $order->set_total( WC()->cart->total );
+        $order->save();
+        // $order->calculate_totals();
         // end of add discount
 
         Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
@@ -457,7 +457,7 @@
         $order = new WC_Order( $order_id );
 
         //get SNAP token
-        $snapToken = $this->get_snap_token($order_id);
+        $snapToken = $this->get_snap_token($order_id,$order);
 
         return array(
           'result'  => 'success',
