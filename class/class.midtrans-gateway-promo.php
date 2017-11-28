@@ -473,7 +473,7 @@
       function receipt_page( $order_id ) {
         global $woocommerce;
         $pluginName = 'bin_promo';
-        include_once 'payment-page.php';
+        require_once(dirname(__FILE__) . '/payment-page.php'); 
 
       }
 

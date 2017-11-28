@@ -463,7 +463,7 @@
       function receipt_page( $order_id ) {
         global $woocommerce;
         $pluginName = 'installment_dragon';
-        include_once 'payment-page.php';
+        require_once(dirname(__FILE__) . '/payment-page.php'); 
 
       }
 
