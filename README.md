@@ -51,6 +51,19 @@ Payment Method Feature:
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` as your Payment Notification URL.
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` link as Finish/Unfinish/Error Redirect URL.
 
+### Additional Resource
+
+Note: This section is optional.
+If you are activating BCA Klikpay payment channel, follow this additional step. This step is required to pass BCA UAT on BCA Klikpay.
+
+1. Login to Wordpress Admin Panel / Dashboard
+2. Add new page by going to menu **Pages > Add new**
+3. Insert this as title: `payment-finish`. Makesure the permalink display `[your wordpress url]/payment-finish`. Click **Publish/Save**.
+4. Login to your [Midtrans&nbsp; Account](https://dashboard.midtrans.com), select your environment (sandbox/production), go to menu **settings > configuration**
+5. Then change Finish Redirect URL to `http://[your wordpress url]/payment-finish`.
+
+This is to ensure we have finish page when customer has completed the payment on KlikPay page, and then the payment result will be displayed accordingly on the page. If you want to customize the finish page, edit this file `/class/finish-url-page.php`.
+
 #### Get help
 
 * [SNAP-Woocommerce Wiki](https://github.com/veritrans/SNAP-Woocommerce/wiki)

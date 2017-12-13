@@ -3,7 +3,7 @@
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
 Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a href="http://midtrans.co.id" target="_blank">Midtrans.co.id</a>
-Version: 2.4.2
+Version: 2.4.3
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    *
    * @category   Wordrpress-WooCommerce Payment Plugin
    * @author     Rizda Dwi Prasetya <rizda.prasetya@midtrans.com>
-   * @version    2.4.2
+   * @version    2.4.3
    * @link       http://docs.midtrans.com
    * (This plugin is made based on Payment Plugin Template by WooCommerce)
    */
@@ -67,3 +67,12 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_Promo';
   return $methods;
 }
+// For BCAKlikpay
+function handle_finish_url_page()
+{
+  if(is_page('payment-finish')){ 
+    include(dirname(__FILE__) . '/class/finish-url-page.php');
+    die();
+  }
+}
+add_action( 'wp', 'handle_finish_url_page' );
