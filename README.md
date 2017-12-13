@@ -39,11 +39,11 @@ Payment Method Feature:
 2. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's `wp-content/plugins/` directory.
 3. Install & Activate the plugin from the Plugins menu within the WordPress admin panel.
 4. Go to menu **WooCommerce > Settings > Checkout > Midtrans**, fill the configuration fields.
-  * Fill **Title** with text button that you want to display to customer
-  * Select **Environment**, Sandbox is for testing transaction, Production is for real transaction
-  * Fill in the **client key** & **server key** with your corresonding [Midtrans&nbsp; account](https://dashboard.midtrans.com/) credentials
-  * Note: key for Sandbox & Production is different, make sure you use the correct one.
-  * Other configuration are optional, you may leave it as is.
+	* Fill **Title** with text button that you want to display to customer
+	* Select **Environment**, Sandbox is for testing transaction, Production is for real transaction
+	* Fill in the **client key** & **server key** with your corresonding [Midtrans&nbsp; account](https://dashboard.midtrans.com/) credentials
+	* Note: key for Sandbox & Production is different, make sure you use the correct one.
+	* Other configuration are optional, you may leave it as is.
 
 ### Midtrans&nbsp; MAP Configuration
 
