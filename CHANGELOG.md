@@ -29,3 +29,6 @@
 = 2.4.2 =
 * Fix Expire notification Handler
 * Separate payment page into a file
+
+= 2.4.3 =
+* Add BCA Klikpay finish page
