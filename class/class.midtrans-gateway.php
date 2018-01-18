@@ -205,83 +205,6 @@
             'default' => '',
             'class' => 'production_settings toggle-midtrans'
           ),
-          // 'credit_card' => array(
-          //   'title' => __( 'Enable credit card', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Credit card?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'mandiri_clickpay' => array(
-          //   'title' => __( 'Enable Mandiri Clickpay', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Mandiri Clickpay?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'cimb_clicks' => array(
-          //   'title' => __( 'Enable CIMB Clicks', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable CIMB Clicks?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ), 
-          // 'bank_transfer' => array(
-          //   'title' => __( 'Enable Bank Transfer', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Bank Transfer?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'bri_epay' => array(
-          //   'title' => __( 'Enable Bri e-pay', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable BRI e-pay?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'telkomsel_cash' => array(
-          //   'title' => __( 'Enable T-cash', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable T-cash?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'xl_tunai' => array(
-          //   'title' => __( 'Enable XL tunai', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable XL tunai?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'mandiri_bill' => array(
-          //   'title' => __( 'Enable Mandiri Bill', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Mandiri Bill?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'cstore' => array(
-          //   'title' => __( 'Enable Indomaret', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Indomaret?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'indosat_dompetku' => array(
-          //   'title' => __( 'Enable Indosat Dompetku', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Indosat Dompetku?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
-          // 'mandiri_ecash' => array(
-          //   'title' => __( 'Enable Mandiri Ecash', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Mandiri Ecash?', 'woocommerce' ),
-          //   'description' => __( 'Please contact us if you wish to enable this feature in the Production environment.', 'woocommerce' ),
-          //   'default' => 'no'
-          // ),
           'enable_3d_secure' => array(
             'title' => __( 'Enable 3D Secure', 'woocommerce' ),
             'type' => 'checkbox',
@@ -309,13 +232,7 @@
             'type' => 'text',
             'description' => __( 'This will allow you to set custom fields that will be displayed on Midtrans dashboard. <br>Up to 3 fields are available, separate by coma (,) <br> Example:  Order from web, Woocommerce, Processed', 'woocommerce' ),
             'default' => ''
-          ),
-          // 'enable_sanitization' => array(
-          //   'title' => __( 'Enable Sanitization', 'woocommerce' ),
-          //   'type' => 'checkbox',
-          //   'label' => __( 'Enable Sanitization?', 'woocommerce' ),
-          //   'default' => 'yes'
-          // )
+          )
         );
 
         if (get_woocommerce_currency() != 'IDR')
@@ -361,46 +278,6 @@
           ),
           'vtweb' => array()
         );
-
-        $enabled_payments = array();
-        if ($this->enable_credit_card == 'yes'){
-          $enabled_payments[] = 'credit_card';
-        }
-        if ($this->enable_mandiri_clickpay =='yes'){
-          $enabled_payments[] = 'mandiri_clickpay';
-        }
-        if ($this->enable_cimb_clicks =='yes'){
-          $enabled_payments[] = 'cimb_clicks';
-        }
-        if ($this->enable_permata_va =='yes'){
-          $enabled_payments[] = 'bank_transfer';   
-        }
-        if ($this->enable_bri_epay =='yes'){
-          $enabled_payments[] = 'bri_epay';
-        }
-        if ($this->enable_telkomsel_cash =='yes'){
-          $enabled_payments[] = 'telkomsel_cash';
-        }
-        if ($this->enable_xl_tunai =='yes'){
-          $enabled_payments[] = 'xl_tunai';
-        }
-        if ($this->enable_mandiri_bill =='yes'){
-          $enabled_payments[] = 'echannel';
-        }
-        if ($this->enable_bbmmoney =='yes'){
-          $enabled_payments[] = 'bbm_money';
-        }
-        if ($this->enable_indomaret =='yes'){
-          $enabled_payments[] = 'cstore';
-        }
-        if ($this->enable_indosat_dompetku =='yes'){
-          $enabled_payments[] = 'indosat_dompetku';
-        }
-        if ($this->enable_mandiri_ecash =='yes'){
-          $enabled_payments[] = 'mandiri_ecash';
-        }
-
-        // $params['enabled_payments'] = $enabled_payments; // Disable customize payment method from config
 
         $customer_details = array();
         $customer_details['first_name'] = $this->getOrderProperty($order,'billing_first_name');
