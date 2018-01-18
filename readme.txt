@@ -105,19 +105,22 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 = 2.4.3 =
 * Add BCA Klikpay finish page
 
+= 2.4.4 =
+* Minor payment page experience enhancement
+
 == Upgrade Notice ==
 
 = 1.0 =
-We support several feature like installment, MIGS acq, and bin promo.
-
-= 2.0 =
-Should update to avoid violation of the GPL.
+Support additional feature like installment, MIGS acq, and bin promo.
 
 = 2.1 = 
-Should update for better experince with BCA KlikPay payment methods
+Update for better experince with BCA KlikPay payment methods
 
 = 2.4.1 =
 Support for WooCommerce v3 and also backward compatible with WooCommerce v2. Also some additional nice feature like 2 clicks for CC.
+
+= 2.4.4 =
+Minor payment page experience enhancement
 
 == Get Help ==
 

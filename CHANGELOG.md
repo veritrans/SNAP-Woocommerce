@@ -32,3 +32,6 @@
 
 = 2.4.3 =
 * Add BCA Klikpay finish page
+
+= 2.4.4 =
+* Minor payment page experience enhancement
