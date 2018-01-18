@@ -80,17 +80,8 @@
             function execSnapCont(){
               var callbackTimer = setInterval(function() {
                 var snapExecuted = false;
+                var retryCount = 0;
                 try{
-                  // record 'pay' event to Mixpanel
-                  mixpanel.track(
-                    'pg-pay', {
-                      merchant_id: MERCHANT_ID,
-                      cms_name: CMS_NAME,
-                      cms_version: CMS_VERSION,
-                      plugin_name: PLUGIN_NAME,
-                      snap_token: SNAP_TOKEN
-                    }
-                  );
                   snap.pay(SNAP_TOKEN, 
                   {
                     skipOrderSummary : true,
@@ -130,10 +121,25 @@
                   });
                   snapExecuted = true; // if SNAP popup executed, change flag to stop the retry.
                 } catch (e){ 
+                  retryCount++;
+                  if(retryCount >= 20){
+                    location.reload(); payButton.innerHTML = "Loading..."; return;
+                  }
                   console.log(e);
                   console.log("Snap s.goHome not ready yet... Retrying in 1000ms!");
                 }
                 if (snapExecuted) {
+                  // record 'pay' event to Mixpanel
+                  mixpanel.track(
+                    'pg-pay', {
+                      merchant_id: MERCHANT_ID,
+                      cms_name: CMS_NAME,
+                      cms_version: CMS_VERSION,
+                      plugin_name: PLUGIN_NAME,
+                      snap_token: SNAP_TOKEN
+                    }
+                  );
+
                   clearInterval(callbackTimer);
                 }
               }, 1000);
