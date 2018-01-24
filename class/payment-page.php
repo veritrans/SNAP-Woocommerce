@@ -76,11 +76,11 @@
       a.setAttribute('data-cfasync','false');
     }
 
+    var retryCount = 0;
     // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
     function execSnapCont(){
       var callbackTimer = setInterval(function() {
         var snapExecuted = false;
-        var retryCount = 0;
         try{
           snap.pay(SNAP_TOKEN, 
           {
@@ -122,7 +122,7 @@
           snapExecuted = true; // if SNAP popup executed, change flag to stop the retry.
         } catch (e){ 
           retryCount++;
-          if(retryCount >= 20){
+          if(retryCount >= 10){
             location.reload(); payButton.innerHTML = "Loading..."; return;
           }
           console.log(e);
