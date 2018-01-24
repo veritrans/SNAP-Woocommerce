@@ -35,3 +35,6 @@
 
 = 2.4.4 =
 * Minor payment page experience enhancement
+
+= 2.4.5 =
+* Optional redirection payment flow added
