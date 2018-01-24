@@ -39,6 +39,7 @@
 
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         $this->enable_savecard   = $this->get_option( 'enable_savecard' );
+        $this->enable_redirect   = $this->get_option( 'enable_redirect' );
         $this->custom_expiry   = $this->get_option( 'custom_expiry' );
         $this->custom_fields   = $this->get_option( 'custom_fields' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
@@ -207,6 +208,14 @@
             'class' => 'toggle-advanced',
             'default' => 'no'
           ),
+          'enable_redirect' => array(
+            'title' => __( 'Redirect payment page', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => __( 'Enable payment page redirection?', 'woocommerce' ),
+            'description' => __( 'This will redirect customer to Midtrans hosted payment page instead of popup payment page on your website. <br>Leave it disabled if you are not sure', 'woocommerce' ),
+            'class' => 'toggle-advanced',
+            'default' => 'no'
+          ),
           'custom_expiry' => array(
             'title' => __( 'Custom Expiry', 'woocommerce' ),
             'type' => 'text',
@@ -242,7 +251,7 @@
        * Call Midtrans SNAP API to return SNAP token
        * using parameter from cart & configuration
        */
-      function get_snap_token( $order_id ){
+      function get_snap_token( $order_id, $isRedirectUrl = false ){
         global $woocommerce;
         $order_items = array();
         $cart = $woocommerce->cart;
@@ -443,7 +452,18 @@
         $woocommerce->cart->empty_cart();
         // error_log(print_r($params,true)); //debug
         
-        $snapToken = Veritrans_Snap::getSnapToken($params);
+        try {
+          if(isset($isRedirectUrl) && $isRedirectUrl){
+            $snapToken = Veritrans_Snap::getRedirectUrl($params);
+          }else{
+            $snapToken = Veritrans_Snap::getSnapToken($params);
+          }
+        } catch (Exception $e) {
+          error_log("Error : ".$e->getMessage());
+          echo 'Error exception: ',  $e->getMessage().". \n";
+          echo 'Please redo transaction by using another cart'."\n";
+          exit();
+        }
         return $snapToken;
       }
 
@@ -459,13 +479,17 @@
         //create the order object
         $order = new WC_Order( $order_id );
 
-        //get SNAP token
-        $snapToken = $this->get_snap_token($order_id);
+        if(property_exists($this,'enable_redirect') && $this->enable_redirect == 'yes'){
+          $redirectUrl = $this->get_snap_token($order_id,true);
+        }else{
+          //get SNAP token
+          $snapToken = $this->get_snap_token($order_id);
+          $redirectUrl = $order->get_checkout_payment_url( true )."&snap_token=".$snapToken;
+        }
 
         return array(
           'result'  => 'success',
-          // 'redirect' => $this->charge_payment( $order_id )
-          'redirect' => $order->get_checkout_payment_url( true )."&snap_token=".$snapToken
+          'redirect' => $redirectUrl
         );
       }
 
