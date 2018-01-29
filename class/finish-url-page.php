@@ -8,14 +8,17 @@ require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php');
 Veritrans_Config::$isProduction = $isProduction;
 Veritrans_Config::$serverKey = $isProduction ? $mt->server_key_v2_production : $mt->server_key_v2_sandbox ;
 try {
-	$midtrans_notification = Veritrans_Transaction::status($_GET['id']);
+	if(isset($_GET['id'])){ //BCA_Klikpay
+		$midtrans_notification = Veritrans_Transaction::status($_GET['id']);	
+	}else if(isset($_POST['response'])){ //CIMB CLICKS
+		$response = preg_replace('/\\\\/', '', $_POST['response']);		
+		$midtrans_notification = json_decode($response);	
+	}
 } catch (Exception $e) {
 	error_log('Failed to do Midtrans Get Status: '.print_r($e,true));
 	$midtrans_notification = new stdClass();
 	$midtrans_notification->transaction_status = 'not found';
 }
-// echo $midtrans_notification->transaction_status; //debug
-// error_log(print_r($midtrans_notification,true)); //debug
 
 // OR redirect it to midtrans plugin callback handler
 // echo "loading... <script>window.location = '".get_site_url(null, '/')."?wc-api=WC_Gateway_Midtrans&id=".$_GET['id']."'</script>";
