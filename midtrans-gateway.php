@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    *
    * @category   Wordrpress-WooCommerce Payment Plugin
    * @author     Rizda Dwi Prasetya <rizda.prasetya@midtrans.com>
-   * @version    2.4.3
+   * @version    2.4.5
    * @link       http://docs.midtrans.com
    * (This plugin is made based on Payment Plugin Template by WooCommerce)
    */
@@ -67,7 +67,7 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_Promo';
   return $methods;
 }
-// For BCAKlikpay
+// For BCAKlikpay, CIMB Clicks, etc finish redirect page
 function handle_finish_url_page()
 {
   if(is_page('payment-finish')){ 

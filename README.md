@@ -27,8 +27,8 @@ Payment Method Feature:
 
 #### Minimum Requirements
 
-* WordPress v3.9.1 or greater (tested up to v4.7.x)
-* WooCommerce v2.1.11 or greater (tested up to v2.6.x)
+* WordPress v3.9 or greater (tested up to v4.9.4)
+* WooCommerce v2 or greater (tested up to v3.3.1)
 * PHP version v5.4 or greater
 * MySQL version v5.0 or greater
 
