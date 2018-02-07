@@ -36,8 +36,9 @@
   var payButton = document.getElementById("pay-button");
 
   document.addEventListener("DOMContentLoaded", function(event) { 
-    function MixpanelTrackResult(token, merchant_id, cms_name, cms_version, plugin_name, status, result) {
+    function MixpanelTrackResult(token, merchant_id, cms_name, cms_version, plugin_name, plugin_version, status, result) {
       var eventNames = {
+        pay: 'pg-pay',
         success: 'pg-success',
         pending: 'pg-pending',
         error: 'pg-error',
@@ -50,6 +51,7 @@
           cms_name: cms_name,
           cms_version: cms_version,
           plugin_name: plugin_name,
+          plugin_version: plugin_version,
           snap_token: token,
           payment_type: result ? result.payment_type: null,
           order_id: result ? result.order_id: null,
@@ -61,8 +63,9 @@
     var SNAP_TOKEN = "<?php echo $snapToken;?>";
     var MERCHANT_ID = "<?php echo $this->get_option('merchant_id');?>";
     var CMS_NAME = "woocommerce";
-    var CMS_VERSION = "3.2";
+    var CMS_VERSION = "<?php echo WC_VERSION;?>";
     var PLUGIN_NAME = "<?php echo $pluginName;?>";
+    var PLUGIN_VERSION = "<?php echo MT_PLUGIN_VERSION;?>";
     // Safely load the snap.js
     function loadExtScript(src) {
       // if snap.js is loaded from html script tag, don't load again
@@ -86,13 +89,13 @@
           {
             skipOrderSummary : true,
             onSuccess: function(result){
-              MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, 'success', result);
+              MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'success', result);
               // console.log(result?result:'no result');
               payButton.innerHTML = "Loading...";
               window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
             },
             onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
-              MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, 'pending', result);
+              MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'pending', result);
               // console.log(result?result:'no result');
               if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
                 payButton.innerHTML = "Loading...";
@@ -109,13 +112,13 @@
               }
             },
             onError: function(result){
-              MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, 'error', result);
+              MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'error', result);
               // console.log(result?result:'no result');
               payButton.innerHTML = "Loading...";
               window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
             },
             onClose: function(){
-              MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, 'close', null);
+              MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'close', null);
               // console.log(result?result:'no result');
             }
           });
@@ -130,16 +133,7 @@
         }
         if (snapExecuted) {
           // record 'pay' event to Mixpanel
-          mixpanel.track(
-            'pg-pay', {
-              merchant_id: MERCHANT_ID,
-              cms_name: CMS_NAME,
-              cms_version: CMS_VERSION,
-              plugin_name: PLUGIN_NAME,
-              snap_token: SNAP_TOKEN
-            }
-          );
-
+          MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'pay', null);
           clearInterval(callbackTimer);
         }
       }, 1000);

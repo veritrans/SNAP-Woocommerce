@@ -47,6 +47,7 @@ function midtrans_gateway_init() {
   }
 
   DEFINE ('MT_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
+  DEFINE ('MT_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
 
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
