@@ -33,6 +33,7 @@
   </div>
 
   <script data-cfasync="false" type="text/javascript">
+  var mixpanel = mixpanel ? mixpanel : { init : function(){}, track : function(){} };
   var payButton = document.getElementById("pay-button");
 
   document.addEventListener("DOMContentLoaded", function(event) { 
@@ -80,10 +81,11 @@
     }
 
     var retryCount = 0;
+    var snapExecuted = false;
+    var intervalFunction = 0;
     // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
     function execSnapCont(){
-      var callbackTimer = setInterval(function() {
-        var snapExecuted = false;
+      intervalFunction = setInterval(function() {
         try{
           snap.pay(SNAP_TOKEN, 
           {
@@ -129,12 +131,13 @@
             location.reload(); payButton.innerHTML = "Loading..."; return;
           }
           console.log(e);
-          console.log("Snap s.goHome not ready yet... Retrying in 1000ms!");
-        }
-        if (snapExecuted) {
-          // record 'pay' event to Mixpanel
-          MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'pay', null);
-          clearInterval(callbackTimer);
+          console.log("Snap not ready yet... Retrying in 1000ms!");
+        } finally {
+          if (snapExecuted) {
+            clearInterval(intervalFunction);
+            // record 'pay' event to Mixpanel
+            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'pay', null);
+          }
         }
       }, 1000);
     };
