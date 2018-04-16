@@ -5,6 +5,8 @@
   // $cart = $woocommerce->cart;
   $isProduction = $this->environment == 'production';
   $snapToken = $_GET['snap_token'];
+  // $snapToken = preg_match("/^[a-zA-Z0-9_-]*$/",$snapToken) ? $snapToken : '';
+  $snapToken = htmlspecialchars($snapToken, ENT_COMPAT,'ISO-8859-1', true);
   $mixpanel_key = $isProduction ? $mixpanel_key_production : $mixpanel_key_sandbox;
 
   // TODO evaluate whether finish & error url need to be hardcoded
