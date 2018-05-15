@@ -31,6 +31,7 @@ Payment Method Feature:
 * WooCommerce v2 or greater (tested up to v3.3.1)
 * PHP version v5.4 or greater
 * MySQL version v5.0 or greater
+* PHP CURL enabled server/host
 
 #### Manual Installation
 

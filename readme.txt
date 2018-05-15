@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 4.9.4
-Stable tag: 2.6
+Stable tag: 2.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 = 2.6 =
 * Payment page experience enhancement
 
+= 2.6.1 =
+New payment option for faster credit card transaction via browser's Payment Request API
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -134,6 +137,9 @@ Optional redirection payment flow added
 
 = 2.6 =
 Payment page experience enhancement
+
+= 2.6.1 =
+New payment option for faster credit card transaction via browser's Payment Request API
 
 == Get Help ==
 

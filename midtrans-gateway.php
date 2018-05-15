@@ -3,7 +3,7 @@
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
 Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a href="http://midtrans.co.id" target="_blank">Midtrans.co.id</a>
-Version: 2.4.6
+Version: 2.6.1
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
@@ -32,7 +32,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    *
    * @category   Wordrpress-WooCommerce Payment Plugin
    * @author     Rizda Dwi Prasetya <rizda.prasetya@midtrans.com>
-   * @version    2.4.6
    * @link       http://docs.midtrans.com
    * (This plugin is made based on Payment Plugin Template by WooCommerce)
    */
@@ -50,6 +49,7 @@ function midtrans_gateway_init() {
   DEFINE ('MT_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
 
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentmigs.php';
@@ -61,6 +61,7 @@ function midtrans_gateway_init() {
 
 function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans';
+  $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
   $methods[] = 'WC_Gateway_Midtrans_Installment';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentMIGS';
