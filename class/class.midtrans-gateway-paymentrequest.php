@@ -28,18 +28,25 @@
         // Get Settings
         $this->title              = $this->get_option( 'title' );
         $this->description        = $this->get_option( 'description' );
-        $this->client_key_v2_sandbox         = $this->get_option( 'client_key_v2_sandbox' );
-        $this->server_key_v2_sandbox         = $this->get_option( 'server_key_v2_sandbox' );
-        $this->client_key_v2_production         = $this->get_option( 'client_key_v2_production' );
-        $this->server_key_v2_production         = $this->get_option( 'server_key_v2_production' );
+        $this->client_key_v2_sandbox         = 
+          get_option('woocommerce_midtrans_settings' , ['client_key_v2_sandbox' => ''])['client_key_v2_sandbox'];
+        $this->server_key_v2_sandbox         = 
+          get_option('woocommerce_midtrans_settings' , ['server_key_v2_sandbox' => ''])['server_key_v2_sandbox'];
+        $this->client_key_v2_production         = 
+          get_option('woocommerce_midtrans_settings' , ['client_key_v2_production' => ''])['client_key_v2_production'];
+        $this->server_key_v2_production         = 
+          get_option('woocommerce_midtrans_settings' , ['server_key_v2_production' => ''])['server_key_v2_production'];
         $this->api_version        = 2;
-        $this->environment        = $this->get_option( 'select_midtrans_environment' );
+        $this->environment        = 
+          get_option('woocommerce_midtrans_settings' , ['select_midtrans_environment' => ''])['select_midtrans_environment'];
+        $this->merchant_id        = 
+          get_option('woocommerce_midtrans_settings' , ['merchant_id' => ''])['merchant_id'];
         
         $this->to_idr_rate        = $this->get_option( 'to_idr_rate' );
 
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         $this->enable_savecard   = $this->get_option( 'enable_savecard' );
-        $this->enable_redirect   = $this->get_option( 'enable_redirect' );
+        $this->enable_redirect   = 'no';
         $this->custom_expiry   = $this->get_option( 'custom_expiry' );
         $this->custom_fields   = $this->get_option( 'custom_fields' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
@@ -116,50 +123,6 @@
             'description' => __( 'This controls the description which the user sees during checkout', 'woocommerce' ),
             'default' => ''
           ),
-          'select_midtrans_environment' => array(
-            'title' => __( 'Environment', 'woocommerce' ),
-            'type' => 'select',
-            'default' => 'sandbox',
-            'description' => __( 'Select the Midtrans Environment', 'woocommerce' ),
-            'options'   => array(
-              'sandbox'    => __( 'Sandbox', 'woocommerce' ),
-              'production'   => __( 'Production', 'woocommerce' ),
-            ),
-          ),
-          'merchant_id' => array(
-            'title' => __("Merchant ID", 'woocommerce'),
-            'type' => 'text',
-            'description' => sprintf(__('Input your Midtrans Merchant ID (e.g M012345). Get the ID <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_sandbox_key_url),
-            'default' => '',
-          ),
-          'client_key_v2_sandbox' => array(
-            'title' => __("Client Key", 'woocommerce'),
-            'type' => 'text',
-            'description' => sprintf(__('Input your <b>Sandbox</b> Midtrans Client Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_sandbox_key_url),
-            'default' => '',
-            'class' => 'sandbox_settings toggle-midtrans',
-          ),
-          'server_key_v2_sandbox' => array(
-            'title' => __("Server Key", 'woocommerce'),
-            'type' => 'text',
-            'description' => sprintf(__('Input your <b>Sandbox</b> Midtrans Server Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_sandbox_key_url),
-            'default' => '',
-            'class' => 'sandbox_settings toggle-midtrans'
-          ),
-          'client_key_v2_production' => array(
-            'title' => __("Client Key", 'woocommerce'),
-            'type' => 'text',
-            'description' => sprintf(__('Input your <b>Production</b> Midtrans Client Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_production_key_url),
-            'default' => '',
-            'class' => 'production_settings toggle-midtrans',
-          ),
-          'server_key_v2_production' => array(
-            'title' => __("Server Key", 'woocommerce'),
-            'type' => 'text',
-            'description' => sprintf(__('Input your <b>Production</b> Midtrans Server Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_production_key_url),
-            'default' => '',
-            'class' => 'production_settings toggle-midtrans'
-          ),
           'acquring_bank' => array(
             'title' => __( 'Acquring Bank', 'woocommerce'),
             'type' => 'text',
@@ -193,14 +156,6 @@
             'type' => 'checkbox',
             'label' => __( 'Enable Save Card?', 'woocommerce' ),
             'description' => __( 'This will allow your customer to save their card on the payment popup, for faster payment flow on the following purchase', 'woocommerce' ),
-            'class' => 'toggle-advanced',
-            'default' => 'no'
-          ),
-          'enable_redirect' => array(
-            'title' => __( 'Redirect payment page', 'woocommerce' ),
-            'type' => 'checkbox',
-            'label' => __( 'Enable payment page redirection?', 'woocommerce' ),
-            'description' => __( 'This will redirect customer to Midtrans hosted payment page instead of popup payment page on your website. <br>Leave it disabled if you are not sure', 'woocommerce' ),
             'class' => 'toggle-advanced',
             'default' => 'no'
           ),

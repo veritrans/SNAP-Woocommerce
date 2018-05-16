@@ -64,7 +64,7 @@
       );
     }
     var SNAP_TOKEN = "<?php echo $snapToken;?>";
-    var MERCHANT_ID = "<?php echo $this->get_option('merchant_id');?>";
+    var MERCHANT_ID = "<?php echo $this->merchant_id;?>";
     var CMS_NAME = "woocommerce";
     var CMS_VERSION = "<?php echo WC_VERSION;?>";
     var PLUGIN_NAME = "<?php echo $pluginName;?>";
@@ -226,7 +226,7 @@
 
     payButton.onclick = handlePayAction;
 
-    // handlePayAction();
+    handlePayAction();
     payButton.innerHTML = "Proceed To Payment";
   });
   </script>
