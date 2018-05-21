@@ -116,7 +116,10 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Payment page experience enhancement
 
 = 2.6.1 =
-New payment option for faster credit card transaction via browser's Payment Request API
+* New payment option for faster credit card transaction via browser's Payment Request API
+
+= 2.6.2 =
+* API Library enhancement
 
 == Upgrade Notice ==
 
