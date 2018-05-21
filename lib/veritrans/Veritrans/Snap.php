@@ -29,6 +29,29 @@ class Veritrans_Snap {
   }
 
   /**
+   * Create Snap payment page redirect url
+   *
+   * Example:
+   *
+   * ```php
+   *   $params = array(
+   *     'transaction_details' => array(
+   *       'order_id' => rand(),
+   *       'gross_amount' => 10000,
+   *     )
+   *   );
+   *   $paymentUrl = Veritrans_Snap::getSnapToken($params);
+   * ```
+   *
+   * @param array $params Payment options
+   * @return string Snap redirect url.
+   * @throws Exception curl error or veritrans error
+   */
+  public static function getRedirectUrl($params) {
+    return (Veritrans_Snap::createTransaction($params)->redirect_url);
+  }
+
+  /**
    * Create Snap payment page, with this version returning full API response
    *
    * Example:
