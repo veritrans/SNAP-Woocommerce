@@ -23,3 +23,38 @@
 
 	});
 })(jQuery);
+
+jQuery(function($){
+	$('.gosend_origin').select2({
+  		ajax: {
+			url: ajaxurl,
+			type: 'post',
+            dataType: 'json',
+			delay: 250,
+			cache: true,
+            data: function (params) {
+                return {
+                    q: params.term,
+                    action: 'gosend_origin_location',
+                };
+            },
+            processResults: function( data ) {
+                var options = [];
+                if ( data ) {
+					$.each( data, function( index, text ) {
+                        options.push( { id: text.address, text: text.address  } );
+                    });
+                }
+                return {
+                    results: options
+                };
+			}
+		},
+		initSelection: function( element, callback ){
+			var selected = [];
+			selected.push( { id: midtrans_params.location_selected, text: midtrans_params.location_selected } );
+			return callback( selected );
+		},
+		minimumInputLength: 3
+	});
+});
