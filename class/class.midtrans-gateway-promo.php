@@ -42,6 +42,7 @@
         $this->enable_redirect   = $this->get_option( 'enable_redirect' );
         $this->custom_expiry   = $this->get_option( 'custom_expiry' );
         $this->custom_fields   = $this->get_option( 'custom_fields' );
+        $this->promo_code   = $this->get_option( 'promo_code' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->bin_number         = $this->get_option( 'bin_number' );
         $this->method_enabled         = $this->get_option( 'method_enabled' );
@@ -224,6 +225,12 @@
             'description' => __( 'This will allow you to set custom fields that will be displayed on Midtrans dashboard. <br>Up to 3 fields are available, separate by coma (,) <br> Example:  Order from web, Woocommerce, Processed', 'woocommerce' ),
             'default' => ''
           ),
+          'promo_code' => array(
+            'title' => __( 'Promo Code', 'woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'Promo Code that would be used for discount. Leave blank if you are not sure.', 'woocommerce' ),
+            'default' => ''
+          ),
         );
 
         if (get_woocommerce_currency() != 'IDR')
@@ -256,8 +263,11 @@
         $cart = $woocommerce->cart;
         
         // add discount with coupon named ** onlinepromo **
-        // WC()->cart->add_discount( 'veritrans' );
-        $cart->add_discount('onlinepromo');
+        $coupon_code = 'onlinepromo';
+        if ( strlen($this->promo_code) > 0 )
+          $coupon_code = $this->promo_code;
+
+        $cart->add_discount($coupon_code);
         // $order->add_coupon( 'onlinepromo', WC()->cart->get_coupon_discount_amount( 'onlinepromo' ), WC()->cart->get_coupon_discount_tax_amount( 'onlinepromo' ) );
         $order->set_shipping_total( WC()->cart->shipping_total );
         $order->set_discount_total( WC()->cart->get_cart_discount_total() );
