@@ -296,7 +296,7 @@
         $enabled_payments = explode(',', $this->method_enabled);
         if (empty($enabled_payments[0]))
           $enabled_payments[] = 'credit_card';
-        var_dump($enabled_payments);
+        // var_dump($enabled_payments);
 
         $params['enabled_payments'] = $enabled_payments; // Disable customize payment method from config
 
