@@ -43,6 +43,7 @@
         $this->custom_expiry   = $this->get_option( 'custom_expiry' );
         $this->custom_fields   = $this->get_option( 'custom_fields' );
         $this->promo_code   = $this->get_option( 'promo_code' );
+        $this->enable_map_finish_url   = $this->get_option( 'enable_map_finish_url' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->bin_number         = $this->get_option( 'bin_number' );
         $this->method_enabled         = $this->get_option( 'method_enabled' );
@@ -231,6 +232,13 @@
             'description' => __( 'Promo Code that would be used for discount. Leave blank if you are not sure.', 'woocommerce' ),
             'default' => ''
           ),
+          'enable_map_finish_url' => array(
+            'title' => __( 'Use Dashboard Finish url', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => 'Use dashboard configured payment finish url?',
+            'description' => __( 'This will allow use of Dashboard configured payment finish url instead of auto configured url', 'woocommerce' ),
+            'default' => 'no'
+          )
         );
 
         if (get_woocommerce_currency() != 'IDR')
