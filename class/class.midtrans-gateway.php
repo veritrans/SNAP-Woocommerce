@@ -69,6 +69,7 @@
         $this->enable_redirect   = $this->get_option( 'enable_redirect' );
         $this->custom_expiry   = $this->get_option( 'custom_expiry' );
         $this->custom_fields   = $this->get_option( 'custom_fields' );
+        $this->enable_map_finish_url   = $this->get_option( 'enable_map_finish_url' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->enable_credit_card = $this->get_option( 'credit_card' );
         $this->enable_mandiri_clickpay = $this->get_option( 'mandiri_clickpay' );
@@ -241,6 +242,13 @@
             'type' => 'text',
             'description' => __( 'This will allow you to set custom fields that will be displayed on Midtrans dashboard. <br>Up to 3 fields are available, separate by coma (,) <br> Example:  Order from web, Woocommerce, Processed', 'woocommerce' ),
             'default' => ''
+          ),
+          'enable_map_finish_url' => array(
+            'title' => __( 'Use Dashboard Finish url', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => 'Use dashboard configured payment finish url?',
+            'description' => __( 'This will allow use of Dashboard configured payment finish url instead of auto configured url', 'woocommerce' ),
+            'default' => 'no'
           )
         );
 
