@@ -565,6 +565,9 @@
         // else if request == POST, request is for payment notification, then update the payment status
         if(!isset($_GET['order_id']) && !isset($_GET['id']) && !isset($_POST['response'])){    // Check if POST, then create new notification
           $this->earlyResponse();
+          // Handle pdf url update
+          $this->handlePendingPaymentPdfUrlUpdate();
+
           $midtrans_notification = new Veritrans_Notification();
 
           if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
@@ -656,6 +659,28 @@
         }
 
         exit;
+      }
+
+      public function handlePendingPaymentPdfUrlUpdate(){
+        try {
+          global $woocommerce;
+          $requestObj = json_decode(file_get_contents("php://input"), true);
+          if( !array_key_exists('pdf_url_update', $requestObj) || 
+              !array_key_exists('snap_token_id', $requestObj) ){
+            return;
+          }
+          $snapApiBaseUrl = ($this->environment == 'production') ? 'https://app.midtrans.com' : 'https://app.sandbox.midtrans.com';
+          $tokenStatusUrl = $snapApiBaseUrl.'/snap/v1/transactions/'.$requestObj['snap_token_id'].'/status';
+          $tokenStatusResponse = wp_remote_get( $tokenStatusUrl);
+          $tokenStatus = json_decode($tokenStatusResponse['body'], true);
+
+          $order = new WC_Order( $tokenStatus['order_id'] );
+          $order->add_order_note('Please complete your payment. Payment instruction: '.$tokenStatus['pdf_url'],true);
+          echo "OK";
+          exit();
+        } catch (Exception $e) {
+          var_dump($e); exit();
+        }
       }
 
       /**

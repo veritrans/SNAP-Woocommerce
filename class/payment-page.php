@@ -17,7 +17,8 @@
     $finish_url = 'result.finish_redirect_url';
   }
   $error_url = $wp_base_url."?wc-api=WC_Gateway_Midtrans";
-  $snap_script_url = $isProduction ? "https://app.midtrans.com/snap/snap.js" : "https://app.sandbox.midtrans.com/snap/snap.js";
+  $snap_api_base_url = $isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com";
+  $snap_script_url = $snap_api_base_url."/snap/snap.js";
 
   // ## Print HTML
   ?>
@@ -118,6 +119,19 @@
               if(!result.hasOwnProperty("pdf_url")){
                 document.getElementById('payment-instruction-btn').style.display = "none";
               }
+              // Update order with PDF url
+              try{
+                result['pdf_url_update'] = true;
+                result['snap_token_id'] = SNAP_TOKEN;
+                fetch('<?php echo $wp_base_url."?wc-api=WC_Gateway_Midtrans";?>', {
+                  method: 'POST',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(result)
+                });
+              }catch(e){ console.log(e); }
             },
             onError: function(result){
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'error', result);
