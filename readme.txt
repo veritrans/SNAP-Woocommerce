@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 4.9.4
-Stable tag: 2.6.5
+Stable tag: 2.6.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -130,6 +130,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 = 2.6.5 =
 * Add use map finish url config field
 
+= 2.6.6 =
+* Add payment instruction pdf link on pending order view
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -164,6 +167,9 @@ Add promo code config field
 
 = 2.6.5 =
 Add use map finish url config field
+
+= 2.6.6 =
+* Add payment instruction pdf link on pending order view
 
 == Get Help ==
 
