@@ -673,6 +673,9 @@
           $tokenStatusUrl = $snapApiBaseUrl.'/snap/v1/transactions/'.$requestObj['snap_token_id'].'/status';
           $tokenStatusResponse = wp_remote_get( $tokenStatusUrl);
           $tokenStatus = json_decode($tokenStatusResponse['body'], true);
+          if( !array_key_exists('pdf_url', $tokenStatus) ){
+            return;
+          }
 
           $order = new WC_Order( $tokenStatus['order_id'] );
           $order->add_order_note('Please complete your payment. Payment instruction: '.$tokenStatus['pdf_url'],true);
