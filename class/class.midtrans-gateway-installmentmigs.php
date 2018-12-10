@@ -17,7 +17,7 @@
       function __construct() {
         $this->id           = 'midtrans_installment_migs';
         $this->icon         = apply_filters( 'woocommerce_midtrans_icon', '' );
-        $this->method_title = __( 'Midtrans Online Installment MIGS', 'Midtrans' );
+        $this->method_title = __( 'Midtrans Online Installment MIGS', 'woocommerce' );
         $this->has_fields   = true;
         $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_InstallmentMIGS', home_url( '/' ) ) );
 

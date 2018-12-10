@@ -17,7 +17,7 @@
       function __construct() {
         $this->id           = 'midtrans_paymentrequest';
         $this->icon         = apply_filters( 'woocommerce_midtrans_icon', '' );
-        $this->method_title = __( 'Midtrans Credit Card Direct', 'Midtrans' );
+        $this->method_title = __( 'Midtrans Credit Card Direct', 'woocommerce' );
         $this->has_fields   = true;
         $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_Paymentrequest', home_url( '/' ) ) );
 
