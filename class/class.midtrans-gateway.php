@@ -631,31 +631,35 @@
         global $woocommerce;
 
         $order = new WC_Order( $midtrans_notification->order_id );
+        $order->add_order_note(__('Midtrans HTTP notification received: '.$midtrans_notification->transaction_status.'. Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
+
        // error_log(var_dump($order));
         if ($midtrans_notification->transaction_status == 'capture') {
           if ($midtrans_notification->fraud_status == 'accept') {
             $order->payment_complete();
+            $order->add_order_note(__('Midtrans payment completed: capture. Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
           }
           else if ($midtrans_notification->fraud_status == 'challenge') {
-            $order->update_status('on-hold');
+            $order->update_status('on-hold',__('Challanged payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
           }
         }
         else if ($midtrans_notification->transaction_status == 'cancel') {
-          $order->update_status('cancelled');
+          $order->update_status('cancelled',__('Cancelled payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
         }
         else if ($midtrans_notification->transaction_status == 'expire') {
-          $order->update_status('cancelled');
+          $order->update_status('cancelled',__('Expired payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
         }
         else if ($midtrans_notification->transaction_status == 'deny') {
-          $order->update_status('failed');
+          $order->update_status('failed',__('Denied payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
         }
         else if ($midtrans_notification->transaction_status == 'settlement') {
           if($midtrans_notification->payment_type != 'credit_card'){
             $order->payment_complete();
+            $order->add_order_note(__('Midtrans payment completed: settlement. Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
           }
         }
         else if ($midtrans_notification->transaction_status == 'pending') {
-          $order->update_status('on-hold');
+          $order->update_status('on-hold',__('Awaiting payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
         }
 
         exit;
