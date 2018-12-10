@@ -12,8 +12,13 @@
   // TODO evaluate whether finish & error url need to be hardcoded
   $wp_base_url = home_url( '/' );
   $finish_url = $wp_base_url."?wc-api=WC_Gateway_Midtrans";
+  $finish_url = '"'.$finish_url.'&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status';
+  if(isset($this->enable_map_finish_url) && $this->enable_map_finish_url == 'yes'){
+    $finish_url = 'result.finish_redirect_url';
+  }
   $error_url = $wp_base_url."?wc-api=WC_Gateway_Midtrans";
-  $snap_script_url = $isProduction ? "https://app.midtrans.com/snap/snap.js" : "https://app.sandbox.midtrans.com/snap/snap.js";
+  $snap_api_base_url = $isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com";
+  $snap_script_url = $snap_api_base_url."/snap/snap.js";
 
   // ## Print HTML
   ?>
@@ -64,7 +69,7 @@
       );
     }
     var SNAP_TOKEN = "<?php echo $snapToken;?>";
-    var MERCHANT_ID = "<?php echo $this->merchant_id;?>";
+    var MERCHANT_ID = "<?php echo $this->get_option('merchant_id');?>";
     var CMS_NAME = "woocommerce";
     var CMS_VERSION = "<?php echo WC_VERSION;?>";
     var PLUGIN_NAME = "<?php echo $pluginName;?>";
@@ -101,14 +106,14 @@
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'success', result);
               // console.log(result?result:'no result');
               payButton.innerHTML = "Loading...";
-              window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+              window.location = <?php echo $finish_url;?>;
             },
             onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'pending', result);
               // console.log(result?result:'no result');
               if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
                 payButton.innerHTML = "Loading...";
-                window.location = "<?php echo $finish_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+                window.location = <?php echo $finish_url;?>;
               }
 
               // Show payment instruction and hide payment button
@@ -119,6 +124,19 @@
               if(!result.hasOwnProperty("pdf_url")){
                 document.getElementById('payment-instruction-btn').style.display = "none";
               }
+              // Update order with PDF url
+              try{
+                result['pdf_url_update'] = true;
+                result['snap_token_id'] = SNAP_TOKEN;
+                fetch('<?php echo $wp_base_url."?wc-api=WC_Gateway_Midtrans";?>', {
+                  method: 'POST',
+                  headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(result)
+                });
+              }catch(e){ console.log(e); }
             },
             onError: function(result){
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'error', result);
