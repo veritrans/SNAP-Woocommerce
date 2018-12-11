@@ -650,7 +650,8 @@
           $order->update_status('cancelled',__('Expired payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
         }
         else if ($midtrans_notification->transaction_status == 'deny') {
-          $order->update_status('on-hold',__('Denied payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
+          // do nothing on deny, allow payment retries
+          // $order->update_status('failed',__('Denied payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
         }
         else if ($midtrans_notification->transaction_status == 'settlement') {
           if($midtrans_notification->payment_type != 'credit_card'){
