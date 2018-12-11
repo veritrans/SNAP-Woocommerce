@@ -265,7 +265,7 @@
        * Call Midtrans SNAP API to return SNAP token
        * using parameter from cart & configuration
        */
-      function get_snap_token( $order_id,&$order,$isRedirectUrl = false ){
+      function create_snap_transaction( $order_id,$order){
         global $woocommerce;
         $order_items = array();
         $cart = $woocommerce->cart;
@@ -468,16 +468,12 @@
         // error_log(print_r($params,true)); //debug
         
         try {
-          if(isset($isRedirectUrl) && $isRedirectUrl){
-            $snapToken = Veritrans_Snap::getRedirectUrl($params);
-          }else{
-            $snapToken = Veritrans_Snap::getSnapToken($params);
-          }
+          $snapResponse = Veritrans_Snap::createTransaction($params);
         } catch (Exception $e) {
           $this->json_print_exception($e);
           exit();
         }
-        return $snapToken;
+        return $snapResponse;
       }
 
       function json_print_exception ($e) {
@@ -503,13 +499,13 @@
         //create the order object
         $order = new WC_Order( $order_id );
 
+        $snapResponse = $this->create_snap_transaction($order_id,$order);
         if(property_exists($this,'enable_redirect') && $this->enable_redirect == 'yes'){
-          $redirectUrl = $this->get_snap_token($order_id,$order,true);
+          $redirectUrl = $snapResponse->redirect_url;
         }else{
-          //get SNAP token
-          $snapToken = $this->get_snap_token($order_id,$order);
-          $redirectUrl = $order->get_checkout_payment_url( true )."&snap_token=".$snapToken;
+          $redirectUrl = $order->get_checkout_payment_url( true )."&snap_token=".$snapResponse->token;
         }
+        $order->add_order_note(__('Payment Url: '.$snapResponse->redirect_url),true);
 
         return array(
           'result'  => 'success',
