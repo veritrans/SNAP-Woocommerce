@@ -674,16 +674,23 @@
           $tokenStatusUrl = $snapApiBaseUrl.'/snap/v1/transactions/'.$requestObj['snap_token_id'].'/status';
           $tokenStatusResponse = wp_remote_get( $tokenStatusUrl);
           $tokenStatus = json_decode($tokenStatusResponse['body'], true);
+          $paymentStatus = $tokenStatus['transaction_status'];
+          $order = new WC_Order( $tokenStatus['order_id'] );
+          $orderStatus = $order->get_status();
+          // update order status to on-hold if current status is "pending payment"
+          if($orderStatus == 'pending' && $paymentStatus == 'pending'){
+            $order->update_status('on-hold',__('Midtrans onPending Callback received','woocommerce'));
+          }
           if( !array_key_exists('pdf_url', $tokenStatus) ){
             return;
           }
-
-          $order = new WC_Order( $tokenStatus['order_id'] );
           $order->add_order_note('Please complete your payment. Payment instruction: '.$tokenStatus['pdf_url'],true);
           echo "OK";
+          // immediately terminate notif handling, not a notification.
           exit();
         } catch (Exception $e) {
-          var_dump($e); exit();
+          // var_dump($e); 
+          // exit();
         }
       }
 
