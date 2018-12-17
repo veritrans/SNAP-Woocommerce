@@ -51,6 +51,7 @@
         $this->custom_fields   = $this->get_option( 'custom_fields' );
         $this->enable_map_finish_url   = $this->get_option( 'enable_map_finish_url' );
         $this->ganalytics_id   = $this->get_option( 'ganalytics_id' );
+        $this->enable_immediate_reduce_stock   = $this->get_option( 'enable_immediate_reduce_stock' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
         $this->bin_number         = $this->get_option( 'bin_number' );
         $this->acquring_bank         = $this->get_option( 'acquring_bank' );
@@ -185,6 +186,13 @@
             'type' => 'text',
             'description' => __( 'This will allow you to use Google Analytics tracking on woocommerce payment page. <br>Input your tracking ID ("UA-XXXXX-Y") <br> Leave it blank if you are not sure', 'woocommerce' ),
             'default' => ''
+          ),
+          'enable_immediate_reduce_stock' => array(
+            'title' => __( 'Immediate Reduce Stock', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => 'Immediately reduce item stock on Midtrans payment pop-up?',
+            'description' => __( 'By default, item stock only reduced if payment status on Midtrans reach pending/success (customer choose payment channel and click pay on payment pop-up). Enable this if you want to immediately reduce item stock when payment pop-up generated/displayed.', 'woocommerce' ),
+            'default' => 'no'
           )
         );
 
@@ -413,6 +421,9 @@
           $redirectUrl = $order->get_checkout_payment_url( true )."&snap_token=".$snapResponse->token;
         }
         $order->add_order_note(__('Payment Url: '.$snapResponse->redirect_url),true);
+        if(property_exists($this,'enable_immediate_reduce_stock') && $this->enable_immediate_reduce_stock == 'yes'){
+          wc_reduce_stock_levels($order);
+        }
 
         return array(
           'result'  => 'success',
