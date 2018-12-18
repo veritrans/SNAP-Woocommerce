@@ -2,8 +2,8 @@
 Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
-Tested up to: 4.9.4
-Stable tag: 2.7.0
+Tested up to: 5.0.0
+Stable tag: 2.8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,12 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Add Google Analytics optional config
 * Add Immediate Reduce Stock optional config
 
+= 2.8.0 =
+* Installment terms for online installment now configurable
+* Installment banks for online installment now configurable
+* Installment terms for offline installment now configurable
+* Installment bank for online installment now configurable
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -186,6 +192,12 @@ Add use map finish url config field
 * Add update payment status to on-hold synchronously via Snap onPending
 * Add Google Analytics optional config
 * Add Immediate Reduce Stock optional config
+
+= 2.8.0 =
+* Installment terms for online installment now configurable
+* Installment banks for online installment now configurable
+* Installment terms for offline installment now configurable
+* Installment bank for online installment now configurable
 
 == Get Help ==
 
