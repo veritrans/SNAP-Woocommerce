@@ -46,6 +46,8 @@
         $this->ganalytics_id   = $this->get_option( 'ganalytics_id' );
         $this->enable_immediate_reduce_stock   = $this->get_option( 'enable_immediate_reduce_stock' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
+        $this->installment_term   = $this->get_option( 'installment_term' );
+        $this->installment_bank   = $this->get_option( 'installment_bank' );
         $this->min_amount         = $this->get_option( 'min_amount' );
         
         $this->client_key         = ($this->environment == 'production')
@@ -170,6 +172,18 @@
             'description' => sprintf(__('Input your <b>Production</b> Midtrans Server Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_production_key_url),
             'default' => '',
             'class' => 'production_settings toggle-midtrans'
+          ),
+          'installment_term' => array(
+            'title' => __( 'Installment Terms', 'woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'Input the desired Installment Terms. Separate with coma. e.g: 3,6,12', 'woocommerce' ),
+            'default' => '3,6,9,12,15,18,21,24,27,30,33,36'
+          ),
+          'installment_bank' => array(
+            'title' => __( 'Installment Bank(s)', 'woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'Input the desired installment bank(s). Separate with coma for multiple banks. e.g: bni,mandiri,bca', 'woocommerce' ),
+            'default' => 'bni,mandiri,cimb,danamon,mega,bca,maybank,bri'
           ),
           'min_amount' => array(
             'title' => __( 'Minimal Transaction Amount', 'woocommerce'),
@@ -443,20 +457,19 @@
         if($params['transaction_details']['gross_amount'] >= $this->min_amount)
         {
           // Build bank & terms array
-          $terms      = array(3,6,9,12,15,18,21,24,27,30,33,36);
+          $termsStr = explode(',', $this->installment_term);
+          $terms = array();
+          foreach ($termsStr as $termStr) {
+            $terms[] = (int)$termStr;
+          };
+          
+          $banksStr = explode(',', $this->installment_bank);
+          foreach ($banksStr as $bankStr) {
+            $params['credit_card']['installment']['terms'][$bankStr] = $terms;  
+          };
 
           // Add installment param
           $params['credit_card']['installment']['required'] = true;
-          $params['credit_card']['installment']['terms'] = 
-            array(
-              'bri' => $terms, 
-              'danamon' => $terms, 
-              'maybank' => $terms, 
-              'bni' => $terms, 
-              'mandiri' => $terms, 
-              'bca' => $terms,
-              'cimb' => $terms
-            );
         }
 
         $woocommerce->cart->empty_cart();
