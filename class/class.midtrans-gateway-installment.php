@@ -449,12 +449,12 @@
           $params['credit_card']['installment']['required'] = true;
           $params['credit_card']['installment']['terms'] = 
             array(
-              // 'bri' => $terms, 
-              // 'danamon' => $terms, 
-              // 'maybank' => $terms, 
+              'bri' => $terms, 
+              'danamon' => $terms, 
+              'maybank' => $terms, 
               'bni' => $terms, 
               'mandiri' => $terms, 
-              // 'bca' => $terms,
+              'bca' => $terms,
               'cimb' => $terms
             );
         }

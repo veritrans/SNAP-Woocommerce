@@ -54,8 +54,6 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
-  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentmigs.php';
-  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-migs.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
@@ -66,8 +64,6 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
   $methods[] = 'WC_Gateway_Midtrans_Installment';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
-  $methods[] = 'WC_Gateway_Midtrans_InstallmentMIGS';
-  $methods[] = 'WC_Gateway_Midtrans_MIGS';
   $methods[] = 'WC_Gateway_Midtrans_Promo';
   return $methods;
 }
