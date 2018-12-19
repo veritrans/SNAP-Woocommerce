@@ -46,6 +46,8 @@
         $this->ganalytics_id   = $this->get_option( 'ganalytics_id' );
         $this->enable_immediate_reduce_stock   = $this->get_option( 'enable_immediate_reduce_stock' );
         // $this->enable_sanitization = $this->get_option( 'enable_sanitization' );
+        $this->installment_term   = $this->get_option( 'installment_term' );
+        $this->acquiring_bank   = $this->get_option( 'acquiring_bank' );
         $this->min_amount         = $this->get_option( 'min_amount' );
         $this->bin_number         = $this->get_option( 'bin_number' );
         
@@ -180,6 +182,18 @@
             'description' => sprintf(__('Input your <b>Production</b> Midtrans Server Key. Get the key <a href="%s" target="_blank">here</a>', 'woocommerce' ),$v2_production_key_url),
             'default' => '',
             'class' => 'production_settings toggle-midtrans'
+          ),
+          'installment_term' => array(
+            'title' => __( 'Installment Terms', 'woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'Input the desired Installment Terms. Separate with coma. e.g: 3,6,12', 'woocommerce' ),
+            'default' => '3,6,12'
+          ),
+          'acquiring_bank' => array(
+            'title' => __( 'Acquiring Bank', 'woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'Input the desired acquiring bank. e.g: bni </br>Leave blank if you are not sure', 'woocommerce' ),
+            'default' => ''
           ),
           'min_amount' => array(
             'title' => __( 'Minimal Transaction Amount', 'woocommerce'),
@@ -451,7 +465,15 @@
         if($params['transaction_details']['gross_amount'] >= $this->min_amount)
         {
           // Build bank & terms array
-          $terms      = array(3,6,9,12,15,18,21,24,27,30,33,36);
+          $termsStr = explode(',', $this->installment_term);
+          $terms = array();
+          foreach ($termsStr as $termStr) {
+            $terms[] = (int)$termStr;
+          };
+          
+          if (strlen($this->acquiring_bank) > 0){
+            $params['credit_card']['bank'] = $this->acquiring_bank;
+          }
 
           // Add installment param
           $params['credit_card']['installment']['required'] = true;
