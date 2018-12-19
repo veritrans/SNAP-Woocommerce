@@ -142,6 +142,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Add Immediate Reduce Stock optional config
 
 = 2.8.0 =
+* Removed separate MIGS button for installment & fullpayment
 * Installment terms for online installment now configurable
 * Installment banks for online installment now configurable
 * Installment terms for offline installment now configurable
@@ -194,6 +195,7 @@ Add use map finish url config field
 * Add Immediate Reduce Stock optional config
 
 = 2.8.0 =
+* Removed separate MIGS button for installment & fullpayment
 * Installment terms for online installment now configurable
 * Installment banks for online installment now configurable
 * Installment terms for offline installment now configurable
