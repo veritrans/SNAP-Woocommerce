@@ -100,6 +100,8 @@
         add_action( 'admin_print_scripts-woocommerce_page_wc-settings', array( &$this, 'midtrans_admin_scripts' ));
         add_action( 'valid-midtrans-web-request', array( $this, 'successful_request' ) );
         add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );// Payment page hook
+        add_action( 'woocommerce_thankyou', array( $this, 'view_order_and_thankyou_page' ) );// Thank you page hook for adding instructions
+        add_action( 'woocommerce_view_order', array( $this, 'view_order_and_thankyou_page' ) );// Order View page hook for adding instructions
       }
 
       /**
@@ -494,6 +496,16 @@
         
         //create the order object
         $order = new WC_Order( $order_id );
+        $successResponse = array(
+          'result'  => 'success',
+          'redirect' => ''
+        );
+
+        // if snap token exists, reuse it
+        if ($order->meta_exists('_mt_payment_snap_token')){
+          $successResponse['redirect'] = $order->get_checkout_payment_url( true )."&snap_token=".$order->get_meta('_mt_payment_snap_token');
+          return $successResponse;
+        }
 
         $snapResponse = $this->create_snap_transaction($order_id);
         if(property_exists($this,'enable_redirect') && $this->enable_redirect == 'yes'){
@@ -501,15 +513,18 @@
         }else{
           $redirectUrl = $order->get_checkout_payment_url( true )."&snap_token=".$snapResponse->token;
         }
-        $order->add_order_note(__('Payment Url: '.$snapResponse->redirect_url),true);
+
+        // Add snap token & snap redirect url to $order metadata
+        $order->update_meta_data('_mt_payment_snap_token',$snapResponse->token);
+        $order->update_meta_data('_mt_payment_url',$snapResponse->redirect_url);
+        $order->save();
+
         if(property_exists($this,'enable_immediate_reduce_stock') && $this->enable_immediate_reduce_stock == 'yes'){
           wc_reduce_stock_levels($order);
         }
 
-        return array(
-          'result'  => 'success',
-          'redirect' => $redirectUrl
-        );
+        $successResponse['redirect'] = $redirectUrl;
+        return $successResponse;
       }
 
       /**
@@ -521,6 +536,13 @@
         $pluginName = 'fullpayment';
         require_once(dirname(__FILE__) . '/payment-page.php'); 
 
+      }
+
+      /**
+       * Output for the order received page.
+       */
+      public function view_order_and_thankyou_page( $order_id ) {
+        require_once(dirname(__FILE__) . '/order-view-and-thankyou-page.php');
       }
 
       // Response early with 200 OK status for Midtrans notification & handle HTTP GET
@@ -702,7 +724,9 @@
           if( !array_key_exists('pdf_url', $tokenStatus) ){
             return;
           }
-          $order->add_order_note('Please complete your payment. Payment instruction: '.$tokenStatus['pdf_url'],true);
+          $order->update_meta_data('_mt_payment_pdf_url',$tokenStatus['pdf_url']);
+          $order->save();
+
           echo "OK";
           // immediately terminate notif handling, not a notification.
           exit();
