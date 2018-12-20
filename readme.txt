@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.0.0
-Stable tag: 2.8.0
+Stable tag: 2.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -148,6 +148,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Installment terms for offline installment now configurable
 * Installment bank for online installment now configurable
 
+= 2.9.0 =
+* Replace order notes to order metadata
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -200,6 +203,9 @@ Add use map finish url config field
 * Installment banks for online installment now configurable
 * Installment terms for offline installment now configurable
 * Installment bank for online installment now configurable
+
+= 2.9.0 =
+* Replace order notes to order metadata
 
 == Get Help ==
 

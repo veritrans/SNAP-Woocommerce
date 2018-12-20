@@ -413,6 +413,16 @@
         
         //create the order object
         $order = new WC_Order( $order_id );
+        $successResponse = array(
+          'result'  => 'success',
+          'redirect' => ''
+        );
+
+        // if snap token exists, reuse it
+        if ($order->meta_exists('_mt_payment_snap_token')){
+          $successResponse['redirect'] = $order->get_checkout_payment_url( true )."&snap_token=".$order->get_meta('_mt_payment_snap_token');
+          return $successResponse;
+        }
 
         $snapResponse = $this->create_snap_transaction($order_id);
         if(property_exists($this,'enable_redirect') && $this->enable_redirect == 'yes'){
@@ -420,15 +430,18 @@
         }else{
           $redirectUrl = $order->get_checkout_payment_url( true )."&snap_token=".$snapResponse->token;
         }
-        $order->add_order_note(__('Payment Url: '.$snapResponse->redirect_url),true);
+
+        // Add snap token & snap redirect url to $order metadata
+        $order->update_meta_data('_mt_payment_snap_token',$snapResponse->token);
+        $order->update_meta_data('_mt_payment_url',$snapResponse->redirect_url);
+        $order->save();
+
         if(property_exists($this,'enable_immediate_reduce_stock') && $this->enable_immediate_reduce_stock == 'yes'){
           wc_reduce_stock_levels($order);
         }
 
-        return array(
-          'result'  => 'success',
-          'redirect' => $redirectUrl
-        );
+        $successResponse['redirect'] = $redirectUrl;
+        return $successResponse;
       }
 
       /**
