@@ -1,11 +1,7 @@
 <?php
 
-    // TODO uncomment these, use the real snap php library class (make sure to do this on other file too)
-     require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
-    
-    // TODO remove this
-    // require_once(dirname(__FILE__) . '/../../veritrans-woocommerce-2.1.0/lib/veritrans/Veritrans.php');
-
+     require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php');
+     require_once(dirname(__FILE__) . '/class.midtrans-utils.php');
     /**
      * Midtrans Payment Gateway Class
      */
@@ -62,10 +58,7 @@
 
         $this->log = new WC_Logger();
 
-        // Payment listener/API hook
-        // add_action( 'woocommerce_api_wc_gateway_midtrans', array( &$this, 'midtrans_vtweb_response' ) );
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) ); 
-        add_action( 'wp_enqueue_scripts', array( &$this, 'midtrans_scripts' ) );
         add_action( 'admin_print_scripts-woocommerce_page_woocommerce_settings', array( &$this, 'midtrans_admin_scripts' ));
         add_action( 'admin_print_scripts-woocommerce_page_wc-settings', array( &$this, 'midtrans_admin_scripts' ));
         add_action( 'valid-midtrans-web-request', array( $this, 'successful_request' ) );
@@ -77,14 +70,6 @@
        */
       function midtrans_admin_scripts() {
         wp_enqueue_script( 'admin-midtrans', MT_PLUGIN_DIR . 'js/admin-scripts.js', array('jquery') );
-      }
-
-      function midtrans_scripts() {
-        if( is_checkout() ) {
-          // wp_enqueue_script( 'midtrans', 'https://api.veritrans.co.id/v2/assets/js/veritrans.min.js', array('jquery') );
-          //wp_enqueue_script( 'midtrans-integration', MT_PLUGIN_DIR . 'js/script.js', array('jquery') );
-          //wp_localize_script( 'midtrans-integration', 'wc_midtrans_client_key', $this->client_key );
-        }
       }
 
       // Backward compatibility WC v3 & v2
@@ -247,7 +232,7 @@
         $billing_address['city'] = $this->getOrderProperty($order,'billing_city');
         $billing_address['postal_code'] = $this->getOrderProperty($order,'billing_postcode');
         $billing_address['phone'] = $this->getOrderProperty($order,'billing_phone');
-        $converted_country_code = $this->convert_country_code($this->getOrderProperty($order,'billing_country'));
+        $converted_country_code = Midtrans_Utils::convert_country_code($this->getOrderProperty($order,'billing_country'));
         $billing_address['country_code'] = (strlen($converted_country_code) != 3 ) ? 'IDN' : $converted_country_code ;
 
         $customer_details['billing_address'] = $billing_address;
@@ -261,7 +246,7 @@
           $shipping_address['city'] = $this->getOrderProperty($order,'shipping_city');
           $shipping_address['postal_code'] = $this->getOrderProperty($order,'shipping_postcode');
           $shipping_address['phone'] = $this->getOrderProperty($order,'billing_phone');
-          $converted_country_code = $this->convert_country_code($this->getOrderProperty($order,'shipping_country'));
+          $converted_country_code = Midtrans_Utils::convert_country_code($this->getOrderProperty($order,'shipping_country'));
           $shipping_address['country_code'] = (strlen($converted_country_code) != 3 ) ? 'IDN' : $converted_country_code;
           
           $customer_details['shipping_address'] = $shipping_address;
@@ -455,141 +440,5 @@
         $pluginName = 'cc_paymentrequest';
         require_once(dirname(__FILE__) . '/payment-page-paymentrequest.php'); 
 
-      }
-
-      /**
-       * Check for Midtrans Web Response
-       * Method ini akan dipanggil untuk merespon notifikasi yang
-       * diberikan oleh server Midtrans serta melakukan verifikasi
-       * apakah notifikasi tersebut berasal dari Midtrans dan melakukan
-       * konfirmasi transaksi pembayaran yang dilakukan customer
-       *
-       * update: sekaligus untuk menjadi finish/failed URL handler.
-       * @access public
-       * @return void
-       */
-
-
-      function midtrans_vtweb_response() {
-
-        global $woocommerce;
-        @ob_clean();
-
-        global $woocommerce;
-        $order = new WC_Order( $order_id );
-        
-        Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
-        
-        if ($this->environment == 'production') {
-          Veritrans_Config::$serverKey = $this->server_key_v2_production;
-        } else {
-          Veritrans_Config::$serverKey = $this->server_key_v2_sandbox;
-        }
-        
-        // check whether the request is GET or POST, 
-        // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
-        // else if request == POST, request is for payment notification, then update the payment status
-        if(!isset($_GET['order_id']) && !isset($_POST['response'])){    // Check if POST, then create new notification
-          $midtrans_notification = new Veritrans_Notification();
-
-          if (in_array($midtrans_notification->status_code, array(200, 201, 202))) {
-              header( 'HTTP/1.1 200 OK' );
-            if ($order->get_order($midtrans_notification->order_id) == true) {
-              $midtrans_confirmation = Veritrans_Transaction::status($midtrans_notification->order_id);             
-              do_action( "valid-midtrans-web-request", $midtrans_notification );
-            }
-          }
-        } else {    // else if GET, redirect to order complete/failed
-          // error_log('status_code '. $_GET['status_code']); //debug
-          // error_log('status_code '. $_GET['transaction_status']); //debug
-          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] == 200)  //if capture or pending or challenge or settlement, redirect to order received page
-          {
-            $order_id = $_GET['order_id'];
-            // error_log($this->get_return_url( $order )); //debug
-            $order = new WC_Order( $order_id );
-            wp_redirect($order->get_checkout_order_received_url());
-          }else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] != 200)  //if deny, redirect to order checkout page again
-          {
-            $order_id = $_GET['order_id'];
-            $order = new WC_Order( $order_id );
-            wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
-          } else if( isset($_GET['order_id']) && !isset($_GET['transaction_status'])){ // if customer click "back" button, redirect to checkout page again
-            $order_id = $_GET['order_id'];
-            $order = new WC_Order( $order_id );
-            wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
-          } else if ( isset($_POST['response']) ){ // if customer redirected from async payment
-            $responses = json_decode( stripslashes($_POST['response']), true);
-            $order = new WC_Order( $responses['order_id'] );
-            if ( $responses['status_code'] == 200) { // async payment success
-              wp_redirect($order->get_checkout_order_received_url());
-            } else {
-              wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
-            }
-          }
-        }
-
-      }
- 
-      /**
-       * Method ini akan dipanggil jika customer telah sukses melakukan
-       * pembayaran. Method ini akan mengubah status order yang tersimpan
-       * di back-end berdasarkan status pembayaran yang dilakukan customer.
-       * 
-       */
-
-      function successful_request( $midtrans_notification ) {
-
-        global $woocommerce;
-
-        $order = new WC_Order( $midtrans_notification->order_id );
-       // error_log(var_dump($order));
-        if ($midtrans_notification->transaction_status == 'capture') {
-          if ($midtrans_notification->fraud_status == 'accept') {
-            $order->payment_complete();
-          }
-          else if ($midtrans_notification->fraud_status == 'challenge') {
-            $order->update_status('on-hold');
-          }
-        }
-        else if ($midtrans_notification->transaction_status == 'expire') {
-          $order->update_status('cancelled');
-        }
-        else if ($midtrans_notification->transaction_status == 'cancel') {
-          $order->update_status('cancelled');
-        }
-        else if ($midtrans_notification->transaction_status == 'deny') {
-          $order->update_status('failed');
-        }
-        else if ($midtrans_notification->transaction_status == 'settlement') {
-          if($midtrans_notification->payment_type != 'credit_card'){
-            $order->payment_complete();
-          }
-        }
-        else if ($midtrans_notification->transaction_status == 'pending') {
-          $order->update_status('on-hold');
-        }
-
-        exit;
-      }
-
-      /**
-       * Convert 2 digits coundry code to 3 digit country code
-       *
-       * @param String $country_code Country code which will be converted
-       */
-      public function convert_country_code( $country_code ) {
-
-        // 3 digits country codes
-        $cc_three = array( 'AF' => 'AFG', 'AX' => 'ALA', 'AL' => 'ALB', 'DZ' => 'DZA', 'AD' => 'AND', 'AO' => 'AGO', 'AI' => 'AIA', 'AQ' => 'ATA', 'AG' => 'ATG', 'AR' => 'ARG', 'AM' => 'ARM', 'AW' => 'ABW', 'AU' => 'AUS', 'AT' => 'AUT', 'AZ' => 'AZE', 'BS' => 'BHS', 'BH' => 'BHR', 'BD' => 'BGD', 'BB' => 'BRB', 'BY' => 'BLR', 'BE' => 'BEL', 'PW' => 'PLW', 'BZ' => 'BLZ', 'BJ' => 'BEN', 'BM' => 'BMU', 'BT' => 'BTN', 'BO' => 'BOL', 'BQ' => 'BES', 'BA' => 'BIH', 'BW' => 'BWA', 'BV' => 'BVT', 'BR' => 'BRA', 'IO' => 'IOT', 'VG' => 'VGB', 'BN' => 'BRN', 'BG' => 'BGR', 'BF' => 'BFA', 'BI' => 'BDI', 'KH' => 'KHM', 'CM' => 'CMR', 'CA' => 'CAN', 'CV' => 'CPV', 'KY' => 'CYM', 'CF' => 'CAF', 'TD' => 'TCD', 'CL' => 'CHL', 'CN' => 'CHN', 'CX' => 'CXR', 'CC' => 'CCK', 'CO' => 'COL', 'KM' => 'COM', 'CG' => 'COG', 'CD' => 'COD', 'CK' => 'COK', 'CR' => 'CRI', 'HR' => 'HRV', 'CU' => 'CUB', 'CW' => 'CUW', 'CY' => 'CYP', 'CZ' => 'CZE', 'DK' => 'DNK', 'DJ' => 'DJI', 'DM' => 'DMA', 'DO' => 'DOM', 'EC' => 'ECU', 'EG' => 'EGY', 'SV' => 'SLV', 'GQ' => 'GNQ', 'ER' => 'ERI', 'EE' => 'EST', 'ET' => 'ETH', 'FK' => 'FLK', 'FO' => 'FRO', 'FJ' => 'FJI', 'FI' => 'FIN', 'FR' => 'FRA', 'GF' => 'GUF', 'PF' => 'PYF', 'TF' => 'ATF', 'GA' => 'GAB', 'GM' => 'GMB', 'GE' => 'GEO', 'DE' => 'DEU', 'GH' => 'GHA', 'GI' => 'GIB', 'GR' => 'GRC', 'GL' => 'GRL', 'GD' => 'GRD', 'GP' => 'GLP', 'GT' => 'GTM', 'GG' => 'GGY', 'GN' => 'GIN', 'GW' => 'GNB', 'GY' => 'GUY', 'HT' => 'HTI', 'HM' => 'HMD', 'HN' => 'HND', 'HK' => 'HKG', 'HU' => 'HUN', 'IS' => 'ISL', 'IN' => 'IND', 'ID' => 'IDN', 'IR' => 'RIN', 'IQ' => 'IRQ', 'IE' => 'IRL', 'IM' => 'IMN', 'IL' => 'ISR', 'IT' => 'ITA', 'CI' => 'CIV', 'JM' => 'JAM', 'JP' => 'JPN', 'JE' => 'JEY', 'JO' => 'JOR', 'KZ' => 'KAZ', 'KE' => 'KEN', 'KI' => 'KIR', 'KW' => 'KWT', 'KG' => 'KGZ', 'LA' => 'LAO', 'LV' => 'LVA', 'LB' => 'LBN', 'LS' => 'LSO', 'LR' => 'LBR', 'LY' => 'LBY', 'LI' => 'LIE', 'LT' => 'LTU', 'LU' => 'LUX', 'MO' => 'MAC', 'MK' => 'MKD', 'MG' => 'MDG', 'MW' => 'MWI', 'MY' => 'MYS', 'MV' => 'MDV', 'ML' => 'MLI', 'MT' => 'MLT', 'MH' => 'MHL', 'MQ' => 'MTQ', 'MR' => 'MRT', 'MU' => 'MUS', 'YT' => 'MYT', 'MX' => 'MEX', 'FM' => 'FSM', 'MD' => 'MDA', 'MC' => 'MCO', 'MN' => 'MNG', 'ME' => 'MNE', 'MS' => 'MSR', 'MA' => 'MAR', 'MZ' => 'MOZ', 'MM' => 'MMR', 'NA' => 'NAM', 'NR' => 'NRU', 'NP' => 'NPL', 'NL' => 'NLD', 'AN' => 'ANT', 'NC' => 'NCL', 'NZ' => 'NZL', 'NI' => 'NIC', 'NE' => 'NER', 'NG' => 'NGA', 'NU' => 'NIU', 'NF' => 'NFK', 'KP' => 'MNP', 'NO' => 'NOR', 'OM' => 'OMN', 'PK' => 'PAK', 'PS' => 'PSE', 'PA' => 'PAN', 'PG' => 'PNG', 'PY' => 'PRY', 'PE' => 'PER', 'PH' => 'PHL', 'PN' => 'PCN', 'PL' => 'POL', 'PT' => 'PRT', 'QA' => 'QAT', 'RE' => 'REU', 'RO' => 'SHN', 'RU' => 'RUS', 'RW' => 'EWA', 'BL' => 'BLM', 'SH' => 'SHN', 'KN' => 'KNA', 'LC' => 'LCA', 'MF' => 'MAF', 'SX' => 'SXM', 'PM' => 'SPM', 'VC' => 'VCT', 'SM' => 'SMR', 'ST' => 'STP', 'SA' => 'SAU', 'SN' => 'SEN', 'RS' => 'SRB', 'SC' => 'SYC', 'SL' => 'SLE', 'SG' => 'SGP', 'SK' => 'SVK', 'SI' => 'SVN', 'SB' => 'SLB', 'SO' => 'SOM', 'ZA' => 'ZAF', 'GS' => 'SGS', 'KR' => 'KOR', 'SS' => 'SSD', 'ES' => 'ESP', 'LK' => 'LKA', 'SD' => 'SDN', 'SR' => 'SUR', 'SJ' => 'SJM', 'SZ' => 'SWZ', 'SE' => 'SWE', 'CH' => 'CHE', 'SY' => 'SYR', 'TW' => 'TWN', 'TJ' => 'TJK', 'TZ' => 'TZA', 'TH' => 'THA', 'TL' => 'TLS', 'TG' => 'TGO', 'TK' => 'TKL', 'TO' => 'TON', 'TT' => 'TTO', 'TN' => 'TUN', 'TR' => 'TUR', 'TM' => 'TKM', 'TC' => 'TCA', 'TV' => 'TUV', 'UG' => 'UGA', 'UA' => 'UKR', 'AE' => 'ARE', 'GB' => 'GBR', 'US' => 'USA', 'UY' => 'URY', 'UZ' => 'UZB', 'VU' => 'VUT', 'VA' => 'VAT', 'VE' => 'VEN', 'VN' => 'VNM', 'WF' => 'WLF', 'EH' => 'ESH', 'WS' => 'WSM', 'YE' => 'YEM', 'ZM' => 'ZMB', 'ZW' => 'ZWE' );
-
-        // Check if country code exists
-        if( isset( $cc_three[ $country_code ] ) && $cc_three[ $country_code ] != '' ) {
-          $country_code = $cc_three[ $country_code ];
-        }
-        else{
-         $country_code = ''; 
-        }
-
-        return $country_code;
       }
     }
