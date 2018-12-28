@@ -24,9 +24,6 @@
    * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    */
 
-     require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php');
-     require_once(dirname(__FILE__) . '/class.midtrans-utils.php');
-
     /**
      * Midtrans Payment Gateway Class
      */
@@ -282,6 +279,11 @@
        * using parameter from cart & configuration
        */
       function create_snap_transaction( $order_id){
+        if(!class_exists('Veritrans_Config')){
+          require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
+        }
+        require_once(dirname(__FILE__) . '/class.midtrans-utils.php');
+        
         global $woocommerce;
         $order_items = array();
         $cart = $woocommerce->cart;
@@ -569,6 +571,9 @@
 
 
       function midtrans_vtweb_response() {
+        if(!class_exists('Veritrans_Config')){
+          require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
+        }
 
         global $woocommerce;
         @ob_clean();
