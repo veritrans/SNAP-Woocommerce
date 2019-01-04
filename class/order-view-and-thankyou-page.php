@@ -1,4 +1,8 @@
 <?php
+/**
+ * Output HTML to display payment/instruction url
+ */
+
 global $woocommerce;
 
 //create the order object
