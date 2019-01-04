@@ -1,4 +1,8 @@
 <?php
+  /**
+   * Output HTML to display Snap Payment page
+   */
+  
   $mixpanel_key_production = "17253088ed3a39b1e2bd2cbcfeca939a";
   $mixpanel_key_sandbox = "9dcba9b440c831d517e8ff1beff40bd9";
   // $order_items = array();
@@ -133,7 +137,7 @@
               if(!result.hasOwnProperty("pdf_url")){
                 document.getElementById('payment-instruction-btn').style.display = "none";
               }
-              // Update order with PDF url
+              // Update order with PDF url to backend
               try{
                 result['pdf_url_update'] = true;
                 result['snap_token_id'] = SNAP_TOKEN;

@@ -33,6 +33,9 @@
        * Constructor
        */
       function __construct() {
+        /**
+         * Fetch config option field values and set it as private variables
+         */
         $this->id           = 'midtrans';
         $this->icon         = apply_filters( 'woocommerce_midtrans_icon', '' );
         $this->method_title = __( 'Midtrans', 'woocommerce' );
@@ -86,19 +89,25 @@
 
         $this->log = new WC_Logger();
 
-        // Payment listener/API hook
+        // Register hook for handling HTTP notification (HTTP call to `http://[your web]/?wc-api=WC_Gateway_Midtrans`)
         add_action( 'woocommerce_api_wc_gateway_midtrans', array( &$this, 'midtrans_vtweb_response' ) );
-        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) ); 
+        add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) );
+        // Hook for adding JS script to admin config page 
         add_action( 'admin_print_scripts-woocommerce_page_woocommerce_settings', array( &$this, 'midtrans_admin_scripts' ));
         add_action( 'admin_print_scripts-woocommerce_page_wc-settings', array( &$this, 'midtrans_admin_scripts' ));
+        // Create action to be called when HTTP notification is valid
         add_action( 'valid-midtrans-web-request', array( $this, 'successful_request' ) );
-        add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );// Payment page hook
-        add_action( 'woocommerce_thankyou', array( $this, 'view_order_and_thankyou_page' ) );// Thank you page hook for adding instructions
-        add_action( 'woocommerce_view_order', array( $this, 'view_order_and_thankyou_page' ) );// Order View page hook for adding instructions
+        // Hook for displaying payment page HTML on receipt page
+        add_action( 'woocommerce_receipt_' . $this->id, array( $this, 'receipt_page' ) );
+        // Hook for adding custom HTML on thank you page (for payement/instruction url)
+        add_action( 'woocommerce_thankyou', array( $this, 'view_order_and_thankyou_page' ) );
+        // Hook for adding custom HTML on view order menu from customer (for payement/instruction url)
+        add_action( 'woocommerce_view_order', array( $this, 'view_order_and_thankyou_page' ) );
       }
 
       /**
        * Enqueue Javascripts
+       * Add JS script file to admin page
        */
       function midtrans_admin_scripts() {
         wp_enqueue_script( 'admin-midtrans', MT_PLUGIN_DIR . 'js/admin-scripts.js', array('jquery') );
@@ -106,8 +115,7 @@
 
       /**
        * Admin Panel Options
-       * - Options for bits like 'title' and availability on a country-by-country basis
-       *
+       * HTML that will be displayed on Admin Panel
        * @access public
        * @return void
        */
@@ -116,7 +124,7 @@
         <p><?php _e('Allows payments using Midtrans.', 'woocommerce' ); ?></p>
         <table class="form-table">
           <?php
-            // Generate the HTML For the settings form.
+            // Generate the HTML For the settings form. generated from `init_form_fields`
             $this->generate_settings_html();
           ?>
         </table><!--/.form-table-->
@@ -131,7 +139,9 @@
         
         $v2_sandbox_key_url = 'https://dashboard.sandbox.midtrans.com/settings/config_info';
         $v2_production_key_url = 'https://dashboard.midtrans.com/settings/config_info';
-
+        /**
+         * Build array of configurations that will be displayed on Admin Panel
+         */
         $this->form_fields = array(
           'enabled' => array(
             'title' => __( 'Enable/Disable', 'woocommerce' ),
@@ -253,7 +263,7 @@
             'default' => 'no'
           )
         );
-
+        // Currency conversion rate if currency is not IDR
         if (get_woocommerce_currency() != 'IDR')
         {
           $this->form_fields['to_idr_rate'] = array(
@@ -264,7 +274,12 @@
           );
         }
       }
-      // Backward compatibility WC v3 & v2
+      /**
+       * Helper for backward compatibility WC v3 & v2 on getting Order Property
+       * @param  [String] $order    Order Object
+       * @param  [String] $property Target property
+       * @return the property
+       */
       function getOrderProperty($order, $property){
         $functionName = "get_".$property;
         if (method_exists($order, $functionName)){ // WC v3
@@ -275,8 +290,10 @@
       }
 
       /**
-       * Call Midtrans SNAP API to return SNAP token
-       * using parameter from cart & configuration
+       * Call Midtrans SNAP API and return the response as asoc array
+       * Plugin config and cart/order properties are used as param
+       * @param  [String] $order_id 
+       * @return [Array]  SNAP API response encoded as associative array
        */
       function create_snap_transaction( $order_id){
         if(!class_exists('Veritrans_Config')){
@@ -341,6 +358,7 @@
 
         $items = array();
 
+         // Build item_details API params from $Order items
         if( sizeof( $order->get_items() ) > 0 ) {
           foreach( $order->get_items() as $item ) {
             if ( $item['qty'] ) {
@@ -358,7 +376,7 @@
           }
         }
 
-        // Shipping fee
+        // Shipping fee as item_details
         if( $order->get_total_shipping() > 0 ) {
           $items[] = array(
             'id' => 'shippingfee',
@@ -368,7 +386,7 @@
           );
         }
 
-        // Tax
+        // Tax as item_details
         if( $order->get_total_tax() > 0 ) {
           $items[] = array(
             'id' => 'taxfee',
@@ -378,7 +396,7 @@
           );
         }
 
-        // Discount
+        // Discount as item_details
         if ( $order->get_total_discount() > 0) {
           $items[] = array(
             'id' => 'totaldiscount',
@@ -388,7 +406,7 @@
           );
         }
 
-        // Fees
+        // Fees as item_details
         if ( sizeof( $order->get_fees() ) > 0 ) {
           $fees = $order->get_fees();
           $i = 0;
@@ -403,7 +421,7 @@
           }
         }
 
-        // sift through the entire item to ensure that currency conversion is applied
+        // Iterate through the entire item to ensure that currency conversion is applied
         if (get_woocommerce_currency() != 'IDR')
         {
           foreach ($items as &$item) {
@@ -418,17 +436,15 @@
 
         $total_amount=0;
         // error_log('print r items[]' . print_r($items,true)); //debugan
+        // Sum item details prices as gross_amount
         foreach ($items as $item) {
           $total_amount+=($item['price']*$item['quantity']);
-          // error_log('|||| Per item[]' . print_r($item,true)); //debugan
         }
-
-        // error_log('order get total = '.$order->get_total());
-        // error_log('total amount = '.$total_amount);
         $params['transaction_details']['gross_amount'] = $total_amount;
 
         $params['item_details'] = $items;
-        // add custom expiry params
+
+        // add custom `expiry` API params
         $custom_expiry_params = explode(" ",$this->custom_expiry);
         if ( !empty($custom_expiry_params[1]) && !empty($custom_expiry_params[0]) ){
           $time = time();
@@ -439,19 +455,19 @@
             'duration'  => (int)$custom_expiry_params[0],
           );
         }
-        // add custom fields params
+        // add custom_fields API params
         $custom_fields_params = explode(",",$this->custom_fields);
         if ( !empty($custom_fields_params[0]) ){
           $params['custom_field1'] = $custom_fields_params[0];
           $params['custom_field2'] = !empty($custom_fields_params[1]) ? $custom_fields_params[1] : null;
           $params['custom_field3'] = !empty($custom_fields_params[2]) ? $custom_fields_params[2] : null;
         }
-        // add savecard params
+        // add savecard API params
         if ($this->enable_savecard =='yes' && is_user_logged_in()){
           $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , Veritrans_Config::$serverKey );
           $params['credit_card']['save_card'] = true;
         }
-        
+        // Empty the cart because payment is initiated.
         $woocommerce->cart->empty_cart();
         // error_log(print_r($params,true)); //debug
         
@@ -464,6 +480,12 @@
         return $snapResponse;
       }
 
+      /**
+       * Helper to print error as expected by Woocommerce ajax call
+       * On payment.
+       * @param  [error] $e
+       * @return [array] JSON encoded error messages.
+       */
       function json_print_exception ($e) {
         $errorObj = array(
           'result' => "failure", 
@@ -476,40 +498,44 @@
       }
 
       /**
-       * Process the payment and return the result
-       * Method ini akan dipanggil ketika customer akan melakukan pembayaran
-       * Return value dari method ini adalah link yang akan digunakan untuk
-       * me-redirect customer ke halaman pembayaran Midtrans
+       * This function auto-triggered by WC when payment process initiated
+       * Serves as WC payment entry point
+       * @param  [String] $order_id auto generated by WC
+       * @return [array] contains redirect_url of payment for customer
        */
       function process_payment( $order_id ) {
         global $woocommerce;
         
-        //create the order object
+        // Create the order object
         $order = new WC_Order( $order_id );
+        // Response object template
         $successResponse = array(
           'result'  => 'success',
           'redirect' => ''
         );
 
-        // if snap token exists, reuse it
+        // If snap token exists on the current $Order, reuse it
+        // Prevent duplication of API call, which may throw API error
         if ($order->meta_exists('_mt_payment_snap_token')){
           $successResponse['redirect'] = $order->get_checkout_payment_url( true )."&snap_token=".$order->get_meta('_mt_payment_snap_token');
           return $successResponse;
         }
 
         $snapResponse = $this->create_snap_transaction($order_id);
+        // If `enable_redirect` admin config used, snap redirect
         if(property_exists($this,'enable_redirect') && $this->enable_redirect == 'yes'){
           $redirectUrl = $snapResponse->redirect_url;
         }else{
           $redirectUrl = $order->get_checkout_payment_url( true )."&snap_token=".$snapResponse->token;
         }
 
-        // Add snap token & snap redirect url to $order metadata
+        // Store snap token & snap redirect url to $order metadata
         $order->update_meta_data('_mt_payment_snap_token',$snapResponse->token);
         $order->update_meta_data('_mt_payment_url',$snapResponse->redirect_url);
         $order->save();
 
         if(property_exists($this,'enable_immediate_reduce_stock') && $this->enable_immediate_reduce_stock == 'yes'){
+          // Reduce item stock on WC, item also auto reduced on order `pending` status changes
           wc_reduce_stock_levels($order);
         }
 
@@ -518,24 +544,35 @@
       }
 
       /**
-       * receipt_page
-       * Method ini digunakan untuk menampilkan SNAP popout berdasarkan token SNAP
+       * Hook function that will be called on receipt page
+       * Output HTML for Snap payment page. Including `snap.pay()` part
+       * @param  [String] $order_id generated by WC
+       * @return [String] HTML
        */
       function receipt_page( $order_id ) {
         global $woocommerce;
         $pluginName = 'fullpayment';
+        // Separated as Shared PHP included by multiple class
         require_once(dirname(__FILE__) . '/payment-page.php'); 
 
       }
 
       /**
-       * Output for the order received page.
+       * Hook function that will be called on thank you page
+       * Output HTML for payment/instruction URL
+       * @param  [String] $order_id generated by WC
+       * @return [String] HTML
        */
       public function view_order_and_thankyou_page( $order_id ) {
         require_once(dirname(__FILE__) . '/order-view-and-thankyou-page.php');
       }
 
-      // Response early with 200 OK status for Midtrans notification & handle HTTP GET
+      /**
+       * Helper to response Response early with HTTP 200 for Midtrans notification
+       * So Notification Engine can mark notification complete early and faster
+       * Also reject HTTP GET request
+       * @return void
+       */
       public function earlyResponse(){
         if ( $_SERVER['REQUEST_METHOD'] == 'GET' ){
           die('This endpoint should not be opened using browser (HTTP GET). This endpoint is for Midtrans notification URL (HTTP POST)');
@@ -556,20 +593,10 @@
         flush();
       }
 
-
       /**
-       * Check for Midtrans Web Response
-       * Method ini akan dipanggil untuk merespon notifikasi yang
-       * diberikan oleh server Midtrans serta melakukan verifikasi
-       * apakah notifikasi tersebut berasal dari Midtrans dan melakukan
-       * konfirmasi transaksi pembayaran yang dilakukan customer
-       *
-       * update: sekaligus untuk menjadi finish/failed URL handler.
-       * @access public
-       * @return void
+       * Called by hook function when HTTP notification / API call received
+       * Handle Midtrans payment notification
        */
-
-
       function midtrans_vtweb_response() {
         if(!class_exists('Veritrans_Config')){
           require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
@@ -597,8 +624,9 @@
           // Handle pdf url update
           $this->handlePendingPaymentPdfUrlUpdate();
 
+          // Verify Midtrans notification
           $midtrans_notification = new Veritrans_Notification();
-
+          // If notification verified, handle it
           if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
             if ($order->get_order($midtrans_notification->order_id) == true) {
               do_action( "valid-midtrans-web-request", $midtrans_notification );
@@ -654,7 +682,13 @@
        * di back-end berdasarkan status pembayaran yang dilakukan customer.
        * 
        */
-
+      /**
+       * Handle Midtrans Notification Object, after payment status changes on Midtrans
+       * Will update WC payment status accordingly
+       * @param  [Object] $midtrans_notification Object representation of Midtrans JSON
+       * notification
+       * @return void
+       */
       function successful_request( $midtrans_notification ) {
 
         global $woocommerce;
@@ -695,6 +729,10 @@
         exit;
       }
 
+      /**
+       * Handle API call from payment page to update order with PDF instruction Url
+       * @return void
+       */
       public function handlePendingPaymentPdfUrlUpdate(){
         try {
           global $woocommerce;
@@ -717,6 +755,7 @@
           if( !array_key_exists('pdf_url', $tokenStatus) ){
             return;
           }
+          // store Url as $Order metadata
           $order->update_meta_data('_mt_payment_pdf_url',$tokenStatus['pdf_url']);
           $order->save();
 

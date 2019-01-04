@@ -1,6 +1,8 @@
 <?php
     /**
-     * Midtrans Payment Gateway Class
+     * Midtrans Offline Installment Payment Gateway Class
+     * Duplicated from `class.midtrans-gateway.php`
+     * Check `class.midtrans-gateway.php` file for proper function comments
      */
     class WC_Gateway_Midtrans_InstallmentOff extends WC_Payment_Gateway {
 
@@ -64,13 +66,6 @@
         wp_enqueue_script( 'admin-midtrans', MT_PLUGIN_DIR . 'js/admin-scripts.js', array('jquery') );
       }
 
-      /**
-       * Admin Panel Options
-       * - Options for bits like 'title' and availability on a country-by-country basis
-       *
-       * @access public
-       * @return void
-       */
       public function admin_options() { ?>
         <h3><?php _e( 'Midtrans Offline Installment', 'woocommerce' ); ?></h3>
         <p><?php _e('Allows offline installment payments using Midtrans.', 'woocommerce' ); ?></p>
@@ -266,10 +261,6 @@
         }
       }
 
-      /**
-       * Call Midtrans SNAP API to return SNAP token
-       * using parameter from cart & configuration
-       */
       function create_snap_transaction( $order_id){
         if(!class_exists('Veritrans_Config')){
           require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
@@ -398,7 +389,7 @@
           }
         }
 
-        // sift through the entire item to ensure that currency conversion is applied
+        // iterate through the entire item to ensure that currency conversion is applied
         if (get_woocommerce_currency() != 'IDR')
         {
           foreach ($items as &$item) {
@@ -499,12 +490,6 @@
         echo $errorJson;
       }
 
-      /**
-       * Process the payment and return the result
-       * Method ini akan dipanggil ketika customer akan melakukan pembayaran
-       * Return value dari method ini adalah link yang akan digunakan untuk
-       * me-redirect customer ke halaman pembayaran Midtrans
-       */
       function process_payment( $order_id ) {
         global $woocommerce;
         
@@ -541,10 +526,6 @@
         return $successResponse;
       }
 
-      /**
-       * receipt_page
-       * Method ini digunakan untuk menampilkan SNAP popout berdasarkan token SNAP
-       */
       function receipt_page( $order_id ) {
         global $woocommerce;
         $pluginName = 'installment_offline';

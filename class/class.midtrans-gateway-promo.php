@@ -1,7 +1,12 @@
 <?php
-
     /**
-     * Midtrans Payment Gateway Class
+     * Midtrans Promo Payment Gateway Class
+     * Duplicated from `class.midtrans-gateway.php`
+     * Check `class.midtrans-gateway.php` file for proper function comments
+     *
+     * Using WC Coupon mechanism to apply discount 
+     * then lock user to pay with specific payment channel
+     * which is often required as Midtrans promo campaign
      */
     class WC_Gateway_Midtrans_Promo extends WC_Payment_Gateway {
 
@@ -249,7 +254,7 @@
           );
         }
       }
-      // Backward compatibility WC v3 & v2
+
       function getOrderProperty($order, $property){
         $functionName = "get_".$property;
         if (method_exists($order, $functionName)){ // WC v3
@@ -259,10 +264,6 @@
         }
       }
 
-      /**
-       * Call Midtrans SNAP API to return SNAP token
-       * using parameter from cart & configuration
-       */
       function create_snap_transaction( $order_id,$order){
         if(!class_exists('Veritrans_Config')){
           require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
@@ -273,11 +274,12 @@
         $order_items = array();
         $cart = $woocommerce->cart;
         
-        // add discount with coupon named ** onlinepromo **
+        // add discount with coupon named `onlinepromo` or admin defined `promo_code` str
         $coupon_code = 'onlinepromo';
         if ( strlen($this->promo_code) > 0 )
           $coupon_code = $this->promo_code;
 
+        // add coupon to $cart for discount
         $cart->add_discount($coupon_code);
         // $order->add_coupon( 'onlinepromo', WC()->cart->get_coupon_discount_amount( 'onlinepromo' ), WC()->cart->get_coupon_discount_tax_amount( 'onlinepromo' ) );
         $order->set_shipping_total( WC()->cart->shipping_total );
@@ -411,7 +413,7 @@
           }
         }
 
-        // sift through the entire item to ensure that currency conversion is applied
+        // iterate through the entire item to ensure that currency conversion is applied
         if (get_woocommerce_currency() != 'IDR')
         {
           foreach ($items as &$item) {
@@ -490,12 +492,6 @@
         echo $errorJson;
       }
 
-      /**
-       * Process the payment and return the result
-       * Method ini akan dipanggil ketika customer akan melakukan pembayaran
-       * Return value dari method ini adalah link yang akan digunakan untuk
-       * me-redirect customer ke halaman pembayaran Midtrans
-       */
       function process_payment( $order_id ) {
         global $woocommerce;
         
@@ -532,10 +528,6 @@
         return $successResponse;
       }
 
-      /**
-       * receipt_page
-       * Method ini digunakan untuk menampilkan SNAP popout berdasarkan token SNAP
-       */
       function receipt_page( $order_id ) {
         global $woocommerce;
         $pluginName = 'bin_promo';
