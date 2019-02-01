@@ -637,13 +637,13 @@
         } else {    // else if GET, redirect to order complete/failed
           // error_log('status_code '. $_GET['status_code']); //debug
           // error_log('status_code '. $_GET['transaction_status']); //debug
-          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] == 200)  //if capture or pending or challenge or settlement, redirect to order received page
+          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] <= 201)  //if capture or pending or challenge or settlement, redirect to order received page
           {
             $order_id = $_GET['order_id'];
             // error_log($this->get_return_url( $order )); //debug
             $order = new WC_Order( $order_id );
             wp_redirect($order->get_checkout_order_received_url());
-          }else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] != 200)  //if deny, redirect to order checkout page again
+          }else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] >= 201)  //if deny, redirect to order checkout page again
           {
             wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
           } else if( isset($_GET['order_id']) && !isset($_GET['transaction_status'])){ // if customer click "back" button, redirect to checkout page again

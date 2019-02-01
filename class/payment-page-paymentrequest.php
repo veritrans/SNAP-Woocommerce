@@ -48,9 +48,9 @@
   <a id="pay-button" title="Do Payment!" class="button alt">Loading Payment...</a>
   
   <div id="payment-instruction" style="display:none;">
-    <h3 class="alert alert-info"> Awaiting Your Payment </h3>
+    <!-- <h3 class="alert alert-info"> Awaiting Your Payment </h3> -->
     <!-- <br> -->
-    <p> Please complete your payment as instructed </p>
+    <p> Please complete your payment as instructed. If you have done your payment, please check your email or my "Order" menu for order status. </p>
     <!-- <br> -->
     <a target="_blank" href="#" id="payment-instruction-btn" title="Do Payment!" class="button alt" >
       Payment Instruction
@@ -133,7 +133,10 @@
                 payButton.innerHTML = "Loading...";
                 window.location = <?php echo $finish_url;?>;
               }
-
+              // redirect to thank you page
+              window.location = <?php echo $finish_url;?>; 
+              return;
+              // Below code is UNUSED
               // Show payment instruction and hide payment button
               document.getElementById('payment-instruction-btn').href = result.pdf_url;
               document.getElementById('pay-button').style.display = "none";
