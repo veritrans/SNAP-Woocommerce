@@ -692,13 +692,7 @@
         }
 
       }
- 
-      /**
-       * Method ini akan dipanggil jika customer telah sukses melakukan
-       * pembayaran. Method ini akan mengubah status order yang tersimpan
-       * di back-end berdasarkan status pembayaran yang dilakukan customer.
-       * 
-       */
+      
       /**
        * Handle Midtrans Notification Object, after payment status changes on Midtrans
        * Will update WC payment status accordingly
