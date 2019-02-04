@@ -606,7 +606,6 @@
         @ob_clean();
 
         global $woocommerce;
-        $order = new WC_Order( $order_id );
         
         Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
         
