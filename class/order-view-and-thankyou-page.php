@@ -12,12 +12,21 @@ $order = new WC_Order( $order_id );
 ?>
 <?php if( $order->meta_exists('_mt_payment_url') ) : ?>
   <h2>Payment Info</h2>
-  <table class="woocommerce-table shop_table payment_info">
+  <table class="woocommerce-table shop_table midtrans_payment_info">
       <tbody>
+          <?php if( $order->is_paid() ) : ?>
           <tr>
-              <th>Payment Complete?</th>
-              <td><?php echo $order->is_paid()? 'Yes. Payment Completed' : 'No' ?></td>
+              <th>Payment Status</th>
+              <td>Payment Completed</td>
           </tr>
+          <?php else : ?>
+          <!-- Make customer focus to payment url, if order need payment -->
+          <script type="text/javascript">
+            setTimeout(function(){
+              document.querySelectorAll('.midtrans_payment_info')[0].scrollIntoView();
+            }, 1500);
+          </script>
+          <?php endif; ?>
           <?php if( $order->meta_exists('_mt_payment_pdf_url') ) : ?>
           <tr>
               <th>Payment Instructions</th>

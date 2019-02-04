@@ -606,19 +606,16 @@
         @ob_clean();
 
         global $woocommerce;
-        $order = new WC_Order( $order_id );
         
-        Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
+        Veritrans_Config::$isProduction = ($this->environment == 'production') ?
+          true: 
+          false;
+        Veritrans_Config::$serverKey = ($this->environment == 'production') ?
+          $this->server_key_v2_production: 
+          $this->server_key_v2_sandbox;
         
-        if ($this->environment == 'production') {
-          Veritrans_Config::$serverKey = $this->server_key_v2_production;
-        } else {
-          Veritrans_Config::$serverKey = $this->server_key_v2_sandbox;
-        }
-        
-        // check whether the request is GET or POST, 
-        // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
-        // else if request == POST, request is for payment notification, then update the payment status
+        // check whether the request is POST or GET, 
+        // if request == POST, request is for payment notification, then update the payment status
         if(!isset($_GET['order_id']) && !isset($_GET['id']) && !isset($_POST['response'])){    // Check if POST, then create new notification
           $this->earlyResponse();
           // Handle pdf url update
@@ -628,60 +625,74 @@
           $midtrans_notification = new Veritrans_Notification();
           // If notification verified, handle it
           if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
-            if ($order->get_order($midtrans_notification->order_id) == true) {
+            if (wc_get_order($midtrans_notification->order_id) != false) {
               do_action( "valid-midtrans-web-request", $midtrans_notification );
             }
           }
           exit;
-
-        } else {    // else if GET, redirect to order complete/failed
+        } 
+        // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
+        else {    
           // error_log('status_code '. $_GET['status_code']); //debug
           // error_log('status_code '. $_GET['transaction_status']); //debug
-          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] == 200)  //if capture or pending or challenge or settlement, redirect to order received page
-          {
+
+          // if capture or pending or challenge or settlement, redirect to order received page
+          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] <= 201)  {
             $order_id = $_GET['order_id'];
             // error_log($this->get_return_url( $order )); //debug
             $order = new WC_Order( $order_id );
             wp_redirect($order->get_checkout_order_received_url());
-          }else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] != 200)  //if deny, redirect to order checkout page again
-          {
+          } 
+          //if deny, redirect to order checkout page again
+          else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] >= 201){
             wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
-          } else if( isset($_GET['order_id']) && !isset($_GET['transaction_status'])){ // if customer click "back" button, redirect to checkout page again
+          } 
+          // if customer click "back" button, redirect to checkout page again
+          else if( isset($_GET['order_id']) && !isset($_GET['transaction_status'])){ 
             wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
-          } else if ( isset($_POST['response']) ){ // if customer redirected from async payment
+          // if customer redirected from async payment with POST `response` (CIMB clicks, etc)
+          } else if ( isset($_POST['response']) ){ 
             $responses = json_decode( stripslashes($_POST['response']), true);
             $order = new WC_Order( $responses['order_id'] );
-            if ( $responses['status_code'] == 200) { // async payment success
+            // if async payment paid
+            if ( $responses['status_code'] == 200) { 
               wp_redirect($order->get_checkout_order_received_url());
-            } else {
+            } 
+            // if async payment not paid
+            else {
               wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
             }
-          } else if (isset($_GET['id']) || (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) ){ // if customer redirected form bca klikpay
-            if (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) // if papi id get-query still in wrong format, need to manually substring
+          // if customer redirected from async payment with GET `id` (BCA klikpay, etc)
+          } else if (isset($_GET['id']) || (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) ){
+            // Workaround if id query string is malformed, manual substring
+            if (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) {
               $id = str_replace("WC_Gateway_Midtrans?id=", "", $_GET['wc-api']);
-            else
+            }
+            // else if id query string format is correct
+            else {
               $id = $_GET['id'];
+            }
+
             $midtrans_notification = Veritrans_Transaction::status($id);
             $order_id = $midtrans_notification->order_id;
+            // if async payment paid
             if ($midtrans_notification->transaction_status == 'settlement'){
               $order = new WC_Order( $order_id );
               wp_redirect($order->get_checkout_order_received_url());              
-            } else {
+            } 
+            // if async payment not paid
+            else {
               wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
             }
-          } else {
+          } 
+          // if unhandled case, fallback, redirect to home
+          else {
             wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
           }
         }
 
       }
- 
-      /**
-       * Method ini akan dipanggil jika customer telah sukses melakukan
-       * pembayaran. Method ini akan mengubah status order yang tersimpan
-       * di back-end berdasarkan status pembayaran yang dilakukan customer.
-       * 
-       */
+      
       /**
        * Handle Midtrans Notification Object, after payment status changes on Midtrans
        * Will update WC payment status accordingly
