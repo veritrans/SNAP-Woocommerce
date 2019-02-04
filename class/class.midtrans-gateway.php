@@ -607,13 +607,12 @@
 
         global $woocommerce;
         
-        Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
-        
-        if ($this->environment == 'production') {
-          Veritrans_Config::$serverKey = $this->server_key_v2_production;
-        } else {
-          Veritrans_Config::$serverKey = $this->server_key_v2_sandbox;
-        }
+        Veritrans_Config::$isProduction = ($this->environment == 'production') ?
+          true: 
+          false;
+        Veritrans_Config::$serverKey = ($this->environment == 'production') ?
+          $this->server_key_v2_production: 
+          $this->server_key_v2_sandbox;
         
         // check whether the request is POST or GET, 
         // if request == POST, request is for payment notification, then update the payment status
