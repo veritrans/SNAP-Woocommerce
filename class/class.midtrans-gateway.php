@@ -628,7 +628,7 @@
           $midtrans_notification = new Veritrans_Notification();
           // If notification verified, handle it
           if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
-            if ($order->get_order($midtrans_notification->order_id) == true) {
+            if (wc_get_order($midtrans_notification->order_id) != false) {
               do_action( "valid-midtrans-web-request", $midtrans_notification );
             }
           }
