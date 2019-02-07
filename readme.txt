@@ -2,8 +2,8 @@
 Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
-Tested up to: 4.9.4
-Stable tag: 2.6.3
+Tested up to: 5.0.0
+Stable tag: 2.11.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -124,6 +124,39 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 = 2.6.3 =
 * Improve API error handling: Display API error messages to checkout page if any
 
+= 2.6.4 =
+* Add promo code config field
+
+= 2.6.5 =
+* Add use map finish url config field
+
+= 2.6.6 =
+* Add payment instruction pdf link on pending order view
+
+= 2.7.0 =
+* Add payment url link on order view
+* Improve deny notification handling by allowing payment retries
+* Add internal order notes on payment status changes from notification
+* Add update payment status to on-hold synchronously via Snap onPending
+* Add Google Analytics optional config
+* Add Immediate Reduce Stock optional config
+
+= 2.8.0 =
+* Removed separate MIGS button for installment & fullpayment
+* Installment terms for online installment now configurable
+* Installment banks for online installment now configurable
+* Installment terms for offline installment now configurable
+* Installment bank for online installment now configurable
+
+= 2.9.0 =
+* Replace order notes to order metadata
+
+= 2.10.0 =
+* Code cleanup
+
+= 2.11.0 =
+* UX improvement for pending payment
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -152,6 +185,39 @@ API Library enhancement
 
 = 2.6.3 =
 Improve API error handling: Display API error messages to checkout page if any
+
+= 2.6.4 =
+Add promo code config field
+
+= 2.6.5 =
+Add use map finish url config field
+
+= 2.6.6 =
+* Add payment instruction pdf link on pending order view
+
+= 2.7.0 =
+* Add payment url link on order view
+* Improve deny notification handling by allowing payment retries
+* Add internal order notes on payment status changes from notification
+* Add update payment status to on-hold synchronously via Snap onPending
+* Add Google Analytics optional config
+* Add Immediate Reduce Stock optional config
+
+= 2.8.0 =
+* Removed separate MIGS button for installment & fullpayment
+* Installment terms for online installment now configurable
+* Installment banks for online installment now configurable
+* Installment terms for offline installment now configurable
+* Installment bank for online installment now configurable
+
+= 2.9.0 =
+* Replace order notes to order metadata
+
+= 2.10.0 =
+* Code cleanup
+
+= 2.11.0 =
+* UX improvement for pending payment
 
 == Get Help ==
 

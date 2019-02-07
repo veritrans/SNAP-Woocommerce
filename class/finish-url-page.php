@@ -1,4 +1,10 @@
-<?php /* For BcaKlikpay */ 
+<?php 
+/**
+ * Customizable payment finish page, for internet banking channel, mainly BCA KlikPay
+ * Output HTML that display payment result of an internet banking transactions
+ * based on order/transaction id found in GET/POST request
+ */
+
 // reference: https://www.cloudways.com/blog/creating-custom-page-template-in-wordpress/
 require_once(dirname(__FILE__) . '/class.midtrans-gateway.php');
 $mt = new WC_Gateway_Midtrans();
@@ -8,9 +14,9 @@ require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php');
 Veritrans_Config::$isProduction = $isProduction;
 Veritrans_Config::$serverKey = $isProduction ? $mt->server_key_v2_production : $mt->server_key_v2_sandbox ;
 try {
-	if(isset($_GET['id'])){ //BCA_Klikpay
+	if(isset($_GET['id'])){ // handler for BCA_Klikpay finish redirect
 		$midtrans_notification = Veritrans_Transaction::status($_GET['id']);	
-	}else if(isset($_POST['response'])){ //CIMB CLICKS
+	}else if(isset($_POST['response'])){ // handler for CIMB CLICKS finish redirect
 		$response = preg_replace('/\\\\/', '', $_POST['response']);		
 		$midtrans_notification = json_decode($response);	
 	}

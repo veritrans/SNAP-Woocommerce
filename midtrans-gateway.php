@@ -2,13 +2,14 @@
 /*
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
-Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a href="http://midtrans.co.id" target="_blank">Midtrans.co.id</a>
-Version: 2.6.3
+Description: Accept all payment directly on your WooCommerce site in a seamless and 
+secure checkout environment with <a href="http://midtrans.co.id" target="_blank">Midtrans.co.id</a>
+Version: 2.11.0
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
 WC requires at least: 2.0.0
-WC tested up to: 3.3.5
+WC tested up to: 3.5.2
 */
 
 /*
@@ -54,24 +55,31 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
-  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentmigs.php';
-  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-migs.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
 }
 
 function add_midtrans_payment_gateway( $methods ) {
+  /**
+   * Payment methods are separated as different method/class so it will be separated
+   * as different payment button. This is needed because each of 'feature' like Promo,
+   * require special backend treatment (i.e. applying discount and locking payment channel). 
+   * Especially Offline Installment, it requires `whitelist_bins` so it should not be combined 
+   * with other payment feature.
+   */
   $methods[] = 'WC_Gateway_Midtrans';
   $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
   $methods[] = 'WC_Gateway_Midtrans_Installment';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
-  $methods[] = 'WC_Gateway_Midtrans_InstallmentMIGS';
-  $methods[] = 'WC_Gateway_Midtrans_MIGS';
   $methods[] = 'WC_Gateway_Midtrans_Promo';
   return $methods;
 }
-// For BCAKlikpay, CIMB Clicks, etc finish redirect page
+/**
+ * BCA Klikpay, CIMB Clicks, and other direct banking payment channel will need finish url
+ * to handle redirect after payment complete, especially BCA, may require custom finish url
+ * required by BCA team as UAT process.
+ */
 function handle_finish_url_page()
 {
   if(is_page('payment-finish')){ 
