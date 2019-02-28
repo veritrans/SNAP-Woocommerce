@@ -26,10 +26,11 @@ try {
 	$midtrans_notification->transaction_status = 'not found';
 }
 
-// OR redirect it to midtrans plugin callback handler
+// OR uncomment this to redirect it to midtrans plugin callback handler
 // echo "loading... <script>window.location = '".get_site_url(null, '/')."?wc-api=WC_Gateway_Midtrans&id=".$_GET['id']."'</script>";
 
-get_header(); ?>
+get_header(); // WP Header
+?>
  
 <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
@@ -42,16 +43,27 @@ get_header(); ?>
 				<hr>
 				<p>We have received your payment, your order is being processed. Thank you!</p>
 			<?php
+		}else if($midtrans_notification->transaction_status == 'pending'){
+			// TODO implement what to do when payment pending
+			?> 
+				<h3>Order is Awaiting Your Payment</h3>
+				<hr>
+				<p>Please complete the payment as instructed earlier. Thank you!</p>
+			<?php
 		}else{
 			// TODO implement what to do when payment failed
 			?> 
-				<h3>Payment Failed!</h3>
+				<h3>Payment Is Not Received</h3>
 				<hr>
 				<p>Your payment is not yet completed. Please complete your payment or do another checkout. Thank you!</p>
 			<?php
 		}
         ?>
     </main><!-- .site-main -->
-    <?php get_sidebar( 'content-bottom' ); ?>
 </div><!-- .content-area -->
-<?php get_footer(); ?>
+
+<!-- WP Sidebar & Footer -->
+<?php 
+// get_sidebar(); // uncomment this if you need sidebar
+get_footer(); 
+?>
