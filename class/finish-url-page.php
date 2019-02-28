@@ -42,6 +42,13 @@ get_header(); ?>
 				<hr>
 				<p>We have received your payment, your order is being processed. Thank you!</p>
 			<?php
+		}else if($midtrans_notification->transaction_status == 'pending'){
+			// TODO implement what to do when payment pending
+			?> 
+				<h3>Order is Awaiting Your Payment</h3>
+				<hr>
+				<p>Please complete the payment as instructed earlier. Thank you!</p>
+			<?php
 		}else{
 			// TODO implement what to do when payment failed
 			?> 
