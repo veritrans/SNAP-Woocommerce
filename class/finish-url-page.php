@@ -26,10 +26,11 @@ try {
 	$midtrans_notification->transaction_status = 'not found';
 }
 
-// OR redirect it to midtrans plugin callback handler
+// OR uncomment this to redirect it to midtrans plugin callback handler
 // echo "loading... <script>window.location = '".get_site_url(null, '/')."?wc-api=WC_Gateway_Midtrans&id=".$_GET['id']."'</script>";
 
-get_header(); ?>
+get_header(); // WP Header
+?>
  
 <div id="primary" class="content-area">
     <main id="main" class="site-main" role="main">
@@ -59,6 +60,10 @@ get_header(); ?>
 		}
         ?>
     </main><!-- .site-main -->
-    <?php get_sidebar( 'content-bottom' ); ?>
 </div><!-- .content-area -->
-<?php get_footer(); ?>
+
+<!-- WP Sidebar & Footer -->
+<?php 
+// get_sidebar(); // uncomment this if you need sidebar
+get_footer(); 
+?>
