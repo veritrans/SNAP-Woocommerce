@@ -52,7 +52,7 @@ get_header(); ?>
 		}else{
 			// TODO implement what to do when payment failed
 			?> 
-				<h3>Payment Failed!</h3>
+				<h3>Payment Is Not Received</h3>
 				<hr>
 				<p>Your payment is not yet completed. Please complete your payment or do another checkout. Thank you!</p>
 			<?php
