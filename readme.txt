@@ -157,6 +157,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 = 2.11.0 =
 * UX improvement for pending payment
 
+= 2.12.0 =
+* Updated API library to ensure smooth API connection
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -218,6 +221,9 @@ Add use map finish url config field
 
 = 2.11.0 =
 * UX improvement for pending payment
+
+= 2.12.0 =
+* Updated API library to ensure smooth API connection
 
 == Get Help ==
 
