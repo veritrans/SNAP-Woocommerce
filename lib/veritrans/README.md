@@ -41,15 +41,15 @@ Veritrans_Config::$isProduction = false;
 // Set sanitization on (default)
 Veritrans_Config::$isSanitized = true;
 // Set 3DS transaction for credit card to true
-Veritrans_Config::$is3ds = true
+Veritrans_Config::$is3ds = true;
 ```
 
 ### 2.2 Choose Product/Method
 
 We have [3 different products](https://docs.midtrans.com/en/welcome/index.html) of payment that you can use:
-- [Snap](https://snap-docs.midtrans.com/) - Customizable payment popup will appear on **your web/app** (no redirection)
-- [VT-Web](https://docs.midtrans.com/en/vtweb/integration.html) - Customer need to be redirected to payment url **hosted by midtrans**
-- [Core API (VT-Direct)](https://api-docs.midtrans.com/) - Basic backend implementation, you can customize the frontend embedded on **your web/app** as you like (no redirection)
+- [Snap](#22a-snap) - Customizable payment popup will appear on **your web/app** (no redirection). [doc ref](https://snap-docs.midtrans.com/)
+- [Snap Redirect](#22b-snap-redirect) - Customer need to be redirected to payment url **hosted by midtrans**. [doc ref](https://snap-docs.midtrans.com/)
+- [Core API (VT-Direct)](#22c-core-api-vt-direct) - Basic backend implementation, you can customize the frontend embedded on **your web/app** as you like (no redirection). [doc ref](https://api-docs.midtrans.com/)
 
 Choose one that you think best for your unique needs.
 
@@ -67,7 +67,38 @@ $params = array(
     )
   );
 
-$snapToken = Veritrans_Snap.getSnapToken($params);
+$snapToken = Veritrans_Snap::getSnapToken($params);
+```
+
+#### Get Snap Token in Yii2
+
+```php
+    
+    //install library from composer
+    //in your controller no need to include anything
+    //make sure call class with \Class_name::method()
+
+    public function actionSnapToken() {
+
+        \Veritrans_Config::$serverKey = 'Secret Server Key Goes Here';
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Veritrans_Config::$isProduction = false;
+        // Set sanitization on (default)
+        \Veritrans_Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Veritrans_Config::$is3ds = true;
+
+        $complete_request = [
+            "transaction_details" => [
+                "order_id" => "1234",
+                "gross_amount" => 10000
+            ]
+        ];
+
+        $snap_token = \Veritrans_Snap::getSnapToken($complete_request);
+        return ['snap_token' => $snap_token];
+  
+    }
 ```
 
 #### Initialize Snap JS when customer click pay button
@@ -106,11 +137,14 @@ $snapToken = Veritrans_Snap.getSnapToken($params);
 #### Implement Notification Handler
 [Refer to this section](#23-handle-http-notification)
 
-### 2.2.b VT-Web
+### ~2.2.b VT-Web~
+> !!! VT-Web is DEPRECATED !!!
 
-You can see some VT-Web examples [here](examples/vt-web).
+> Please use [Snap Redirect](#22b-snap-redirect), it has the same functionality, but better. [Refer to this section](#22b-snap-redirect)
 
-#### Get Redirection URL of a Charge
+~You can see some VT-Web examples [here](examples/vt-web).~
+
+#### ~Get Redirection URL of a Charge~
 
 ```php
 $params = array(
@@ -124,6 +158,33 @@ $params = array(
 try {
   // Redirect to Veritrans VTWeb page
   header('Location: ' . Veritrans_Vtweb::getRedirectionUrl($params));
+}
+catch (Exception $e) {
+  echo $e->getMessage();
+}
+```
+
+### 2.2.b Snap Redirect
+
+You can see some Snap Redirect examples [here](examples/snap-redirect).
+
+#### Get Redirection URL of a Payment Page
+
+```php
+$params = array(
+    'transaction_details' => array(
+      'order_id' => rand(),
+      'gross_amount' => 10000,
+    ),
+    'vtweb' => array()
+  );
+
+try {
+  // Get Snap Payment Page URL
+  $paymentUrl = Veritrans_Snap::createTransaction($params)->redirect_url;
+  
+  // Redirect to Snap Payment Page
+  header('Location: ' . $paymentUrl);
 }
 catch (Exception $e) {
   echo $e->getMessage();
