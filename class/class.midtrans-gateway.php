@@ -494,7 +494,7 @@
           'reload' => false
         );
         $errorJson = json_encode($errorObj);
-        echo $errorJson;
+        echo esc_html($errorJson);
       }
 
       /**
@@ -583,7 +583,7 @@
 
         $input_source = "php://input";
         $raw_notification = json_decode(file_get_contents($input_source), true);
-        echo "Notification Received: \n";
+        echo esc_html("Notification Received: \n");
         print_r($raw_notification);
         
         header('Connection: close');
@@ -770,7 +770,7 @@
           $order->update_meta_data('_mt_payment_pdf_url',$tokenStatus['pdf_url']);
           $order->save();
 
-          echo "OK";
+          echo esc_html("OK");
           // immediately terminate notif handling, not a notification.
           exit();
         } catch (Exception $e) {
