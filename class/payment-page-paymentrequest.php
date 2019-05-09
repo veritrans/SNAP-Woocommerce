@@ -20,6 +20,10 @@
   if(isset($this->enable_map_finish_url) && $this->enable_map_finish_url == 'yes'){
     $finish_url = 'result.finish_redirect_url';
   }
+  $pending_url = $finish_url;
+  if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
+    $pending_url = '"#"'; // prevent redirect onPending
+  }
   $error_url = $wp_base_url."?wc-api=WC_Gateway_Midtrans";
   $snap_api_base_url = $isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com";
   $snap_script_url = $snap_api_base_url."/snap/snap.js";
@@ -131,20 +135,20 @@
               // console.log(result?result:'no result');
               if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
                 payButton.innerHTML = "Loading...";
-                window.location = <?php echo $finish_url;?>;
+                window.location = <?php echo $pending_url;?>;
               }
               // redirect to thank you page
-              window.location = <?php echo $finish_url;?>; 
-              return;
-              // Below code is UNUSED
+              window.location = <?php echo $pending_url;?>;
               // Show payment instruction and hide payment button
               document.getElementById('payment-instruction-btn').href = result.pdf_url;
-              document.getElementById('pay-button').style.display = "none";
+              // document.getElementById('pay-button').style.display = "none";
               document.getElementById('payment-instruction').style.display = "block";
               // if no pdf instruction, hide the btn
               if(!result.hasOwnProperty("pdf_url")){
                 document.getElementById('payment-instruction-btn').style.display = "none";
               }
+              return;
+              // Below code is UNUSED
               // Update order with PDF url to backend
               try{
                 result['pdf_url_update'] = true;
