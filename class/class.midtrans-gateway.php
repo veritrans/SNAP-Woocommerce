@@ -64,6 +64,7 @@
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         $this->enable_savecard   = $this->get_option( 'enable_savecard' );
         $this->enable_redirect   = $this->get_option( 'enable_redirect' );
+        $this->ignore_pending_status   = $this->get_option( 'ignore_pending_status' );
         $this->custom_expiry   = $this->get_option( 'custom_expiry' );
         $this->custom_fields   = $this->get_option( 'custom_fields' );
         $this->enable_map_finish_url   = $this->get_option( 'enable_map_finish_url' );
@@ -260,6 +261,14 @@
             'type' => 'checkbox',
             'label' => 'Immediately reduce item stock on Midtrans payment pop-up?',
             'description' => __( 'By default, item stock only reduced if payment status on Midtrans reach pending/success (customer choose payment channel and click pay on payment pop-up). Enable this if you want to immediately reduce item stock when payment pop-up generated/displayed.', 'woocommerce' ),
+            'default' => 'no'
+          ),
+          'ignore_pending_status' => array(
+            'title' => __( 'Ignore Midtrans Transaction Pending Status', 'woocommerce' ),
+            'type' => 'checkbox',
+            'label' => __( 'Ignore Midtrans Transaction Pending Status?', 'woocommerce' ),
+            'description' => __( 'This will prevent customer for being redirected to "order received" page, on unpaid async payment type. <br>Backend pending notification will also ignored, and not trigger change to "on-hold". <br>Leave it disabled if you are not sure', 'woocommerce' ),
+            'class' => 'toggle-advanced',
             'default' => 'no'
           )
         );
@@ -494,7 +503,7 @@
           'reload' => false
         );
         $errorJson = json_encode($errorObj);
-        echo $errorJson;
+        echo esc_html($errorJson);
       }
 
       /**
@@ -583,7 +592,7 @@
 
         $input_source = "php://input";
         $raw_notification = json_decode(file_get_contents($input_source), true);
-        echo "Notification Received: \n";
+        echo esc_html("Notification Received: \n");
         print_r($raw_notification);
         
         header('Connection: close');
@@ -636,15 +645,25 @@
           // error_log('status_code '. $_GET['status_code']); //debug
           // error_log('status_code '. $_GET['transaction_status']); //debug
 
-          // if capture or pending or challenge or settlement, redirect to order received page
-          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] <= 201)  {
+          // if capture/settlement, redirect to order received page
+          if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] <= 200)  {
             $order_id = $_GET['order_id'];
             // error_log($this->get_return_url( $order )); //debug
             $order = new WC_Order( $order_id );
             wp_redirect($order->get_checkout_order_received_url());
           } 
+          // if or pending/challenge
+          else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] == 201)  {
+            if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
+              wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+              exit;
+            }
+            $order_id = $_GET['order_id'];
+            $order = new WC_Order( $order_id );
+            wp_redirect($order->get_checkout_order_received_url());
+          } 
           //if deny, redirect to order checkout page again
-          else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] >= 201){
+          else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] >= 202){
             wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
           } 
           // if customer click "back" button, redirect to checkout page again
@@ -734,6 +753,9 @@
           }
         }
         else if ($midtrans_notification->transaction_status == 'pending') {
+          if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
+            exit;
+          }
           $order->update_status('on-hold',__('Awaiting payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
         }
 
@@ -770,7 +792,7 @@
           $order->update_meta_data('_mt_payment_pdf_url',$tokenStatus['pdf_url']);
           $order->save();
 
-          echo "OK";
+          echo esc_html("OK");
           // immediately terminate notif handling, not a notification.
           exit();
         } catch (Exception $e) {

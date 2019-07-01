@@ -20,6 +20,10 @@
   if(isset($this->enable_map_finish_url) && $this->enable_map_finish_url == 'yes'){
     $finish_url = 'result.finish_redirect_url';
   }
+  $pending_url = $finish_url;
+  if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
+    $pending_url = '"#"'; // prevent redirect onPending
+  }
   $error_url = $wp_base_url."?wc-api=WC_Gateway_Midtrans";
   $snap_api_base_url = $isProduction ? "https://app.midtrans.com" : "https://app.sandbox.midtrans.com";
   $snap_script_url = $snap_api_base_url."/snap/snap.js";
@@ -27,7 +31,7 @@
   // ## Print HTML
   ?>
   <!-- start Mixpanel -->
-  <script data-cfasync="false" type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);mixpanel.init("<?php echo $mixpanel_key ?>");</script>
+  <script data-cfasync="false" type="text/javascript">(function(e,a){if(!a.__SV){var b=window;try{var c,l,i,j=b.location,g=j.hash;c=function(a,b){return(l=a.match(RegExp(b+"=([^&]*)")))?l[1]:null};g&&c(g,"state")&&(i=JSON.parse(decodeURIComponent(c(g,"state"))),"mpeditor"===i.action&&(b.sessionStorage.setItem("_mpcehash",g),history.replaceState(i.desiredHash||"",e.title,j.pathname+j.search)))}catch(m){}var k,h;window.mixpanel=a;a._i=[];a.init=function(b,c,f){function e(b,a){var c=a.split(".");2==c.length&&(b=b[c[0]],a=c[1]);b[a]=function(){b.push([a].concat(Array.prototype.slice.call(arguments,0)))}}var d=a;"undefined"!==typeof f?d=a[f]=[]:f="mixpanel";d.people=d.people||[];d.toString=function(b){var a="mixpanel";"mixpanel"!==f&&(a+="."+f);b||(a+=" (stub)");return a};d.people.toString=function(){return d.toString(1)+".people (stub)"};k="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config reset people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");for(h=0;h<k.length;h++)e(d,k[h]);a._i.push([b,c,f])};a.__SV=1.2;b=e.createElement("script");b.type="text/javascript";b.async=!0;b.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";c=e.getElementsByTagName("script")[0];c.parentNode.insertBefore(b,c)}})(document,window.mixpanel||[]);mixpanel.init("<?php echo esc_js($mixpanel_key) ?>");</script>
   <!-- end Mixpanel -->
 
   <?php if(property_exists($this,'ganalytics_id') && strlen($this->ganalytics_id)>0){ ?>
@@ -38,13 +42,13 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '<?php echo $this->ganalytics_id ?>', 'auto');
+  ga('create', '<?php echo esc_attr($this->ganalytics_id) ?>', 'auto');
   ga('send', 'pageview');
   </script>
   <!-- end Google Analytics -->
   <?php } ?>
 
-  <script data-cfasync="false" id="snap_script" src="<?php echo $snap_script_url;?>" data-client-key="<?php echo $this->client_key;?>"></script>
+  <script data-cfasync="false" id="snap_script" src="<?php echo esc_attr($snap_script_url);?>" data-client-key="<?php echo esc_attr($this->client_key);?>"></script>
   <a id="pay-button" title="Do Payment!" class="button alt">Loading Payment...</a>
   
   <div id="payment-instruction" style="display:none;">
@@ -86,12 +90,12 @@
         }
       );
     }
-    var SNAP_TOKEN = "<?php echo $snapToken;?>";
-    var MERCHANT_ID = "<?php echo $this->get_option('merchant_id');?>";
+    var SNAP_TOKEN = "<?php echo esc_js($snapToken);?>";
+    var MERCHANT_ID = "<?php echo esc_js($this->get_option('merchant_id'));?>";
     var CMS_NAME = "woocommerce";
-    var CMS_VERSION = "<?php echo WC_VERSION;?>";
-    var PLUGIN_NAME = "<?php echo $pluginName;?>";
-    var PLUGIN_VERSION = "<?php echo MT_PLUGIN_VERSION;?>";
+    var CMS_VERSION = "<?php echo esc_js(WC_VERSION);?>";
+    var PLUGIN_NAME = "<?php echo esc_js($pluginName);?>";
+    var PLUGIN_VERSION = "<?php echo esc_js(MT_PLUGIN_VERSION);?>";
     // Safely load the snap.js
     function loadExtScript(src) {
       // if snap.js is loaded from html script tag, don't load again
@@ -101,7 +105,7 @@
       var s = document.createElement("script");
       s.src = src;
       a = document.body.appendChild(s);
-      a.setAttribute('data-client-key','<?php echo $this->client_key; ?>');
+      a.setAttribute('data-client-key','<?php echo esc_js($this->client_key); ?>');
       a.setAttribute('data-cfasync','false');
     }
 
@@ -131,25 +135,25 @@
               // console.log(result?result:'no result');
               if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
                 payButton.innerHTML = "Loading...";
-                window.location = <?php echo $finish_url;?>;
+                window.location = <?php echo $pending_url;?>;
               }
               // redirect to thank you page
-              window.location = <?php echo $finish_url;?>; 
-              return;
-              // Below code is UNUSED
+              window.location = <?php echo $pending_url;?>;
               // Show payment instruction and hide payment button
               document.getElementById('payment-instruction-btn').href = result.pdf_url;
-              document.getElementById('pay-button').style.display = "none";
+              // document.getElementById('pay-button').style.display = "none";
               document.getElementById('payment-instruction').style.display = "block";
               // if no pdf instruction, hide the btn
               if(!result.hasOwnProperty("pdf_url")){
                 document.getElementById('payment-instruction-btn').style.display = "none";
               }
+              return;
+              // Below code is UNUSED
               // Update order with PDF url to backend
               try{
                 result['pdf_url_update'] = true;
                 result['snap_token_id'] = SNAP_TOKEN;
-                fetch('<?php echo $wp_base_url."?wc-api=WC_Gateway_Midtrans";?>', {
+                fetch('<?php echo esc_js($wp_base_url."?wc-api=WC_Gateway_Midtrans");?>', {
                   method: 'POST',
                   headers: {
                     'Accept': 'application/json',
@@ -163,7 +167,7 @@
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'error', result);
               // console.log(result?result:'no result');
               payButton.innerHTML = "Loading...";
-              window.location = "<?php echo $error_url;?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+              window.location = "<?php echo esc_js($error_url);?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
             },
             onClose: function(){
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'close', null);
@@ -202,7 +206,7 @@
           label: 'Total',
           amount:{
             currency: 'IDR',
-            value: <?php echo $gross_amount;?>
+            value: <?php echo esc_js($gross_amount);?>
           }
         }
       };
@@ -260,7 +264,7 @@
 
     console.log("Loading snap JS library now!");
     // Loading SNAP JS Library to the page    
-    loadExtScript("<?php echo $snap_script_url;?>");
+    loadExtScript("<?php echo esc_js($snap_script_url);?>");
     console.log("Snap library is loaded now");
 
     payButton.onclick = handlePayAction;

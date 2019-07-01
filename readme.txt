@@ -2,8 +2,8 @@
 Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
-Tested up to: 5.0.0
-Stable tag: 2.11.0
+Tested up to: 5.2.0
+Stable tag: 2.13.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -157,6 +157,13 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 = 2.11.0 =
 * UX improvement for pending payment
 
+= 2.12.0 =
+* Updated API library to ensure smooth API connection
+
+= 2.13.0 =
+* Output optimization
+* Add config to prevent redirect & ignore on `pending` status
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -218,6 +225,13 @@ Add use map finish url config field
 
 = 2.11.0 =
 * UX improvement for pending payment
+
+= 2.12.0 =
+* Updated API library to ensure smooth API connection
+
+= 2.13.0 =
+* Output optimization
+* Add config to prevent redirect & ignore on `pending` status
 
 == Get Help ==
 

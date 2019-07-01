@@ -47,7 +47,7 @@ Payment Method Feature:
 2. Extract the plugin, then rename the folder modules as **midtrans-woocommerce**
 3. Using an FTP program, or your hosting control panel, upload the unzipped plugin folder to your WordPress installation's `wp-content/plugins/` directory.
 4. Install & Activate the plugin from the Plugins menu within the WordPress admin panel.
-5. Go to menu **WooCommerce > Settings > Checkout > Midtrans**, fill the configuration fields.
+5. Go to menu **WooCommerce > Settings > Payment > Midtrans > Manage**, fill the configuration fields.
 	* Fill **Title** with text button that you want to display to customer
 	* Select **Environment**, Sandbox is for testing transaction, Production is for real transaction
 	* Fill in the **client key** & **server key** with your corresonding [Midtrans&nbsp; account](https://dashboard.midtrans.com/) credentials
@@ -60,6 +60,9 @@ Payment Method Feature:
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` as your Payment Notification URL.
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` link as Finish/Unfinish/Error Redirect URL.
 
+2. Go to menu **settings > Snap Preference > System Settings**
+  * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` link as Finish/Unfinish/Error Redirect URL.
+
 ### Additional Resource
 
 Note: This section is optional.
@@ -68,10 +71,13 @@ If you are activating BCA Klikpay payment channel, follow this additional step. 
 1. Login to Wordpress Admin Panel / Dashboard
 2. Add new page by going to menu **Pages > Add new**
 3. Insert this as title: `payment-finish`. Makesure the permalink display `[your wordpress url]/payment-finish`. Click **Publish/Save**.
-4. Login to your [Midtrans&nbsp; Account](https://dashboard.midtrans.com), select your environment (sandbox/production), go to menu **settings > configuration**
-5. Then change Finish Redirect URL to `http://[your wordpress url]/payment-finish`.
+4. Login to your [Midtrans&nbsp; Account](https://dashboard.midtrans.com), select your environment (sandbox/production), go to menu **settings > Snap Preference > System Settings**
+5. Go to menu **settings > configuration**. Then change Finish Redirect URL to `http://[your wordpress url]/payment-finish`.
 
 This is to ensure we have finish page when customer has completed the payment on KlikPay page, and then the payment result will be displayed accordingly on the page. If you want to customize the finish page, edit this file `/class/finish-url-page.php`.
+
+> **Note:** BCA KlikPay requires you to **disable the `Redirect payment page` configuration**, on Midtrans Plugin config page.
+> Please ensure you have done this.
 
 #### Get help
 
