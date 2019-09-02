@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.2.0
-Stable tag: 2.13.0
+Stable tag: 2.14.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -164,6 +164,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Output optimization
 * Add config to prevent redirect & ignore on `pending` status
 
+= 2.14.0 =
+* Enhance finish page for BCA Klikpay
+
 == Upgrade Notice ==
 
 = 1.0 =
@@ -232,6 +235,9 @@ Add use map finish url config field
 = 2.13.0 =
 * Output optimization
 * Add config to prevent redirect & ignore on `pending` status
+
+= 2.14.0 =
+* Enhance finish page for BCA Klikpay
 
 == Get Help ==
 
