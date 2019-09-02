@@ -65,6 +65,7 @@ Payment Method Feature:
 
 ### Additional Resource
 
+#### BCA Klikpay Specific
 Note: This section is optional.
 If you are activating BCA Klikpay payment channel, follow this additional step. This step is required to pass BCA UAT on BCA Klikpay.
 
@@ -78,6 +79,26 @@ This is to ensure we have finish page when customer has completed the payment on
 
 > **Note:** BCA KlikPay requires you to **disable the `Redirect payment page` configuration**, on Midtrans Plugin config page.
 > Please ensure you have done this.
+
+If required to change API endpoint/url, these are where you need to change:
+
+- `[plugin folder]/lib/veritrans/Veritrans/Config.php`
+	- Replace any Snap API domain: https://app.sandbox.midtrans.com/snap/v1 with UAT API domain
+	- Replace any Midtrans API domain: https://api.sandbox.midtrans.com/v2 with UAT API domain
+
+- `[plugin folder]/class/payment-page.php`
+	- Replace any Snap API domain: https://app.sandbox.midtrans.com with UAT API domain
+
+#### Configurables
+Available for customization from plugin config:
+- Payment text label of the payment options
+- Payment text description of the payment options
+- You can also input html tags as the text, to insert something like image
+
+Additional payment options (radio button) can be activated:
+- Installment
+- Offline Installment
+- Promo / specific payment
 
 #### Get help
 
