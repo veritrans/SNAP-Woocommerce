@@ -2,7 +2,7 @@
 Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
-Tested up to: 5.2.0
+Tested up to: 5.3
 Stable tag: 2.15.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -72,6 +72,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 = 2.15.0 =
 * Enhance Snap API error message display
+* Tested compatibility to WP v5.3
 
 = 2.14.0 =
 * Enhance finish page for BCA Klikpay
