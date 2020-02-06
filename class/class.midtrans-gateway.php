@@ -498,12 +498,12 @@
       function json_print_exception ($e) {
         $errorObj = array(
           'result' => "failure", 
-          'messages' => '<div class="woocommerce-error" role="alert"> Midtrans Exception: '.$e->getMessage().'. <br>Plugin Title: '.$this->method_title.'</div>',
+          'messages' => '<div class="woocommerce-error" role="alert"> Midtrans Exception: '.$e->getMessage().'. <br>Plugin Title: '.esc_html($this->method_title).'</div>',
           'refresh' => false, 
           'reload' => false
         );
         $errorJson = json_encode($errorObj);
-        echo esc_html($errorJson);
+        echo $errorJson;
       }
 
       /**

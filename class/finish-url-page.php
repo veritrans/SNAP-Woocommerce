@@ -46,9 +46,23 @@ get_header(); // WP Header
 		}else if($midtrans_notification->transaction_status == 'pending'){
 			// TODO implement what to do when payment pending
 			?> 
-				<h3>Order is Awaiting Your Payment</h3>
-				<hr>
-				<p>Please complete the payment as instructed earlier. Thank you!</p>
+				<?php 
+					if($midtrans_notification->payment_type == 'bca_klikpay'){
+						// BCA Klikpay specific, all non-settlement are considered failure
+				?>
+					<h3>Payment Failed</h3>
+					<hr>
+					<p>Sorry, we are unable to receive your payment.</p>
+				<?php 
+					}else{
+						// Other payment, pending is pending
+				?>
+					<h3>Order is Awaiting Your Payment</h3>
+					<hr>
+					<p>Please complete the payment as instructed earlier. Thank you!</p>
+				<?php 
+					}
+				?>
 			<?php
 		}else{
 			// TODO implement what to do when payment failed

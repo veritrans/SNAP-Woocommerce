@@ -2,8 +2,8 @@
 Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
-Tested up to: 5.2.0
-Stable tag: 2.13.0
+Tested up to: 5.3
+Stable tag: 2.15.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,68 +70,129 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Changelog ==
 
-= 1.0 =
-* First release!
-* Fullpayment feature
+= 2.15.0 =
+* Enhance Snap API error message display
+* Tested compatibility to WP v5.3
 
-= 1.1.0 =
-* Installment feature added
-* MIGS acquiring added
-* Bin promo feature added
+= 2.14.0 =
+* Enhance finish page for BCA Klikpay
 
-= 2.0.0 =
-* Bump version to match Woocommerce official plugin repo version
+= 2.13.0 =
+* Output optimization
+* Add config to prevent redirect & ignore on `pending` status
 
-= 2.1.0 =
-* Custom Expiry feature added
+= 2.12.0 =
+* Updated API library to ensure smooth API connection
 
-= 2.2.0 =
-* Clientkey to snap payment page added
-* Payment method for promo config added
+= 2.11.0 =
+* UX improvement for pending payment
 
-= 2.3.0 =
-* Custom fields feature added
+= 2.10.0 =
+* Code cleanup
 
-= 2.4.0 =
-* Two-click & One-click feature added
+= 2.9.0 =
+* Replace order notes to order metadata
 
-= 2.4.1 =
-* Backward compatibility for both WC v3 & v2
+= 2.8.0 =
+* Removed separate MIGS button for installment & fullpayment
+* Installment terms for online installment now configurable
+* Installment banks for online installment now configurable
+* Installment terms for offline installment now configurable
+* Installment bank for online installment now configurable
 
-= 2.4.2 =
-* Fix Expire notification Handler
-* Separate payment page into a file
+= 2.7.0 =
+* Add payment url link on order view
+* Improve deny notification handling by allowing payment retries
+* Add internal order notes on payment status changes from notification
+* Add update payment status to on-hold synchronously via Snap onPending
+* Add Google Analytics optional config
 
-= 2.4.3 =
-* Add BCA Klikpay finish page
+= 2.6.6 =
+* Add payment instruction pdf link on pending order view
+* Add Immediate Reduce Stock optional config
 
-= 2.4.4 =
-* Minor payment page experience enhancement
+= 2.6.5 =
+* Add use map finish url config field
+
+= 2.6.4 =
+* Add promo code config field
+
+= 2.6.3 =
+* Improve API error handling: Display API error messages to checkout page if any
+
+= 2.6.2 =
+* API Library enhancement
+
+= 2.6.1 =
+* New payment option for faster credit card transaction via browser's Payment Request API
+
+= 2.6.0 =
+* Payment page experience enhancement
 
 = 2.4.5 =
 * Optional redirection payment flow added
 * Minor payment page experience enhancement
 
-= 2.6 =
-* Payment page experience enhancement
+= 2.4.4 =
+* Minor payment page experience enhancement
 
-= 2.6.1 =
-* New payment option for faster credit card transaction via browser's Payment Request API
+= 2.4.3 =
+* Add BCA Klikpay finish page
 
-= 2.6.2 =
-* API Library enhancement
+= 2.4.2 =
+* Fix Expire notification Handler
+* Separate payment page into a file
 
-= 2.6.3 =
-* Improve API error handling: Display API error messages to checkout page if any
+= 2.4.1 =
+* Backward compatibility for both WC v3 & v2
 
-= 2.6.4 =
-* Add promo code config field
+= 2.4.0 =
+* Two-click & One-click feature added
 
-= 2.6.5 =
-* Add use map finish url config field
+= 2.3.0 =
+* Custom fields feature added
 
-= 2.6.6 =
-* Add payment instruction pdf link on pending order view
+= 2.2.0 =
+* Clientkey to snap payment page added
+* Payment method for promo config added
+
+= 2.1.0 =
+* Custom Expiry feature added
+
+= 2.0.0 =
+* Bump version to match Woocommerce official plugin repo version
+
+= 1.0 =
+* First release!
+* Fullpayment feature
+
+== Upgrade Notice ==
+
+= 2.14.0 =
+* Enhance finish page for BCA Klikpay
+
+= 2.13.0 =
+* Output optimization
+* Add config to prevent redirect & ignore on `pending` status
+
+= 2.12.0 =
+* Updated API library to ensure smooth API connection
+
+= 2.11.0 =
+* UX improvement for pending payment
+
+= 2.10.0 =
+* Code cleanup
+
+= 2.9.0 =
+* Replace order notes to order metadata
+
+= 2.8.0 =
+* Removed separate MIGS button for installment & fullpayment
+* Installment terms for online installment now configurable
+* Installment banks for online installment now configurable
+* Installment terms for offline installment now configurable
+* Installment bank for online installment now configurable
 
 = 2.7.0 =
 * Add payment url link on order view
@@ -141,97 +202,41 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Add Google Analytics optional config
 * Add Immediate Reduce Stock optional config
 
-= 2.8.0 =
-* Removed separate MIGS button for installment & fullpayment
-* Installment terms for online installment now configurable
-* Installment banks for online installment now configurable
-* Installment terms for offline installment now configurable
-* Installment bank for online installment now configurable
-
-= 2.9.0 =
-* Replace order notes to order metadata
-
-= 2.10.0 =
-* Code cleanup
-
-= 2.11.0 =
-* UX improvement for pending payment
-
-= 2.12.0 =
-* Updated API library to ensure smooth API connection
-
-= 2.13.0 =
-* Output optimization
-* Add config to prevent redirect & ignore on `pending` status
-
-== Upgrade Notice ==
-
-= 1.0 =
-Support additional feature like installment, MIGS acq, and bin promo.
-
-= 2.1 = 
-Update for better experince with BCA KlikPay payment methods
-
-= 2.4.1 =
-Support for WooCommerce v3 and also backward compatible with WooCommerce v2. Also some additional nice feature like 2 clicks for CC.
-
-= 2.4.4 =
-Minor payment page experience enhancement
-
-= 2.4.5 =
-Optional redirection payment flow added
-
-= 2.6 =
-Payment page experience enhancement
-
-= 2.6.1 =
-New payment option for faster credit card transaction via browser's Payment Request API
-
-= 2.6.2 =
-API Library enhancement
-
-= 2.6.3 =
-Improve API error handling: Display API error messages to checkout page if any
-
-= 2.6.4 =
-Add promo code config field
+= 2.6.6 =
+* Add payment instruction pdf link on pending order view
 
 = 2.6.5 =
 Add use map finish url config field
 
-= 2.6.6 =
-* Add payment instruction pdf link on pending order view
+= 2.6.4 =
+Add promo code config field
 
-= 2.7.0 =
-* Add payment url link on order view
-* Improve deny notification handling by allowing payment retries
-* Add internal order notes on payment status changes from notification
-* Add update payment status to on-hold synchronously via Snap onPending
-* Add Google Analytics optional config
-* Add Immediate Reduce Stock optional config
+= 2.6.3 =
+Improve API error handling: Display API error messages to checkout page if any
 
-= 2.8.0 =
-* Removed separate MIGS button for installment & fullpayment
-* Installment terms for online installment now configurable
-* Installment banks for online installment now configurable
-* Installment terms for offline installment now configurable
-* Installment bank for online installment now configurable
+= 2.6.2 =
+API Library enhancement
 
-= 2.9.0 =
-* Replace order notes to order metadata
+= 2.6.1 =
+New payment option for faster credit card transaction via browser's Payment Request API
 
-= 2.10.0 =
-* Code cleanup
+= 2.6.0 =
+Payment page experience enhancement
 
-= 2.11.0 =
-* UX improvement for pending payment
+= 2.4.5 =
+Optional redirection payment flow added
 
-= 2.12.0 =
-* Updated API library to ensure smooth API connection
+= 2.4.4 =
+Minor payment page experience enhancement
 
-= 2.13.0 =
-* Output optimization
-* Add config to prevent redirect & ignore on `pending` status
+= 2.4.1 =
+Support for WooCommerce v3 and also backward compatible with WooCommerce v2. Also some additional nice feature like 2 clicks for CC.
+
+= 2.1.0 = 
+Update for better experince with BCA KlikPay payment methods
+
+= 1.0 =
+Support additional feature like installment, MIGS acq, and bin promo.
 
 == Get Help ==
 
