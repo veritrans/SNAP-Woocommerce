@@ -305,9 +305,7 @@
        * @return [Array]  SNAP API response encoded as associative array
        */
       function create_snap_transaction( $order_id){
-        if(!class_exists('Veritrans_Config')){
-          require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
-        }
+        require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
         require_once(dirname(__FILE__) . '/class.midtrans-utils.php');
         
         global $woocommerce;
@@ -316,10 +314,10 @@
 
         $order = new WC_Order( $order_id );     
       
-        Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
-        Veritrans_Config::$serverKey = (Veritrans_Config::$isProduction) ? $this->server_key_v2_production : $this->server_key_v2_sandbox;     
-        Veritrans_Config::$is3ds = ($this->enable_3d_secure == 'yes') ? true : false;
-        Veritrans_Config::$isSanitized = true;
+        \Midtrans\Config::$isProduction = ($this->environment == 'production') ? true : false;
+        \Midtrans\Config::$serverKey = (\Midtrans\Config::$isProduction) ? $this->server_key_v2_production : $this->server_key_v2_sandbox;     
+        \Midtrans\Config::$is3ds = ($this->enable_3d_secure == 'yes') ? true : false;
+        \Midtrans\Config::$isSanitized = true;
         
         $params = array(
           'transaction_details' => array(
@@ -473,7 +471,7 @@
         }
         // add savecard API params
         if ($this->enable_savecard =='yes' && is_user_logged_in()){
-          $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , Veritrans_Config::$serverKey );
+          $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , \Midtrans\Config::$serverKey );
           $params['credit_card']['save_card'] = true;
         }
         // Empty the cart because payment is initiated.
@@ -481,7 +479,7 @@
         // error_log(print_r($params,true)); //debug
         
         try {
-          $snapResponse = Veritrans_Snap::createTransaction($params);
+          $snapResponse = \Midtrans\Snap::createTransaction($params);
         } catch (Exception $e) {
           $this->json_print_exception($e);
           exit();
@@ -607,19 +605,17 @@
        * Handle Midtrans payment notification
        */
       function midtrans_vtweb_response() {
-        if(!class_exists('Veritrans_Config')){
-          require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
-        }
+        require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
 
         global $woocommerce;
         @ob_clean();
 
         global $woocommerce;
         
-        Veritrans_Config::$isProduction = ($this->environment == 'production') ?
+        \Midtrans\Config::$isProduction = ($this->environment == 'production') ?
           true: 
           false;
-        Veritrans_Config::$serverKey = ($this->environment == 'production') ?
+        \Midtrans\Config::$serverKey = ($this->environment == 'production') ?
           $this->server_key_v2_production: 
           $this->server_key_v2_sandbox;
         
@@ -631,7 +627,7 @@
           $this->handlePendingPaymentPdfUrlUpdate();
 
           // Verify Midtrans notification
-          $midtrans_notification = new Veritrans_Notification();
+          $midtrans_notification = new \Midtrans\Notification();
           // If notification verified, handle it
           if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
             if (wc_get_order($midtrans_notification->order_id) != false) {
@@ -692,7 +688,7 @@
               $id = $_GET['id'];
             }
 
-            $midtrans_notification = Veritrans_Transaction::status($id);
+            $midtrans_notification = \Midtrans\Transaction::status($id);
             $order_id = $midtrans_notification->order_id;
             // if async payment paid
             if ($midtrans_notification->transaction_status == 'settlement'){

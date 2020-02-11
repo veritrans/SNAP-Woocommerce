@@ -247,9 +247,7 @@
       }
 
       function create_snap_transaction( $order_id){
-        if(!class_exists('Veritrans_Config')){
-          require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
-        }
+        require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
         require_once(dirname(__FILE__) . '/class.midtrans-utils.php');
         
         global $woocommerce;
@@ -258,10 +256,10 @@
 
         $order = new WC_Order( $order_id );     
       
-        Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
-        Veritrans_Config::$serverKey = (Veritrans_Config::$isProduction) ? $this->server_key_v2_production : $this->server_key_v2_sandbox;     
-        Veritrans_Config::$is3ds = ($this->enable_3d_secure == 'yes') ? true : false;
-        Veritrans_Config::$isSanitized = true;
+        \Midtrans\Config::$isProduction = ($this->environment == 'production') ? true : false;
+        \Midtrans\Config::$serverKey = (\Midtrans\Config::$isProduction) ? $this->server_key_v2_production : $this->server_key_v2_sandbox;     
+        \Midtrans\Config::$is3ds = ($this->enable_3d_secure == 'yes') ? true : false;
+        \Midtrans\Config::$isSanitized = true;
         
         $params = array(
           'transaction_details' => array(
@@ -420,7 +418,7 @@
         }
         // add savecard params
         if ($this->enable_savecard =='yes' && is_user_logged_in()){
-          $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , Veritrans_Config::$serverKey );
+          $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , \Midtrans\Config::$serverKey );
           $params['credit_card']['save_card'] = true;
         }
         
@@ -447,7 +445,7 @@
         // error_log(print_r($params,true)); //debug
         
         try {
-          $snapResponse = Veritrans_Snap::createTransaction($params);
+          $snapResponse = \Midtrans\Snap::createTransaction($params);
         } catch (Exception $e) {
           $this->json_print_exception($e);
           exit();
