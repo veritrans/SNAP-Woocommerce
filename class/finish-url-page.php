@@ -10,12 +10,12 @@ require_once(dirname(__FILE__) . '/class.midtrans-gateway.php');
 $mt = new WC_Gateway_Midtrans();
 $isProduction = ($mt->environment == 'production') ? true : false;
 
-require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php');
-Veritrans_Config::$isProduction = $isProduction;
-Veritrans_Config::$serverKey = $isProduction ? $mt->server_key_v2_production : $mt->server_key_v2_sandbox ;
+require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
+\Midtrans\Config::$isProduction = $isProduction;
+\Midtrans\Config::$serverKey = $isProduction ? $mt->server_key_v2_production : $mt->server_key_v2_sandbox ;
 try {
 	if(isset($_GET['id'])){ // handler for BCA_Klikpay finish redirect
-		$midtrans_notification = Veritrans_Transaction::status($_GET['id']);	
+		$midtrans_notification = \Midtrans\Transaction::status($_GET['id']);	
 	}else if(isset($_POST['response'])){ // handler for CIMB CLICKS finish redirect
 		$response = preg_replace('/\\\\/', '', $_POST['response']);		
 		$midtrans_notification = json_decode($response);	

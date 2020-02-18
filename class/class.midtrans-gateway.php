@@ -89,6 +89,9 @@
             : $this->client_key_v2_sandbox;
 
         $this->log = new WC_Logger();
+        $this->supports = array(
+          'refunds'
+        );
 
         // Register hook for handling HTTP notification (HTTP call to `http://[your web]/?wc-api=WC_Gateway_Midtrans`)
         add_action( 'woocommerce_api_wc_gateway_midtrans', array( &$this, 'midtrans_vtweb_response' ) );
@@ -104,6 +107,8 @@
         add_action( 'woocommerce_thankyou', array( $this, 'view_order_and_thankyou_page' ) );
         // Hook for adding custom HTML on view order menu from customer (for payement/instruction url)
         add_action( 'woocommerce_view_order', array( $this, 'view_order_and_thankyou_page' ) );
+        // Hook for refund request from Midtrans Dashboard or API refund
+        add_action( 'create-refund-request',  array( $this, 'midtrans_refund' ), 10, 4 );
       }
 
       /**
@@ -305,9 +310,7 @@
        * @return [Array]  SNAP API response encoded as associative array
        */
       function create_snap_transaction( $order_id){
-        if(!class_exists('Veritrans_Config')){
-          require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
-        }
+        require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
         require_once(dirname(__FILE__) . '/class.midtrans-utils.php');
         
         global $woocommerce;
@@ -316,10 +319,10 @@
 
         $order = new WC_Order( $order_id );     
       
-        Veritrans_Config::$isProduction = ($this->environment == 'production') ? true : false;
-        Veritrans_Config::$serverKey = (Veritrans_Config::$isProduction) ? $this->server_key_v2_production : $this->server_key_v2_sandbox;     
-        Veritrans_Config::$is3ds = ($this->enable_3d_secure == 'yes') ? true : false;
-        Veritrans_Config::$isSanitized = true;
+        \Midtrans\Config::$isProduction = ($this->environment == 'production') ? true : false;
+        \Midtrans\Config::$serverKey = (\Midtrans\Config::$isProduction) ? $this->server_key_v2_production : $this->server_key_v2_sandbox;     
+        \Midtrans\Config::$is3ds = ($this->enable_3d_secure == 'yes') ? true : false;
+        \Midtrans\Config::$isSanitized = true;
         
         $params = array(
           'transaction_details' => array(
@@ -473,7 +476,7 @@
         }
         // add savecard API params
         if ($this->enable_savecard =='yes' && is_user_logged_in()){
-          $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , Veritrans_Config::$serverKey );
+          $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , \Midtrans\Config::$serverKey );
           $params['credit_card']['save_card'] = true;
         }
         // Empty the cart because payment is initiated.
@@ -481,7 +484,7 @@
         // error_log(print_r($params,true)); //debug
         
         try {
-          $snapResponse = Veritrans_Snap::createTransaction($params);
+          $snapResponse = \Midtrans\Snap::createTransaction($params);
         } catch (Exception $e) {
           $this->json_print_exception($e);
           exit();
@@ -553,6 +556,43 @@
       }
 
       /**
+       * Refund a charge
+       * @param  int $order_id
+       * @param  float $amount
+       * @return bool
+       */
+      function process_refund($order_id, $amount = null, $reason = '', $duplicated = false){
+        require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
+        require_once(dirname(__FILE__) . '/class.midtrans-utils.php');
+
+        \Midtrans\Config::$isProduction = ($this->environment == 'production') ? true : false;
+        \Midtrans\Config::$serverKey = (\Midtrans\Config::$isProduction) ? $this->server_key_v2_production : $this->server_key_v2_sandbox;
+
+        $order = wc_get_order( $order_id );
+        $params = array(
+            'refund_key' => 'RefundID' . $order_id . '-' . current_time('timestamp'),
+            'amount' => $amount,
+            'reason' => $reason
+        );
+
+        try {
+          $response = \Midtrans\Transaction::refund($order_id, $params);
+        } catch (Exception $e) {
+          $error_message = strpos($e->getMessage(), '412') ? $e->getMessage() . ' Note: Refund via Midtrans only for specific payment method, please consult to your midtrans PIC for more information' : $e->getMessage();
+          return new WP_Error( 'midtrans_refund_error', $error_message );
+          return false;
+        }
+
+        if (is_wp_error($response)) {
+            return false;
+        } elseif ($response->status_code == 200) {
+            $refund_message = sprintf(__('Refunded %1$s - Refund ID: %2$s - Reason: %3$s', 'woocommerce-midtrans'), wc_price($response->refund_amount), $response->refund_key, $reason);
+            $order->add_order_note($refund_message);
+            return true;
+        }
+      }
+
+      /**
        * Hook function that will be called on receipt page
        * Output HTML for Snap payment page. Including `snap.pay()` part
        * @param  [String] $order_id generated by WC
@@ -607,19 +647,17 @@
        * Handle Midtrans payment notification
        */
       function midtrans_vtweb_response() {
-        if(!class_exists('Veritrans_Config')){
-          require_once(dirname(__FILE__) . '/../lib/veritrans/Veritrans.php'); 
-        }
+        require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
 
         global $woocommerce;
         @ob_clean();
 
         global $woocommerce;
         
-        Veritrans_Config::$isProduction = ($this->environment == 'production') ?
+        \Midtrans\Config::$isProduction = ($this->environment == 'production') ?
           true: 
           false;
-        Veritrans_Config::$serverKey = ($this->environment == 'production') ?
+        \Midtrans\Config::$serverKey = ($this->environment == 'production') ?
           $this->server_key_v2_production: 
           $this->server_key_v2_sandbox;
         
@@ -631,7 +669,7 @@
           $this->handlePendingPaymentPdfUrlUpdate();
 
           // Verify Midtrans notification
-          $midtrans_notification = new Veritrans_Notification();
+          $midtrans_notification = new \Midtrans\Notification();
           // If notification verified, handle it
           if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
             if (wc_get_order($midtrans_notification->order_id) != false) {
@@ -692,7 +730,7 @@
               $id = $_GET['id'];
             }
 
-            $midtrans_notification = Veritrans_Transaction::status($id);
+            $midtrans_notification = \Midtrans\Transaction::status($id);
             $order_id = $midtrans_notification->order_id;
             // if async payment paid
             if ($midtrans_notification->transaction_status == 'settlement'){
@@ -758,8 +796,107 @@
           }
           $order->update_status('on-hold',__('Awaiting payment: Midtrans-'.$midtrans_notification->payment_type,'woocommerce'));
         }
+        else if ($midtrans_notification->transaction_status == 'refund' || $midtrans_notification->transaction_status == 'partial_refund') {
 
+          // Get the raw post notification
+          $isFullRefund = ($midtrans_notification->transaction_status == 'refund') ? true : false;
+          $input_source = "php://input";
+          $raw_notification = json_decode(file_get_contents($input_source), true);
+
+          // Fetch last array key
+          $lastArrayKey = array_pop(array_keys($midtrans_notification->refunds));
+          $refund_amount = $midtrans_notification->refunds[$lastArrayKey]->refund_amount;
+          $refund_reason = $midtrans_notification->refunds[$lastArrayKey]->reason;
+          $refund_key = $midtrans_notification->refunds[$lastArrayKey]->refund_key;
+          
+          // Do not process if the notif contain 'bank_confirmed_at'
+          if (isset($raw_notification['refunds'][$lastArrayKey]['bank_confirmed_at'])) {
+            exit;
+          }
+
+          // Validate the refund doesn't charge twice by the refund key
+          $order_notes = wc_get_order_notes(array('order_id' => $midtrans_notification->order_id));
+          foreach($order_notes as $value) {
+            if (strpos($value->content, $midtrans_notification->refunds[$lastArrayKey]->refund_key ) !== false) {
+              $run_refund;
+              exit;
+            }
+          }
+
+          if (!$run_refund){
+            try {
+              do_action( "create-refund-request", $midtrans_notification->order_id, $refund_amount, $refund_reason, $isFullRefund );
+
+              // Create refund note
+              $order->add_order_note(sprintf(__('Refunded payment: Midtrans-' . $midtrans_notification->payment_type . ' Refunded %1$s - Refund ID: %2$s - Reason: %3$s', 'woocommerce-midtrans'), wc_price($refund_amount), $refund_key, $refund_reason));
+
+            } catch (Exception $e) {
+                new WC_Logger( $e->getMessage() );
+                error_log($e->getMessage());
+            }  
+          }
+        }
         exit;
+      }
+
+      /**
+       * Handle Midtrans Refund, when refund trigger not from woocommerce
+       * @param  [int] $order_id
+       * @param  [int] $refund_amount
+       * @param  [string] $refund_reason
+       * @param  [bool] $isFullRefund
+       * @return WC_Order_Refund|WP_Error
+       */
+      public function midtrans_refund( $order_id, $refund_amount, $refund_reason, $isFullRefund = false ) {
+        $order  = wc_get_order( $order_id );
+        if( ! is_a( $order, 'WC_Order') ) {
+          return;
+        }
+        // Prepare line items which we are refunding
+        $line_items = array();
+
+        if ($isFullRefund) {
+          // Get Items
+          $order_items = $order->get_items( array( 'line_item', 'fee', 'shipping' ) );
+          if ( ! $order_items ) {
+            return new \WP_Error( 'wc-order', 'This order has no items' );
+          }
+
+          foreach ( $order_items as $item_id => $item ) {
+            $line_total = $order->get_line_total( $item, false, false );
+            $qty        = $item->get_quantity();
+            $tax_data   = wc_get_order_item_meta( $item_id, '_line_tax_data' );
+
+            $refund_tax = array();
+            // Check if it's shipping costs. If so, get shipping taxes.
+            if ( $item instanceof \WC_Order_Item_Shipping ) {
+              $tax_data = wc_get_order_item_meta( $item_id, 'taxes' );
+            }
+            // If taxdata is set, format as decimal.
+            if ( ! empty( $tax_data['total'] ) ) {
+              $refund_tax = array_filter( array_map( 'wc_format_decimal', $tax_data['total'] ) );
+            }
+            // Calculate line total, including tax.
+            $line_total_inc_tax = wc_format_decimal( $line_total ) + ( is_numeric( reset( $refund_tax ) ) ? wc_format_decimal( reset( $refund_tax ) ) : 0 );
+            // Fill item per line.
+            $line_items[ $item_id ] = array(
+              'qty'          => $qty,
+              'refund_total' => wc_format_decimal( $line_total ),
+              'refund_tax'   => array_map( 'wc_round_tax_total', $refund_tax )
+            );
+          }
+        }
+
+        // Create refund
+        $refund = wc_create_refund( array(
+          'amount'         => $refund_amount,
+          'reason'         => $refund_reason,
+          'order_id'       => $order_id,
+          'line_items'     => $line_items,
+          'restock_items' => $isFullRefund
+        ) );
+        if ( is_wp_error( $refund ) ) throw new Exception($refund->get_error_message());
+        return $refund;
       }
 
       /**
