@@ -826,7 +826,6 @@
           if (!$run_refund){
             try {
               do_action( "create-refund-request", $midtrans_notification->order_id, $refund_amount, $refund_reason, $isFullRefund );
-              if ( is_wp_error( $refund ) ) throw new Exception($refund->get_error_message());
 
               // Create refund note
               $order->add_order_note(sprintf(__('Refunded payment: Midtrans-' . $midtrans_notification->payment_type . ' Refunded %1$s - Refund ID: %2$s - Reason: %3$s', 'woocommerce-midtrans'), wc_price($refund_amount), $refund_key, $refund_reason));
@@ -859,8 +858,6 @@
         if ($isFullRefund) {
           // Get Items
           $order_items = $order->get_items( array( 'line_item', 'fee', 'shipping' ) );
-          // Refund Amount
-          $refund_amount = 0;
           if ( ! $order_items ) {
             return new \WP_Error( 'wc-order', 'This order has no items' );
           }
@@ -881,8 +878,6 @@
             }
             // Calculate line total, including tax.
             $line_total_inc_tax = wc_format_decimal( $line_total ) + ( is_numeric( reset( $refund_tax ) ) ? wc_format_decimal( reset( $refund_tax ) ) : 0 );
-            // Add the total for this line tot the grand total.
-            $refund_amount = wc_format_decimal( $refund_amount ) + ceil( $line_total_inc_tax );
             // Fill item per line.
             $line_items[ $item_id ] = array(
               'qty'          => $qty,
@@ -900,6 +895,7 @@
           'line_items'     => $line_items,
           'restock_items' => $isFullRefund
         ) );
+        if ( is_wp_error( $refund ) ) throw new Exception($refund->get_error_message());
         return $refund;
       }
 
