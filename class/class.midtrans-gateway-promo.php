@@ -222,7 +222,7 @@
           'promo_code' => array(
             'title' => __( 'Promo Code', 'woocommerce' ),
             'type' => 'text',
-            'description' => __( 'Promo Code that would be used for discount. Leave blank if you are not sure.', 'woocommerce' ),
+            'description' => __( 'Promo Code that would be used for discount. Leave blank if you are not use promo code.', 'woocommerce' ),
             'default' => ''
           ),
           'enable_map_finish_url' => array(
@@ -275,13 +275,12 @@
         $order_items = array();
         $cart = $woocommerce->cart;
         
-        // add discount with coupon named `onlinepromo` or admin defined `promo_code` str
-        $coupon_code = 'onlinepromo';
-        if ( strlen($this->promo_code) > 0 )
+        if ( strlen($this->promo_code) > 0 ) {
           $coupon_code = $this->promo_code;
+          // add coupon to $cart for discount
+          $cart->add_discount($coupon_code);
+        }
 
-        // add coupon to $cart for discount
-        $cart->add_discount($coupon_code);
         // $order->add_coupon( 'onlinepromo', WC()->cart->get_coupon_discount_amount( 'onlinepromo' ), WC()->cart->get_coupon_discount_tax_amount( 'onlinepromo' ) );
         $order->set_shipping_total( WC()->cart->shipping_total );
         $order->set_discount_total( WC()->cart->get_cart_discount_total() );
