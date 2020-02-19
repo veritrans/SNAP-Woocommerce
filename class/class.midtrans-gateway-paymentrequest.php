@@ -442,9 +442,11 @@
        * @return bool
        */
       function process_refund($order_id, $amount = null, $reason = '', $duplicated = false) {
-        $refundResponse = (require_once(dirname(__FILE__) . '/refund-option.php')) ? true : new WP_Error( 'midtrans_refund_error', $error_message );
+        require_once(dirname(__FILE__) . '/refund-option.php');
+        $refundResponse = refund_option($order_id, $amount, $reason, $this);
         
-        return $refundResponse;
+        if ($refundResponse == '200') return true;
+        else return new WP_Error( 'midtrans_refund_error', $refundResponse);
       }
 
       function receipt_page( $order_id ) {
