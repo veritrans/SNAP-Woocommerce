@@ -222,7 +222,7 @@
           'promo_code' => array(
             'title' => __( 'Promo Code', 'woocommerce' ),
             'type' => 'text',
-            'description' => __( 'Promo Code that would be used for discount. Leave blank if you are not use promo code.', 'woocommerce' ),
+            'description' => __( 'Promo Code that would be used for discount. Leave blank if you are not using promo code.', 'woocommerce' ),
             'default' => ''
           ),
           'enable_map_finish_url' => array(
