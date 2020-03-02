@@ -56,8 +56,16 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-shipping-api.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-shipping-gosend.php';
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
+  add_filter( 'woocommerce_shipping_methods', 'add_midtrans_shipping_method' );
+}
+
+function add_midtrans_shipping_method( $methods ) {
+  $methods[] = 'Midtrans_Shipping_Gosend';
+  return $methods;
 }
 
 function add_midtrans_payment_gateway( $methods ) {
@@ -88,3 +96,4 @@ function handle_finish_url_page()
   }
 }
 add_action( 'wp', 'handle_finish_url_page' );
+add_action( 'wp_ajax_gosend_origin_location', 'Midtrans_Shipping_Gosend::gosend_origin_location' );
