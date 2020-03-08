@@ -58,8 +58,12 @@
 
         $this->api_version        = 2;
         $this->environment        = $this->get_option( 'select_midtrans_environment' );
-        
-        $this->to_idr_rate        = $this->get_option( 'to_idr_rate' );
+
+        $this->to_idr_rate        = apply_filters( 'midtrans_currency_rate', $this->get_option( 'to_idr_rate' ));
+
+        add_filter('midtrans_currency_rate', function ($midtrans_rate) {
+            return $midtrans_rate;
+        });
 
         $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
         $this->enable_savecard   = $this->get_option( 'enable_savecard' );
