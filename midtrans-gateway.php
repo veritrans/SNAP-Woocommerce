@@ -51,6 +51,14 @@ function midtrans_gateway_init() {
   DEFINE ('MT_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
   DEFINE ('MT_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
 
+  require_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
+  require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-notif-handler.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-api.php';
+
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-utils.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-logger.php';
+
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
