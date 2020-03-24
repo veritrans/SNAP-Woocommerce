@@ -97,21 +97,21 @@ class WC_Gateway_Midtrans_Notif_Handler
       } 
       // if or pending/challenge
       else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] == 201)  {
-        // if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
-        //   wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
-        //   exit;
-        // }
+        if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
+          wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
+          exit;
+        }
         $order_id = $_GET['order_id'];
         $order = new WC_Order( $order_id );
         wp_redirect($order->get_checkout_order_received_url());
       } 
       //if deny, redirect to order checkout page again
       else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] >= 202){
-        wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+        wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
       } 
       // if customer click "back" button, redirect to checkout page again
       else if( isset($_GET['order_id']) && !isset($_GET['transaction_status'])){ 
-        wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+        wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
       // if customer redirected from async payment with POST `response` (CIMB clicks, etc)
       } else if ( isset($_POST['response']) ){ 
         $responses = json_decode( stripslashes($_POST['response']), true);
@@ -122,7 +122,7 @@ class WC_Gateway_Midtrans_Notif_Handler
         } 
         // if async payment not paid
         else {
-          wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+          wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
         }
       // if customer redirected from async payment with GET `id` (BCA klikpay, etc)
       } else if (isset($_GET['id']) || (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) ){
@@ -144,12 +144,12 @@ class WC_Gateway_Midtrans_Notif_Handler
         } 
         // if async payment not paid
         else {
-          wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+          wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
         }
       } 
       // if unhandled case, fallback, redirect to home
       else {
-        wp_redirect( get_permalink( woocommerce_get_page_id( 'shop' ) ) );
+        wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
       }
     }
   }
