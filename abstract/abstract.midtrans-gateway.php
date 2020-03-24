@@ -130,7 +130,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     $this->setLogRequest( print_r( $refund_params, true ) );
 
     try {
-      $response = WC_Midtrans_API::createRefund($order_id, $refund_params);
+      $response = WC_Midtrans_API::createRefund($order_id, $refund_params, $this->id);
     } catch (Exception $e) {
       $this->setLogError( $e->getMessage() );
       $error_message = strpos($e->getMessage(), '412') ? $e->getMessage() . ' Note: Refund via Midtrans only for specific payment method, please consult to your midtrans PIC for more information' : $e->getMessage();

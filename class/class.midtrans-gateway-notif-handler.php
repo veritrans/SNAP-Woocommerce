@@ -55,6 +55,7 @@ class WC_Gateway_Midtrans_Notif_Handler
     ob_end_flush();
     ob_flush();
     flush();
+    return $raw_notification;
   }
 
   /**
@@ -70,11 +71,13 @@ class WC_Gateway_Midtrans_Notif_Handler
     // check whether the request is POST or GET, 
     // if request == POST, request is for payment notification, then update the payment status
     if(!isset($_GET['order_id']) && !isset($_POST['id']) && !isset($_GET['id']) && !isset($_POST['response'])) {    // Check if POST, then create new notification
-      $this->earlyResponse();
+      $raw_notification = $this->earlyResponse();
       // Handle pdf url update
       $this->handlePendingPaymentPdfUrlUpdate();
+      // Get plugin id 
+      $plugin_id = wc_get_order( $raw_notification['order_id'] )->get_payment_method();
       // Verify Midtrans notification
-      $midtrans_notification = WC_Midtrans_API::getMidtransNotif();
+      $midtrans_notification = WC_Midtrans_API::getMidtransNotif( $plugin_id );
       // If notification verified, handle it
       if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
         if (wc_get_order($midtrans_notification->order_id) != false) {
@@ -131,7 +134,8 @@ class WC_Gateway_Midtrans_Notif_Handler
         else {
           $id = $_GET['id'];
         }
-        $midtrans_notification = WC_Midtrans_API::getMidtransStatus($id);
+        $plugin_id = wc_get_order( $_GET['id'] )->get_payment_method();
+        $midtrans_notification = WC_Midtrans_API::getMidtransStatus($id, $plugin_id);
         $order_id = $midtrans_notification->order_id;
         // if async payment paid
         if ($midtrans_notification->transaction_status == 'settlement'){
