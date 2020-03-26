@@ -37,7 +37,7 @@
          * Fetch config option field values and set it as private variables
          */
         $this->id           = 'midtrans';
-        $this->method_title = __( $this->pluginTitle(), 'woocommerce' );
+        $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
         $this->has_fields   = true;
         $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans', home_url( '/' ) ) );
 
@@ -54,7 +54,7 @@
        * @return void
        */
       public function admin_options() { ?>
-        <h3><?php _e( $this->pluginTitle(), 'woocommerce' ); ?></h3>
+        <h3><?php _e( $this->pluginTitle(), 'midtrans-woocommerce' ); ?></h3>
         <p><?php _e('Allows payments using Midtrans.', 'midtrans-woocommerce' ); ?></p>
         <table class="form-table">
           <?php

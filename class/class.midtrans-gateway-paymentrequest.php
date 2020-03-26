@@ -15,7 +15,7 @@
        */
       function __construct() {
         $this->id           = 'midtrans_paymentrequest';
-        $this->method_title = __( $this->pluginTitle(), 'woocommerce' );
+        $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
         $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_Paymentrequest', home_url( '/' ) ) );
 
         parent::__construct();
@@ -39,17 +39,17 @@
         parent::init_form_fields();
         WC_Midtrans_Utils::array_insert( $this->form_fields, 'enable_3d_secure', array(
           'acquring_bank' => array(
-            'title' => __( 'Acquiring Bank', 'woocommerce'),
+            'title' => __( 'Acquiring Bank', 'midtrans-woocommerce'),
             'type' => 'text',
-            'label' => __( 'Acquiring Bank', 'woocommerce' ),
-            'description' => __( 'Leave blank for default. </br> Specify your acquiring bank for this payment option. </br> Options: BCA, BRI, DANAMON, MAYBANK, BNI, MANDIRI, CIMB, etc (Only choose 1 bank).' , 'woocommerce' ),
+            'label' => __( 'Acquiring Bank', 'midtrans-woocommerce' ),
+            'description' => __( 'Leave blank for default. </br> Specify your acquiring bank for this payment option. </br> Options: BCA, BRI, DANAMON, MAYBANK, BNI, MANDIRI, CIMB, etc (Only choose 1 bank).' , 'midtrans-woocommerce' ),
             'default' => ''
           ),
           'bin_number' => array(
-            'title' => __( 'Allowed CC BINs', 'woocommerce'),
+            'title' => __( 'Allowed CC BINs', 'midtrans-woocommerce'),
             'type' => 'text',
-            'label' => __( 'Allowed CC BINs', 'woocommerce' ),
-            'description' => __( 'Leave this blank if you dont understand!</br> Fill with CC BIN numbers (or bank name) that you want to allow to use this payment button. </br> Separate BIN number with coma Example: 4,5,4811,bni,mandiri', 'woocommerce' ),
+            'label' => __( 'Allowed CC BINs', 'midtrans-woocommerce' ),
+            'description' => __( 'Leave this blank if you dont understand!</br> Fill with CC BIN numbers (or bank name) that you want to allow to use this payment button. </br> Separate BIN number with coma Example: 4,5,4811,bni,mandiri', 'midtrans-woocommerce' ),
             'default' => ''
           )
         ));

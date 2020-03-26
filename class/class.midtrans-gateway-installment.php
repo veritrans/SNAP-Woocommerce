@@ -21,8 +21,8 @@
       }
 
       public function admin_options() { ?>
-        <h3><?php _e( $this->pluginTitle(), 'woocommerce' ); ?></h3>
-        <p><?php _e('Allows online installment payments using Midtrans.', 'woocommerce' ); ?></p>
+        <h3><?php _e( $this->pluginTitle(), 'midtrans-woocommerce' ); ?></h3>
+        <p><?php _e('Allows online installment payments using Midtrans.', 'midtrans-woocommerce' ); ?></p>
         <table class="form-table">
           <?php
             // Generate the HTML For the settings form.
