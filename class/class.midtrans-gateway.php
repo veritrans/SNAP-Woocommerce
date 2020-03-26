@@ -74,6 +74,8 @@
          * Build array of configurations that will be displayed on Admin Panel
          */
         parent::init_form_fields();
+        // Make this payment method enabled by default
+        $this->form_fields['enabled']['default'] = 'yes';
       }
 
       /**
