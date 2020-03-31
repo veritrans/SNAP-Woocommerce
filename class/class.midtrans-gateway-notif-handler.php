@@ -242,6 +242,10 @@ class WC_Gateway_Midtrans_Notif_Handler
       }
     }
     else if ($midtrans_notification->transaction_status == 'pending') {
+      // Store snap token & snap redirect url to $order metadata
+      $order->update_meta_data('_mt_payment_transaction_id',$midtrans_notification->transaction_id);
+      $order->save();
+
       if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
         exit;
       }
