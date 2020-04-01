@@ -37,7 +37,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     $this->enable_map_finish_url   = $this->get_option( 'enable_map_finish_url' );
     $this->ganalytics_id   = $this->get_option( 'ganalytics_id' );
     $this->enable_immediate_reduce_stock   = $this->get_option( 'enable_immediate_reduce_stock' );
-    $this->to_idr_rate = $this->get_option( 'to_idr_rate' );
+    $this->to_idr_rate = apply_filters( 'midtrans_to_idr_rate', $this->get_option( 'to_idr_rate' ));
     $this->log = new WC_Logger();
 
     // Register hook for handling HTTP notification (HTTP call to `http://[your web]/?wc-api=WC_Gateway_Midtrans`)
@@ -55,6 +55,10 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     add_action( 'woocommerce_view_order', array( $this, 'view_order_and_thankyou_page' ) );
     // Hook for refund request from Midtrans Dashboard or API refund
     add_action( 'create-refund-request',  array( $this, 'midtrans_refund' ), 10, 4 );
+    // Custom hook to customize rate convertion
+    add_filter('midtrans_to_idr_rate', function ($midtrans_rate) {
+      return $midtrans_rate;
+    });
 
     // include_once dirname( __FILE__ ) . '/includes/class-wc-gateway-paypal-ipn-handler.php';
     new WC_Gateway_Midtrans_Notif_Handler( $this->environment, $this->server_key );
