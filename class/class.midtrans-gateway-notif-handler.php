@@ -63,8 +63,6 @@ class WC_Gateway_Midtrans_Notif_Handler
    * Handle Midtrans payment notification
    */
   public function midtrans_response() {
-    // require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
-    global $woocommerce;
     @ob_clean();
     global $woocommerce;
 

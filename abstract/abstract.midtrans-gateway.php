@@ -25,9 +25,9 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     // Get Settings
     $this->title              = $this->get_option( 'title' );
     $this->description        = $this->get_option( 'description' );
-    $this->environment        = $this->get_option( 'environment' );
-    $this->client_key = ($this->environment == 'production') ? $this->get_option( 'client_key_production' ) : $this->get_option( 'client_key_sandbox' );
-    $this->server_key = ($this->environment == 'production') ? $this->get_option( 'server_key_production' ) : $this->get_option( 'server_key_sandbox' );
+    $this->environment        = $this->get_option( 'select_midtrans_environment' );
+    $this->client_key = ($this->environment == 'production') ? $this->get_option( 'client_key_v2_production' ) : $this->get_option( 'client_key_v2_sandbox' );
+    $this->server_key = ($this->environment == 'production') ? $this->get_option( 'server_key_v2_production' ) : $this->get_option( 'server_key_v2_sandbox' );
     $this->enable_3d_secure   = $this->get_option( 'enable_3d_secure' );
     $this->enable_savecard   = $this->get_option( 'enable_savecard' );
     $this->enable_redirect   = $this->get_option( 'enable_redirect' );
@@ -40,15 +40,11 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     $this->to_idr_rate = apply_filters( 'midtrans_to_idr_rate', $this->get_option( 'to_idr_rate' ));
     $this->log = new WC_Logger();
 
-    // Register hook for handling HTTP notification (HTTP call to `http://[your web]/?wc-api=WC_Gateway_Midtrans`)
-    // add_action( 'woocommerce_api_wc_gateway_midtrans', array( &$this, 'midtrans_vtweb_response' ) );
     add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) );
     
     // Hook for adding JS script to admin config page 
     add_action( 'admin_print_scripts-woocommerce_page_woocommerce_settings', array( &$this, 'midtrans_admin_scripts' ));
     add_action( 'admin_print_scripts-woocommerce_page_wc-settings', array( &$this, 'midtrans_admin_scripts' ));
-    // Create action to be called when HTTP notification is valid
-    // add_action( 'valid-midtrans-web-request', array( $this, 'successful_request' ) );
     // Hook for adding custom HTML on thank you page (for payement/instruction url)
     add_action( 'woocommerce_thankyou', array( $this, 'view_order_and_thankyou_page' ) );
     // Hook for adding custom HTML on view order menu from customer (for payement/instruction url)
@@ -59,8 +55,6 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     add_filter('midtrans_to_idr_rate', function ($midtrans_rate) {
       return $midtrans_rate;
     });
-
-    // include_once dirname( __FILE__ ) . '/includes/class-wc-gateway-paypal-ipn-handler.php';
     new WC_Gateway_Midtrans_Notif_Handler( $this->environment, $this->server_key );
   }
 
