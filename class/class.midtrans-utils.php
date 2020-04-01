@@ -3,7 +3,7 @@
 /**
  * Helper functions that is redundant function used on multiple payment classes
  */
-class Midtrans_Utils
+class WC_Midtrans_Utils
 {
   /**
    * Convert 2 digits coundry code to 3 digit country code
@@ -25,5 +25,55 @@ class Midtrans_Utils
 
     return $country_code;
   }
+
+  /**
+   * Helper for backward compatibility WC v3 & v2 on getting Order Property
+   * @param  [String] $order    Order Object
+   * @param  [String] $property Target property
+   * @return the property
+   */
+  public static function getOrderProperty($order, $property){
+    $functionName = "get_".$property;
+    if (method_exists($order, $functionName)){ // WC v3
+      return (string)$order->{$functionName}();
+    } else { // WC v2
+      return (string)$order->{$property};
+    }
+  }
+
+  /**
+   * Helper to print error as expected by Woocommerce ajax call
+   * On payment.
+   * @param  [error] $e
+   * @return [array] JSON encoded error messages.
+   */
+  public static function json_print_exception ( $e, $depedency ) {
+    $errorObj = array(
+      'result' => "failure", 
+      'messages' => '<div class="woocommerce-error" role="alert"> Midtrans Exception: '.$e->getMessage().'. <br>Plugin Title: '.esc_html($depedency->method_title).'</div>',
+      'refresh' => false, 
+      'reload' => false
+    );
+    $errorJson = json_encode($errorObj);
+    echo $errorJson;
+  }
+
+  /**
+   * @param array      $array
+   * @param int|string $position
+   * @param mixed      $insert
+   * @return array insert array to a specific index of an array
+   */
+  public static function array_insert( &$array, $position, $insert ) {
+    $index = array_search( $position, array_keys( $array ) );
+    $pos =  $index === false ? count( $array ) : $index + 1;
+
+    $array = array_merge(
+              array_slice($array, 0, $pos),
+              $insert,
+              array_slice($array, $pos)
+            );
+  }
+
 }
 ?>

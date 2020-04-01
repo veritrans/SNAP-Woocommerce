@@ -4,12 +4,12 @@ Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
 Description: Accept all payment directly on your WooCommerce site in a seamless and 
 secure checkout environment with <a href="http://midtrans.co.id" target="_blank">Midtrans.co.id</a>
-Version: 2.16.0
+Version: 2.17.0
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
 WC requires at least: 2.0.0
-WC tested up to: 3.6.2
+WC tested up to: 4.0.1
 */
 
 /*
@@ -51,6 +51,14 @@ function midtrans_gateway_init() {
   DEFINE ('MT_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
   DEFINE ('MT_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
 
+  require_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
+  require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-notif-handler.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-api.php';
+
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-utils.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-logger.php';
+
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
@@ -88,3 +96,21 @@ function handle_finish_url_page()
   }
 }
 add_action( 'wp', 'handle_finish_url_page' );
+
+/**
+ * Handle a custom '_mt_payment_transaction_id' query var to get orders with the '_mt_payment_transaction_id' meta.
+ * @param array $query - Args for WP_Query.
+ * @param array $query_vars - Query vars from WC_Order_Query.
+ * @return array modified $query
+ */
+function handle_custom_query_var( $query, $query_vars ) {
+	if ( ! empty( $query_vars['_mt_payment_transaction_id'] ) ) {
+		$query['meta_query'][] = array(
+			'key' => '_mt_payment_transaction_id',
+			'value' => esc_attr( $query_vars['_mt_payment_transaction_id'] ),
+		);
+	}
+
+	return $query;
+}
+add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', 'handle_custom_query_var', 10, 2 );

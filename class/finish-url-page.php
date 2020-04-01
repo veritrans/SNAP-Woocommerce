@@ -6,16 +6,13 @@
  */
 
 // reference: https://www.cloudways.com/blog/creating-custom-page-template-in-wordpress/
-require_once(dirname(__FILE__) . '/class.midtrans-gateway.php');
-$mt = new WC_Gateway_Midtrans();
-$isProduction = ($mt->environment == 'production') ? true : false;
-
-require_once(dirname(__FILE__) . '/../lib/midtrans/Midtrans.php');
-\Midtrans\Config::$isProduction = $isProduction;
-\Midtrans\Config::$serverKey = $isProduction ? $mt->server_key_v2_production : $mt->server_key_v2_sandbox ;
 try {
 	if(isset($_GET['id'])){ // handler for BCA_Klikpay finish redirect
-		$midtrans_notification = \Midtrans\Transaction::status($_GET['id']);	
+		$trx_id = $_GET['id'];
+		// Get order from transaction_id meta data
+		$order = wc_get_orders( array( '_mt_payment_transaction_id' => $trx_id ) );
+		$plugin_id = isset($order) ? $order[0]->get_payment_method() : 'midtrans';
+		$midtrans_notification = WC_Midtrans_API::getMidtransStatus($trx_id, $plugin_id);
 	}else if(isset($_POST['response'])){ // handler for CIMB CLICKS finish redirect
 		$response = preg_replace('/\\\\/', '', $_POST['response']);		
 		$midtrans_notification = json_decode($response);	
