@@ -70,7 +70,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
    * Initialise Gateway Settings Form Fields
    */
   public function init_form_fields() {
-    $this->form_fields = require( dirname(__DIR__, 1) . '/class/midtrans-admin-settings.php' );
+    $this->form_fields = require( dirname(__FILE__) . '/../class/midtrans-admin-settings.php' );
     // Currency conversion rate if currency is not IDR
     if (get_woocommerce_currency() != 'IDR') {
       $this->form_fields['to_idr_rate'] = array(
@@ -89,7 +89,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
    * @return string HTML
    */
   public function view_order_and_thankyou_page( $order_id ) {
-    require_once( dirname(__DIR__, 1) . '/class/order-view-and-thankyou-page.php');
+    require_once( dirname(__FILE__) . '/../class/order-view-and-thankyou-page.php');
   }
 
   /**
