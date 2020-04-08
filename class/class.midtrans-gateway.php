@@ -158,7 +158,7 @@
        * @return string
        */
       protected function getDefaultDescription () {
-        return __('Online Payment via Midtrans' . $this->get_option( 'min_amount' ) . '</br> You will be redirected to fullpayment page if the transaction amount below this value', 'midtrans-woocommerce');
+        return __('Pay via Midtrans', 'midtrans-woocommerce');
       }
 
     }

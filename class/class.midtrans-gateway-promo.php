@@ -169,7 +169,7 @@
        * @return string
        */
       protected function getDefaultDescription () {
-        return __('', 'midtrans-woocommerce');
+        return __('Credit Card Promo via Midtrans', 'midtrans-woocommerce');
       }
 
     }
