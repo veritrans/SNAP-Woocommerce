@@ -101,6 +101,7 @@ class WC_Midtrans_API {
      */
     public static function createSnapTransaction( $params, $plugin_id ) {
         self::midtransConfiguration( $plugin_id );
+		self::setLogRequest( print_r( $params, true ), $plugin_id );
         return Midtrans\Snap::createTransaction( $params );
 	}
 	
@@ -114,6 +115,7 @@ class WC_Midtrans_API {
      */
     public static function createRefund( $order_id, $params, $plugin_id ) {
 		self::midtransConfiguration( $plugin_id );
+		self::setLogRequest( print_r( $params, true ), $plugin_id );
 		return Midtrans\Transaction::refund($order_id, $params);
     }
 
@@ -136,4 +138,13 @@ class WC_Midtrans_API {
         return Midtrans\Transaction::status( $id );
     }
 
+    /**
+     * Set log request on midtrans logger.
+	 * 
+     * @param string $message payload request.
+     * @return void
+     */
+	public function setLogRequest( $message, $plugin_id ) {
+		WC_Midtrans_Logger::log( $message, 'midtrans-request', $plugin_id, current_time( 'timestamp') );
+	  }
 }
