@@ -138,6 +138,19 @@ class WC_Midtrans_API {
         return Midtrans\Transaction::status( $id );
     }
 
+	/**
+	 * Cancel transaction.
+	 * 
+	 * @param string $id Order ID or transaction ID.
+	 * @param string $plugin_id Plugin id.
+	 * @return object Midtrans response.
+	 */
+    public static function CancelTransaction( $id, $plugin_id ) {
+		self::midtransConfiguration( $plugin_id );
+		self::setLogRequest('Request Cancel Transaction ' . $id, $plugin_id );
+        return Midtrans\Transaction::cancel( $id );
+    }
+
     /**
      * Set log request on midtrans logger.
 	 * 
