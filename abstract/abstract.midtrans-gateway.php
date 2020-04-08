@@ -55,7 +55,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     add_filter('midtrans_to_idr_rate', function ($midtrans_rate) {
       return $midtrans_rate;
     });
-    new WC_Gateway_Midtrans_Notif_Handler( $this->environment, $this->server_key );
+    $this->id != 'midtrans' ?: new WC_Gateway_Midtrans_Notif_Handler( $this->environment, $this->server_key );
   }
 
   /**
