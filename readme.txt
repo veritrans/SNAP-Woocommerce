@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.3.2
-Stable tag: 2.17.1
+Stable tag: 2.17.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,13 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 4. Configuration page
 
 == Changelog ==
+
+= 2.17.2 – 2020-04-08 =
+* clean up code
+* add more descriptive wording on description default value
+* fix code to prevent the notif_handler class being called multiple times
+* improve method setLogRequest
+* add cancel transaction method
 
 = 2.17.1 – 2020-04-06 =
 * Fix code for backward compatibility php 5.6
@@ -180,6 +187,13 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Fullpayment feature
 
 == Upgrade Notice ==
+
+= 2.17.2 – 2020-04-08 =
+* clean up code
+* add more descriptive wording on description default value
+* fix code to prevent the notif_handler class being called multiple times
+* improve method setLogRequest
+* add cancel transaction method
 
 = 2.17.1 – 2020-04-06 =
 * Fix code for backward compatibility php 5.6
