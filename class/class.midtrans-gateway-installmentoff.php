@@ -116,7 +116,6 @@
           
         // Empty the cart because payment is initiated.
         $woocommerce->cart->empty_cart();
-        $this->setLogRequest( print_r( $params, true) );
         try {
           $snapResponse = WC_Midtrans_API::createSnapTransaction( $params, $this->id );
         } catch (Exception $e) {

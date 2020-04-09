@@ -7,7 +7,7 @@ class WC_Midtrans_Logger {
     /**
      * Utilize WC logger class
      */
-    public static function log( $message, $log_file_name, $plugin_id = 'midtrans_promo', $start_time = null, $end_time = null ) {
+    public static function log( $message, $log_file_name, $plugin_id = 'midtrans', $start_time = null, $end_time = null ) {
         if ( ! class_exists( 'WC_Logger' ) ) {
           return;
         }

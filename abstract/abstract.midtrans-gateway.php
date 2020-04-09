@@ -55,7 +55,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     add_filter('midtrans_to_idr_rate', function ($midtrans_rate) {
       return $midtrans_rate;
     });
-    new WC_Gateway_Midtrans_Notif_Handler( $this->environment, $this->server_key );
+    $this->id != 'midtrans' ?: new WC_Gateway_Midtrans_Notif_Handler( $this->environment, $this->server_key );
   }
 
   /**
@@ -125,7 +125,6 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
       'amount' => $amount,
       'reason' => $reason
     );
-    $this->setLogRequest( print_r( $refund_params, true ) );
 
     try {
       $response = WC_Midtrans_API::createRefund($order_id, $refund_params, $this->id);
@@ -375,10 +374,6 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     ) );
     if ( is_wp_error( $refund ) ) throw new Exception($refund->get_error_message());
       return $refund;
-  }
-
-  public function setLogRequest( $message ) {
-    WC_Midtrans_Logger::log( $message, 'midtrans-request', $this->id, current_time( 'timestamp') );
   }
 
   public function setLogError( $message ) {

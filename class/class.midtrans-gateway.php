@@ -96,7 +96,6 @@
 
         // Empty the cart because payment is initiated.
         $woocommerce->cart->empty_cart();
-        $this->setLogRequest( print_r( $params, true) );
         try {
           $snapResponse = WC_Midtrans_API::createSnapTransaction( $params, $this->id );
         } catch (Exception $e) {
@@ -158,7 +157,7 @@
        * @return string
        */
       protected function getDefaultDescription () {
-        return __('Online Payment via Midtrans' . $this->get_option( 'min_amount' ) . '</br> You will be redirected to fullpayment page if the transaction amount below this value', 'midtrans-woocommerce');
+        return __('Pay via Midtrans', 'midtrans-woocommerce');
       }
 
     }

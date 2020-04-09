@@ -29,7 +29,6 @@ return apply_filters(
             'type' => 'textarea',
             'description' => __( 'This controls the description which the user sees during checkout', 'midtrans-woocommerce' ),
             'default'       => $this->getDefaultDescription(),
-            'default' => ''
           ),
         'merchant_id'                => array(
             'title'         => __("Merchant ID", 'midtrans-woocommerce'),

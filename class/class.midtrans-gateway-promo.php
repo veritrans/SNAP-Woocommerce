@@ -109,7 +109,6 @@
         }
         // Empty the cart because payment is initiated.
         $woocommerce->cart->empty_cart();
-        $this->setLogRequest( print_r( $params, true) );
 
         try {
           $snapResponse = WC_Midtrans_API::createSnapTransaction( $params, $this->id );
@@ -169,7 +168,7 @@
        * @return string
        */
       protected function getDefaultDescription () {
-        return __('', 'midtrans-woocommerce');
+        return __('Credit Card Promo via Midtrans', 'midtrans-woocommerce');
       }
 
     }
