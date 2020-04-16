@@ -64,6 +64,8 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
+  // Add this payment method if WooCommerce Subscriptions plugin activated
+  if( class_exists( 'WC_Subscriptions' ) ) require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
 }
@@ -81,6 +83,8 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_Installment';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
   $methods[] = 'WC_Gateway_Midtrans_Promo';
+  // Add this payment method if WooCommerce Subscriptions plugin activated
+  if( class_exists( 'WC_Subscriptions' ) ) $methods[] = 'WC_Gateway_Midtrans_Subscription';
   return $methods;
 }
 /**

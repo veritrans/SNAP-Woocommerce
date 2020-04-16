@@ -210,14 +210,11 @@ class WC_Gateway_Midtrans_Notif_Handler
 
     if ($midtrans_notification->transaction_status == 'capture') {
       if ($midtrans_notification->fraud_status == 'accept') {
+        // Procces subscription transaction if contains subsctription
+        $this->validateSubscriptionTransaction( $midtrans_notification, $order );
         $order->payment_complete();
         $order->add_order_note(__('Midtrans payment completed: capture. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
 
-        // Get card_token for subscription payment
-        if ( function_exists( 'wcs_order_contains_subscription' ) && ( wcs_order_contains_subscription( $order_id ) || function_exists( 'wcs_is_subscription' ) && wcs_is_subscription( $order_id ) || function_exists( 'wcs_order_contains_renewal' ) && wcs_order_contains_renewal( $order_id ) ) ) {
-          $order->update_meta_data('_mt_subscription_card_token',$midtrans_notification->saved_token_id);
-          $order->save();
-        }
       }
       else if ($midtrans_notification->fraud_status == 'challenge') {
         $order->update_status('on-hold',__('Challanged payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
@@ -288,6 +285,39 @@ class WC_Gateway_Midtrans_Notif_Handler
       }
     }
     return $refund_request;
+  }
+
+  /**
+   * Process subscription transaction if contains one of those
+   * 
+   * @param [Object] $midtrans_notification Object representation of Midtrans JSON notification
+   * @param WC_Order $order 
+   * @return void
+   */
+  public function validateSubscriptionTransaction( $midtrans_notification, $order ) {
+    // Process if this is a subscription transaction
+    if ( wcs_order_contains_subscription( $midtrans_notification->order_id ) || wcs_is_subscription( $midtrans_notification->order_id ) || wcs_order_contains_renewal( $midtrans_notification->order_id ) ) {
+      // Don't process if contains renewal and the order status is pending
+      if ( !wcs_order_contains_renewal( $midtrans_notification->order_id) || $order->get_status() != 'pending' ) {
+        $subscriptions = wcs_get_subscriptions_for_order( $order, array( 'order_type' => 'any' ) );
+        foreach ( $subscriptions as $subscription ) {
+          if (!$subscription->get_meta('_mt_subscription_card_token') || $order->get_status() == 'failed' ) {
+            // Store card token to meta if customer choose save card on previous payment
+            if ($midtrans_notification->saved_token_id ) {
+              $subscription->update_meta_data('_mt_subscription_card_token',$midtrans_notification->saved_token_id);
+              $subscription->save();
+            }
+            // Customer didn't choose save card option on previous payment
+            else {
+              $subscription->add_order_note( __( 'Customer didn\'t tick "save card" option. <br>The next payment on ' . $subscription->get_date('next_payment', 'site') . ' will fail.', 'midtrans-woocommerce'), 1 );
+              $order->add_order_note( __('Customer didn\'t tick "save card" option, next payment will fail', 'midtrans-woocommerce'), 1 );
+              $subscription->update_meta_data('_mt_subscription_card_token',$midtrans_notification->saved_token_id);
+              $subscription->save();
+            }
+          } 
+        }
+      }
+    }
   }
 
 }
