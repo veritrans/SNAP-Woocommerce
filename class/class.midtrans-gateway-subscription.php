@@ -164,7 +164,7 @@
       // if card_token null, the transaction will fail.
       if ($card_token == '' ) {
         $renewal_order->update_status( 'failed', __('Midtrans subscription payment failed.', 'midtrans-woocommerce') );
-        $renewal_order->add_order_note( __( 'Customer didn\'t tick the SAVE CARD on previous payment. <br> Please click <a href="'.$checkout_payment_url.'">here</a> to renew the payment.', 'midtrans-woocommerce' ), 1 );
+        $renewal_order->add_order_note( __( 'Customer didn\'t tick the <b>Save Card Info</b> on previous payment. <br> Please click <a href="'.$checkout_payment_url.'">here</a> to renew the payment.', 'midtrans-woocommerce' ), 1 );
         return array('result' => 'failure');
         exit();
       }
@@ -212,7 +212,7 @@
      * @return string
      */
     protected function getDefaultDescription() {
-      return __('Pay Subscriptionvia Midtrans.<br>You have to tick the <b>SAVE OPTION</b> that will be presented when you fill out the credit card details (if you forget to choose, your next payment will fail).', 'midtrans-woocommerce');
+      return __('Pay Subscriptionvia Midtrans.<br>You have to tick the <b>Save Card Info</b> that will be presented when you fill out the credit card details (if you forget to choose, your next payment will fail).', 'midtrans-woocommerce');
     }
 
     /**

@@ -309,8 +309,8 @@ class WC_Gateway_Midtrans_Notif_Handler
             }
             // Customer didn't choose save card option on previous payment
             else {
-              $subscription->add_order_note( __( 'Customer didn\'t tick "save card" option. <br>The next payment on ' . $subscription->get_date('next_payment', 'site') . ' will fail.', 'midtrans-woocommerce'), 1 );
-              $order->add_order_note( __('Customer didn\'t tick "save card" option, next payment will fail', 'midtrans-woocommerce'), 1 );
+              $subscription->add_order_note( __( 'Customer didn\'t tick <b>Save Card Info</b>. <br>The next payment on ' . $subscription->get_date('next_payment', 'site') . ' will fail.', 'midtrans-woocommerce'), 1 );
+              $order->add_order_note( __('Customer didn\'t tick <b>Save Card Info</b>, next payment will fail', 'midtrans-woocommerce'), 1 );
               $subscription->update_meta_data('_mt_subscription_card_token',$midtrans_notification->saved_token_id);
               $subscription->save();
             }
