@@ -71,6 +71,7 @@
           'default' => ''
         )
       ));
+      $this->form_fields['custom_fields']['description'] = __( 'This will allow you to set custom fields that will be displayed on Midtrans dashboard. <br>Up to 2 fields are available, separate by coma (,) <br> Example:  Order from web, Woocommerce', 'midtrans-woocommerce' );
     }
 
     /**
@@ -99,6 +100,8 @@
         $bins = explode(',', $this->get_option('bin_number'));
         $params['credit_card']['whitelist_bins'] = $bins;
       }
+      // add custom field so it can be easily identified on Midtrans Dashboard.
+      $params['custom_field3'] = 'woocommerce-subscription-initial';
 
       // Empty the cart because payment is initiated.
       $woocommerce->cart->empty_cart();
@@ -173,6 +176,8 @@
       $params = $this->getPaymentRequestData( $order_id );
       $params['credit_card']['secure'] = false;
       $params['credit_card']['token_id'] = $card_token;
+      // add custom field so it can be easily identified on Midtrans Dashboard.
+      $params['custom_field3'] = 'woocommerce-subscription-renewal';
 
       // Charge transaction via Midtrans API.
       try {
