@@ -297,11 +297,12 @@ class WC_Gateway_Midtrans_Notif_Handler
   public function validateSubscriptionTransaction( $midtrans_notification, $order ) {
     // Process if this is a subscription transaction
     if ( wcs_order_contains_subscription( $midtrans_notification->order_id ) || wcs_is_subscription( $midtrans_notification->order_id ) || wcs_order_contains_renewal( $midtrans_notification->order_id ) ) {
-      // Don't process if contains renewal and the order status is pending
-      if ( !wcs_order_contains_renewal( $midtrans_notification->order_id) || $order->get_status() != 'pending' ) {
+      // if not subscription and wc status pending, don't process (because that's a recurring transaction)
+      if ( wcs_order_contains_renewal( $midtrans_notification->order_id) && $order->get_status() == 'pending' ) {
+        return false;
+      }
         $subscriptions = wcs_get_subscriptions_for_order( $order, array( 'order_type' => 'any' ) );
         foreach ( $subscriptions as $subscription ) {
-          if (!$subscription->get_meta('_mt_subscription_card_token') || $order->get_status() == 'failed' ) {
             // Store card token to meta if customer choose save card on previous payment
             if ($midtrans_notification->saved_token_id ) {
               $subscription->update_meta_data('_mt_subscription_card_token',$midtrans_notification->saved_token_id);
@@ -314,9 +315,7 @@ class WC_Gateway_Midtrans_Notif_Handler
               $subscription->update_meta_data('_mt_subscription_card_token',$midtrans_notification->saved_token_id);
               $subscription->save();
             }
-          } 
         }
-      }
     }
   }
 
