@@ -105,6 +105,18 @@ class WC_Midtrans_API {
         return Midtrans\Snap::createTransaction( $params );
 	}
 	
+    /**
+     * Create Recurring Transaction for Subscription Payment.
+     * @param  array $params Payment options.
+     * @return object Core API response (token and redirect_url).
+     * @throws Exception curl error or midtrans error.
+     */
+    public static function createRecurringTransaction( $params, $plugin_id = 'midtrans_subscription' ) {
+		self::midtransConfiguration( $plugin_id );
+		self::setLogRequest( print_r( $params, true ), $plugin_id );
+		return Midtrans\CoreApi::charge( $params );
+    }
+
 	/**
      * Create Refund.
 	 * 
@@ -157,7 +169,7 @@ class WC_Midtrans_API {
      * @param string $message payload request.
      * @return void
      */
-	public function setLogRequest( $message, $plugin_id ) {
+	public static function setLogRequest( $message, $plugin_id ) {
 		WC_Midtrans_Logger::log( $message, 'midtrans-request', $plugin_id, current_time( 'timestamp') );
 	  }
 }
