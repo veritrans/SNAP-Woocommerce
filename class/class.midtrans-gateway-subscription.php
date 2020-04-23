@@ -159,12 +159,12 @@
       $subscription_order = wcs_get_subscriptions_for_renewal_order( $order_id );
       $checkout_payment_url = $renewal_order->get_checkout_payment_url();
 
+      // get value from last element of array
+	    $subscription = array_pop( $subscription_order ); // Just need one valid subscription
       // Retrieve card token from meta.
-      foreach ( $subscription_order as $subscription ) {
-        $card_token = $subscription->get_meta('_mt_subscription_card_token');
-      }
+      $card_token = $subscription->get_meta('_mt_subscription_card_token');
 
-      // if card_token null, the transaction will fail.
+      // if can't find the card token, the transaction will fail
       if ($card_token == '' ) {
         $renewal_order->update_status( 'failed', __('Midtrans subscription payment failed.', 'midtrans-woocommerce') );
         $renewal_order->add_order_note( __( 'Customer didn\'t tick the <b>Save Card Info</b> on previous payment. <br> Please click <a href="'.$checkout_payment_url.'">here</a> to renew the payment.', 'midtrans-woocommerce' ), 1 );
