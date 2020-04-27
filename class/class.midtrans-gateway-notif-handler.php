@@ -211,7 +211,7 @@ class WC_Gateway_Midtrans_Notif_Handler
     if ($midtrans_notification->transaction_status == 'capture') {
       if ($midtrans_notification->fraud_status == 'accept') {
         // Procces subscription transaction if contains subsctription
-        $this->validateSubscriptionTransaction( $midtrans_notification, $order );
+        if( class_exists( 'WC_Subscriptions' ) ) $this->validateSubscriptionTransaction( $midtrans_notification, $order );
         $order->payment_complete();
         $order->add_order_note(__('Midtrans payment completed: capture. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
 
