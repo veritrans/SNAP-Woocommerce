@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.3.2
-Stable tag: 2.18.1
+Stable tag: 2.18.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 4. Configuration page
 
 == Changelog ==
+
+= 2.18.1 – 2020-04-30 =
+* hot fix remove deprecated method
 
 = 2.18.1 – 2020-04-27 =
 * fix handling notif if wc_subscription not installed skip the validateSubscriptionTransaction()
@@ -193,6 +196,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Fullpayment feature
 
 == Upgrade Notice ==
+
+= 2.18.1 – 2020-04-30 =
+* hot fix remove deprecated method
 
 = 2.18.1 – 2020-04-27 =
 * fix handling notif if wc_subscription not installed skip the validateSubscriptionTransaction()
