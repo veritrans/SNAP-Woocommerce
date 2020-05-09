@@ -2,8 +2,7 @@
 /*
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
-Description: Accept all payment directly on your WooCommerce site in a seamless and 
-secure checkout environment with <a href="http://midtrans.co.id" target="_blank">Midtrans.co.id</a>
+Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a  target="_blank" href="https://midtrans.com/">Midtrans</a>
 Version: 2.18.2
 Author: Midtrans
 Author URI: http://midtrans.co.id
