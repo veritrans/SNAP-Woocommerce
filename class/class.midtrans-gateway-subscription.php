@@ -228,7 +228,7 @@
      * @return string
      */
     protected function getSettingsDescription() {
-      return __('This method used for recurring payments with WooCommerce Subscriptions. You must have mid recurring to activate this Method. <br> Please contact your Midtrans PIC for further details.', 'midtrans-woocommerce');
+      return __('This method used for recurring payments with WooCommerce Subscriptions. You must have mid recurring to activate this Method. <br> Please contact your Midtrans PIC for further details. Click <a href="https://github.com/veritrans/SNAP-Woocommerce/wiki/04---Credit-card-subscription-payment">here</a> for more detail.', 'midtrans-woocommerce');
     }
     
   }
