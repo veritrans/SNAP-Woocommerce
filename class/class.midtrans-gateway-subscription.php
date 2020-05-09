@@ -72,6 +72,7 @@
         )
       ));
       $this->form_fields['custom_fields']['description'] = __( 'This will allow you to set custom fields that will be displayed on Midtrans dashboard. <br>Up to 2 fields are available, separate by coma (,) <br> Example:  Order from web, Woocommerce', 'midtrans-woocommerce' );
+      $this->form_fields['enable_savecard']['default'] = 'yes';
     }
 
     /**
@@ -90,6 +91,9 @@
       // Get data for charge to midtrans API.
       $params = $this->getPaymentRequestData( $order_id );
 
+      // Always activate 3ds and save_card
+      $params['credit_card']['secure'] = true;
+      $params['credit_card']['save_card'] = true;
       // add credit card payment.
       $params['enabled_payments'] = ['credit_card'];
       // add bank & channel migs params.
