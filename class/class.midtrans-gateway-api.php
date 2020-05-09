@@ -26,7 +26,7 @@ class WC_Midtrans_API {
 	 * Plugin Options.
 	 * @var string
 	 */
-	private static $plugin_options = 'midtrans';
+	private static $plugin_options;
 	
 	/**
 	 * Set Server Key.
@@ -72,11 +72,9 @@ class WC_Midtrans_API {
 	 */
 	public static function get_environment() {
 		if ( ! self::$environment ) {
-			// TO DO the payment method id still harcoded need to improve
-			$options = get_option( 'woocommerce_midtrans_settings' );
-
-			if ( isset( $options['select_midtrans_environment'] ) ) {
-				self::set_environment( $options['select_midtrans_environment'] );
+			$plugin_options = self::$plugin_options;
+			if ( isset( $plugin_options['select_midtrans_environment'] ) ) {
+				self::set_environment( $plugin_options['select_midtrans_environment'] );
 			}
 		}
 		return self::$environment;
