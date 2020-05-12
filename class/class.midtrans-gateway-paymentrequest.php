@@ -16,6 +16,7 @@
       function __construct() {
         $this->id           = 'midtrans_paymentrequest';
         $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
+        $this->method_description = $this->getSettingsDescription();
         $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_Paymentrequest', home_url( '/' ) ) );
 
         parent::__construct();
@@ -118,7 +119,7 @@
        * @return string
        */
       public function pluginTitle() {
-        return "Midtrans Credit Card Direct";
+        return "Midtrans Optional Card in-Browser Payment UI";
       }
 
       /**
@@ -126,6 +127,13 @@
        */
       protected function getDefaultTitle () {
         return __('Credit Card Payment via Midtrans', 'midtrans-woocommerce');
+      }
+
+      /**
+       * @return string
+       */
+      protected function getSettingsDescription() {
+        return __('Alternative Card Payment form using in-browser payment UI (leave it disabled if not sure).', 'midtrans-woocommerce');
       }
 
       /**
