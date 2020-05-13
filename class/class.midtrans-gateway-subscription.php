@@ -72,6 +72,7 @@
         )
       ));
       $this->form_fields['custom_fields']['description'] = __( 'This will allow you to set custom fields that will be displayed on Midtrans dashboard. <br>Up to 2 fields are available, separate by coma (,) <br> Example:  Order from web, Woocommerce', 'midtrans-woocommerce' );
+      $this->form_fields['enable_savecard']['default'] = 'yes';
     }
 
     /**
@@ -90,6 +91,9 @@
       // Get data for charge to midtrans API.
       $params = $this->getPaymentRequestData( $order_id );
 
+      // Always activate 3ds and save_card
+      $params['credit_card']['secure'] = true;
+      $params['credit_card']['save_card'] = true;
       // add credit card payment.
       $params['enabled_payments'] = ['credit_card'];
       // add bank & channel migs params.
@@ -224,7 +228,7 @@
      * @return string
      */
     protected function getSettingsDescription() {
-      return __('This method used for recurring payments with WooCommerce Subscriptions. You must have mid recurring to activate this Method. <br> Please contact your Midtrans PIC for further details.', 'midtrans-woocommerce');
+      return __('This method used for recurring payments with WooCommerce Subscriptions. You must have mid recurring to activate this Method. <br> Please contact your Midtrans PIC for further details. Click <a href="https://github.com/veritrans/SNAP-Woocommerce/wiki/04---Credit-card-subscription-payment">here</a> for more detail.', 'midtrans-woocommerce');
     }
     
   }

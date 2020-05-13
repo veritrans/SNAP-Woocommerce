@@ -2,9 +2,8 @@
 /*
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
-Description: Accept all payment directly on your WooCommerce site in a seamless and 
-secure checkout environment with <a href="http://midtrans.co.id" target="_blank">Midtrans.co.id</a>
-Version: 2.18.2
+Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a  target="_blank" href="https://midtrans.com/">Midtrans</a>
+Version: 2.18.3
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
@@ -68,6 +67,7 @@ function midtrans_gateway_init() {
   if( class_exists( 'WC_Subscriptions' ) ) require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
+  add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'plugin_action_links' );
 }
 
 function add_midtrans_payment_gateway( $methods ) {
@@ -100,6 +100,20 @@ function handle_finish_url_page()
   }
 }
 add_action( 'wp', 'handle_finish_url_page' );
+
+/**
+ * Adds plugin action links
+ *
+ * @param array $links
+ */
+function plugin_action_links($links){
+  $plugin_links = array(
+      '<a href="' . admin_url('admin.php?page=wc-settings&tab=checkout&section=midtrans') . '">' . __('Settings', 'midtrans-woocommerce') . '</a>',
+      '<a target="_blank" href="https://beta-docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce">' . __('Documentation', 'midtrans-woocommerce') . '</a>',
+      '<a target="_blank" href="https://github.com/veritrans/SNAP-Woocommerce/wiki">' . __('Wiki', 'midtrans-woocommerce') . '</a>',
+  );
+  return array_merge($plugin_links, $links);
+}
 
 /**
  * Handle a custom '_mt_payment_transaction_id' query var to get orders with the '_mt_payment_transaction_id' meta.

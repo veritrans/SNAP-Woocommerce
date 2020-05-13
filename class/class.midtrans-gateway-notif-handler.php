@@ -72,8 +72,15 @@ class WC_Gateway_Midtrans_Notif_Handler
       $raw_notification = $this->earlyResponse();
       // Handle pdf url update
       $this->handlePendingPaymentPdfUrlUpdate();
+      // Get WooCommerce order
+      $wcorder = wc_get_order( $raw_notification['order_id'] );
+      // exit if the order id doesn't exist in WooCommerce dashboard
+      if (!$wcorder) {
+        WC_Midtrans_Logger::log( 'Can\'t find order id' . $raw_notification['order_id'] . ' on WooCommerce dashboard', 'midtrans-error' );
+        exit;
+      }
       // Get plugin id 
-      $plugin_id = wc_get_order( $raw_notification['order_id'] )->get_payment_method();
+      else $plugin_id = $wcorder->get_payment_method();
       // Verify Midtrans notification
       $midtrans_notification = WC_Midtrans_API::getMidtransNotif( $plugin_id );
       // If notification verified, handle it

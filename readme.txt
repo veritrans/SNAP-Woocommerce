@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.3.2
-Stable tag: 2.18.2
+Stable tag: 2.18.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,7 +70,16 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Changelog ==
 
-= 2.18.1 – 2020-04-30 =
+= 2.18.3 - 2020-05-13 =
+* hide 3ds and save card configuration field on midtrans subscription admin and make it active
+* add plugin action links
+* fix typo on description plugin detail
+* improve get_environment method
+* add wiki link on subscription method description
+* update handling notif when order id not exist on WC dashboard
+* change payment option name `Midtrans Credit Card Direct`
+
+= 2.18.2 – 2020-04-30 =
 * hot fix remove deprecated method
 
 = 2.18.1 – 2020-04-27 =
@@ -197,7 +206,16 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Upgrade Notice ==
 
-= 2.18.1 – 2020-04-30 =
+= 2.18.3 - 2020-05-13 =
+* hide 3ds and save card configuration field on midtrans subscription admin and make it active
+* add plugin action links
+* fix typo on description plugin detail
+* improve get_environment method
+* add wiki link on subscription method description
+* update handling notif when order id not exist on WC dashboard
+* change payment option name `Midtrans Credit Card Direct`
+
+= 2.18.2 – 2020-04-30 =
 * hot fix remove deprecated method
 
 = 2.18.1 – 2020-04-27 =
