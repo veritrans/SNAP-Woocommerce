@@ -77,7 +77,6 @@ class WC_Gateway_Midtrans_Notif_Handler
       // exit if the order id doesn't exist in WooCommerce dashboard
       if (!$wcorder) {
         WC_Midtrans_Logger::log( 'Can\'t find order id' . $raw_notification['order_id'] . ' on WooCommerce dashboard', 'midtrans-error' );
-        error_log('Can\'t find order id' . $raw_notification['order_id'] . ' on WooCommerce dashboard');
         exit;
       }
       // Get plugin id 
