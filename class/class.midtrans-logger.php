@@ -15,7 +15,7 @@ class WC_Midtrans_Logger {
         if ( apply_filters( 'wc_midtrans_logging', true, $message ) ) {
           $logger = new WC_Logger();
           $options = get_option( 'woocommerce_' . $plugin_id . '_settings' );
-          if ( ! isset($options['logging'] ) || ! $options['logging'] == 'yes' ) return;
+          if ( ! isset($options['logging'] ) || $options['logging'] != 'yes' ) return;
           // if ( ! $options['logging'] == 'yes' ) return;
   
           if ( ! is_null( $start_time ) ) {
