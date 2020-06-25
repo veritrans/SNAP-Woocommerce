@@ -74,6 +74,15 @@
          * Build array of configurations that will be displayed on Admin Panel
          */
         parent::init_form_fields();
+        WC_Midtrans_Utils::array_insert( $this->form_fields, 'enable_3d_secure', array(
+          'acquring_bank' => array(
+            'title' => __( 'Acquiring Bank', 'midtrans-woocommerce'),
+            'type' => 'text',
+            'label' => __( 'Acquiring Bank', 'midtrans-woocommerce' ),
+            'description' => __( 'Leave blank for default. </br> Specify your acquiring bank for this payment option. </br> Options: BCA, BRI, DANAMON, MAYBANK, BNI, MANDIRI, CIMB, etc (Only choose 1 bank).' , 'midtrans-woocommerce' ),
+            'default' => ''
+          )
+        ));
         // Make this payment method enabled by default
         $this->form_fields['enabled']['default'] = 'yes';
       }
@@ -93,6 +102,9 @@
         $successResponse = $this->getResponseTemplate( $order );
         // Get data for charge to midtrans API
         $params = $this->getPaymentRequestData( $order_id );
+        // Add acquiring bank params
+        if (strlen($this->get_option('acquring_bank')) > 0)
+          $params['credit_card']['bank'] = strtoupper ($this->get_option('acquring_bank'));
 
         // Empty the cart because payment is initiated.
         $woocommerce->cart->empty_cart();
