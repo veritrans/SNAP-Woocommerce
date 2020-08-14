@@ -62,7 +62,7 @@ class Snap
         )
         );
 
-        if (array_key_exists('item_details', $params)) {
+        if (isset($params['item_details'])) {
             $gross_amount = 0;
             foreach ($params['item_details'] as $item) {
                 $gross_amount += $item['quantity'] * $item['price'];
@@ -73,6 +73,12 @@ class Snap
         if (Config::$isSanitized) {
             Sanitizer::jsonRequest($params);
         }
+
+        if (Config::$appendNotifUrl)
+            Config::$curlOptions[CURLOPT_HTTPHEADER][] = 'X-Append-Notification: ' . Config::$appendNotifUrl;
+
+        if (Config::$overrideNotifUrl)
+            Config::$curlOptions[CURLOPT_HTTPHEADER][] = 'X-Override-Notification: ' . Config::$overrideNotifUrl;
 
         $params = array_replace_recursive($payloads, $params);
 

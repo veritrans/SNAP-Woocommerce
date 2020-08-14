@@ -167,8 +167,8 @@ class WC_Gateway_Midtrans_Notif_Handler
     try {
       global $woocommerce;
       $requestObj = json_decode(file_get_contents("php://input"), true);
-      if( !array_key_exists('pdf_url_update', $requestObj) || 
-          !array_key_exists('snap_token_id', $requestObj) ){
+      if( !isset($requestObj['pdf_url_update']) || 
+          !isset($requestObj['snap_token_id']) ){
         return;
       }
       $snapApiBaseUrl = ($this->environment) ? 'https://app.midtrans.com' : 'https://app.sandbox.midtrans.com';
@@ -184,7 +184,7 @@ class WC_Gateway_Midtrans_Notif_Handler
         $order->update_status('on-hold',__('Midtrans onPending Callback received','midtrans-woocommerce'));
 
       }
-      if( !array_key_exists('pdf_url', $tokenStatus) ){
+      if( !isset($tokenStatus['pdf_url']) ){
         return;
       }
 
