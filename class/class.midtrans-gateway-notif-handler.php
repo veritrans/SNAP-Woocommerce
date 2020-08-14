@@ -66,9 +66,16 @@ class WC_Gateway_Midtrans_Notif_Handler
     @ob_clean();
     global $woocommerce;
 
+    $sanitized = [];
+    $sanitized['order_id'] = sanitize_text_field($_GET['order_id']);
+    $sanitized['id'] = sanitize_text_field($_GET['id']);
+    $sanitizedPost = [];
+    $sanitizedPost['id'] = sanitize_text_field($_POST['id']);
+    $sanitizedPost['response'] = sanitize_text_field($_POST['response']);
+
     // check whether the request is POST or GET, 
     // if request == POST, request is for payment notification, then update the payment status
-    if(!isset($_GET['order_id']) && !isset($_POST['id']) && !isset($_GET['id']) && !isset($_POST['response'])) {    // Check if POST, then create new notification
+    if(empty($sanitized['order_id']) && empty($sanitizedPost['id']) && empty($sanitized['id']) && empty($sanitizedPost['response'])) {    // Check if POST, then create new notification
       $raw_notification = $this->earlyResponse();
       // Handle pdf url update
       $this->handlePendingPaymentPdfUrlUpdate();
@@ -93,33 +100,37 @@ class WC_Gateway_Midtrans_Notif_Handler
     }
     // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
     else { 
+      $sanitized['transaction_status'] = sanitize_text_field($_GET['transaction_status']);
+      $sanitized['status_code'] = sanitize_text_field($_GET['status_code']);
+      $sanitized['wc-api'] = sanitize_text_field($_GET['wc-api']);
+
       // if capture/settlement, redirect to order received page
-      if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] <= 200)  {
-        $order_id = $_GET['order_id'];
+      if( !empty($sanitized['order_id']) && !empty($sanitized['status_code']) && $sanitized['status_code'] <= 200)  {
+        $order_id = $sanitized['order_id'];
         // error_log($this->get_return_url( $order )); //debug
         $order = new WC_Order( $order_id );
         wp_redirect($order->get_checkout_order_received_url());
       } 
       // if or pending/challenge
-      else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] == 201)  {
+      else if( !empty($sanitized['order_id']) && !empty($sanitized['transaction_status']) && $sanitized['status_code'] == 201)  {
         if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
           wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
           exit;
         }
-        $order_id = $_GET['order_id'];
+        $order_id = $sanitized['order_id'];
         $order = new WC_Order( $order_id );
         wp_redirect($order->get_checkout_order_received_url());
       } 
       //if deny, redirect to order checkout page again
-      else if( isset($_GET['order_id']) && isset($_GET['transaction_status']) && $_GET['status_code'] >= 202){
+      else if( !empty($sanitized['order_id']) && !empty($sanitized['transaction_status']) && $sanitized['status_code'] >= 202){
         wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
       } 
       // if customer click "back" button, redirect to checkout page again
-      else if( isset($_GET['order_id']) && !isset($_GET['transaction_status'])){ 
+      else if( !empty($sanitized['order_id']) && empty($sanitized['transaction_status'])){ 
         wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
       // if customer redirected from async payment with POST `response` (CIMB clicks, etc)
-      } else if ( isset($_POST['response']) ){ 
-        $responses = json_decode( stripslashes($_POST['response']), true);
+      } else if ( !empty($sanitizedPost['response']) ){ 
+        $responses = json_decode( stripslashes($sanitizedPost['response']), true);
         $order = new WC_Order( $responses['order_id'] );
         // if async payment paid
         if ( $responses['status_code'] == 200) { 
@@ -130,16 +141,18 @@ class WC_Gateway_Midtrans_Notif_Handler
           wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
         }
       // if customer redirected from async payment with GET `id` (BCA klikpay, etc)
-      } else if (isset($_GET['id']) || (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) ){
+      } else if (!empty($sanitized['id']) || (!empty($sanitized['wc-api']) && strlen($sanitized['wc-api']) >= 25) ){
         // Workaround if id query string is malformed, manual substring
-        if (isset($_GET['wc-api']) && strlen($_GET['wc-api']) >= 25) {
-          $id = str_replace("WC_Gateway_Midtrans?id=", "", $_GET['wc-api']);
+        if (!empty($sanitized['wc-api']) && strlen($sanitized['wc-api']) >= 25) {
+          $id = str_replace("WC_Gateway_Midtrans?id=", "", $sanitized['wc-api']);
         }
         // else if id query string format is correct
         else {
-          $id = $_GET['id'];
+          $id = $sanitized['id'];
         }
-        $plugin_id = wc_get_order( $_GET['id'] )->get_payment_method();
+        // @TODO: fix this bug, $sanitized['id'] is transaction_id, which is unknown to WC
+        // But actually, BCA Klikpay already handled on finish-url-page.php, evaluate if this still needed
+        $plugin_id = wc_get_order( $sanitized['id'] )->get_payment_method();
         $midtrans_notification = WC_Midtrans_API::getMidtransStatus($id, $plugin_id);
         $order_id = $midtrans_notification->order_id;
         // if async payment paid
@@ -160,6 +173,7 @@ class WC_Gateway_Midtrans_Notif_Handler
   }
 
   /**
+   * @TODO: Evaluate if this still required/used
    * Handle API call from payment page to update order with PDF instruction Url
    * @return void
    */

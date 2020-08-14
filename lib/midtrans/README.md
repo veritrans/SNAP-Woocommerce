@@ -231,7 +231,6 @@ $customer_details = array(
 
 ```php
 // Token ID from checkout page
-$token_id = $_POST['token_id'];
 ```
 
 ##### 4. Create Transaction Data
