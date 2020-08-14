@@ -2,8 +2,8 @@
 Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
-Tested up to: 5.4.2
-Stable tag: 2.18.4
+Tested up to: 5.5.0
+Stable tag: 2.18.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,10 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 4. Configuration page
 
 == Changelog ==
+
+= 2.18.5 - 2020-08-14 =
+* update versioning & compatibility
+* input processing improvements
 
 = 2.18.4 - 2020-06-25 =
 * add acquring_bank field on credit card full payment (main payment)
