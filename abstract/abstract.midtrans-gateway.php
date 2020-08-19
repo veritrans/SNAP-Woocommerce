@@ -290,7 +290,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     }
     // add savecard API params
     if ($this->enable_savecard =='yes' && is_user_logged_in()){
-      $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , WC_Midtrans_API::get_server_key() );
+      $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , $this->server_key );
       $params['credit_card']['save_card'] = true;
     }
     return $params;
