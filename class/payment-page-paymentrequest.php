@@ -95,7 +95,7 @@
     var CMS_NAME = "woocommerce";
     var CMS_VERSION = "<?php echo esc_js(WC_VERSION);?>";
     var PLUGIN_NAME = "<?php echo esc_js($pluginName);?>";
-    var PLUGIN_VERSION = "<?php echo esc_js(MT_PLUGIN_VERSION);?>";
+    var PLUGIN_VERSION = "<?php echo esc_js(MIDTRANS_PLUGIN_VERSION);?>";
     // Safely load the snap.js
     function loadExtScript(src) {
       // if snap.js is loaded from html script tag, don't load again

@@ -47,8 +47,8 @@ function midtrans_gateway_init() {
     return;
   }
 
-  DEFINE ('MT_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
-  DEFINE ('MT_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
+  DEFINE ('MIDTRANS_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
+  DEFINE ('MIDTRANS_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
 
   require_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway.php';
@@ -67,7 +67,7 @@ function midtrans_gateway_init() {
   if( class_exists( 'WC_Subscriptions' ) ) require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
-  add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'plugin_action_links' );
+  add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'midtrans_plugin_action_links' );
 }
 
 function add_midtrans_payment_gateway( $methods ) {
@@ -92,21 +92,21 @@ function add_midtrans_payment_gateway( $methods ) {
  * to handle redirect after payment complete, especially BCA, may require custom finish url
  * required by BCA team as UAT process.
  */
-function handle_finish_url_page()
+function midtrans_handle_finish_url_page()
 {
-  if(is_page('payment-finish')){ 
+  if(is_page('midtrans-payment-finish')){ 
     include(dirname(__FILE__) . '/class/finish-url-page.php');
     die();
   }
 }
-add_action( 'wp', 'handle_finish_url_page' );
+add_action( 'wp', 'midtrans_handle_finish_url_page' );
 
 /**
  * Adds plugin action links
  *
  * @param array $links
  */
-function plugin_action_links($links){
+function midtrans_plugin_action_links($links){
   $plugin_links = array(
       '<a href="' . admin_url('admin.php?page=wc-settings&tab=checkout&section=midtrans') . '">' . __('Settings', 'midtrans-woocommerce') . '</a>',
       '<a target="_blank" href="https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce">' . __('Documentation', 'midtrans-woocommerce') . '</a>',
