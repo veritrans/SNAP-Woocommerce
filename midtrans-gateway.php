@@ -109,7 +109,7 @@ add_action( 'wp', 'handle_finish_url_page' );
 function plugin_action_links($links){
   $plugin_links = array(
       '<a href="' . admin_url('admin.php?page=wc-settings&tab=checkout&section=midtrans') . '">' . __('Settings', 'midtrans-woocommerce') . '</a>',
-      '<a target="_blank" href="https://beta-docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce">' . __('Documentation', 'midtrans-woocommerce') . '</a>',
+      '<a target="_blank" href="https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce">' . __('Documentation', 'midtrans-woocommerce') . '</a>',
       '<a target="_blank" href="https://github.com/veritrans/SNAP-Woocommerce/wiki">' . __('Wiki', 'midtrans-woocommerce') . '</a>',
   );
   return array_merge($plugin_links, $links);
