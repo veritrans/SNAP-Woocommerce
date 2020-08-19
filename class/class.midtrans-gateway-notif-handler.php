@@ -10,26 +10,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WC_Gateway_Midtrans_Notif_Handler
 // extends WC_Gateway_ 
 {
-  /**
-	 * Receiver server key to validate.
-	 *
-	 * @var string Receiver server key.
-	 */
-	private $server_key;
-
 	/**
 	 * Constructor.
 	 *
 	 * @param bool   $is_production Use production or not.
 	 * @param string $server_key ServerKey to receive HTTP notification from Midtrans.
 	 */
-	public function __construct( $is_production = '', $server_key = '' ) {
-    $this->is_production = ($is_production == 'production') ? true : false;
-    $this->server_key = $server_key;
+	public function __construct() {
     // Register hook for handling HTTP notification (HTTP call to `http://[your web]/?wc-api=WC_Gateway_Midtrans`)
-		add_action( 'woocommerce_api_wc_gateway_midtrans', array( $this, 'midtrans_response' ) );
+		add_action( 'woocommerce_api_wc_gateway_midtrans', array( $this, 'handleMidtransNotificationRequest' ) );
     // Create action to be called when HTTP notification is valid
-    add_action( 'valid-midtrans-web-request', array( $this, 'successful_request' ) );
+    add_action( 'midtrans-handle-valid-notification', array( $this, 'handleMidtransValidNotificationRequest' ) );
   }
     
   /**
@@ -38,7 +29,7 @@ class WC_Gateway_Midtrans_Notif_Handler
    * Also reject HTTP GET request
    * @return void
    */
-  public function earlyResponse() {
+  public function doEarlyAckResponse() {
     if ( $_SERVER['REQUEST_METHOD'] == 'GET' ) {
       die('This endpoint should not be opened using browser (HTTP GET). This endpoint is for Midtrans notification URL (HTTP POST)');
       exit();
@@ -62,7 +53,7 @@ class WC_Gateway_Midtrans_Notif_Handler
    * Called by hook function when HTTP notification / API call received
    * Handle Midtrans payment notification
    */
-  public function midtrans_response() {
+  public function handleMidtransNotificationRequest() {
     @ob_clean();
     global $woocommerce;
 
@@ -76,7 +67,7 @@ class WC_Gateway_Midtrans_Notif_Handler
     // check whether the request is POST or GET, 
     // if request == POST, request is for payment notification, then update the payment status
     if(empty($sanitized['order_id']) && empty($sanitizedPost['id']) && empty($sanitized['id']) && empty($sanitizedPost['response'])) {    // Check if POST, then create new notification
-      $raw_notification = $this->earlyResponse();
+      $raw_notification = $this->doEarlyAckResponse();
       // Handle pdf url update
       $this->handlePendingPaymentPdfUrlUpdate();
       // Get WooCommerce order
@@ -93,7 +84,7 @@ class WC_Gateway_Midtrans_Notif_Handler
       // If notification verified, handle it
       if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
         if (wc_get_order($midtrans_notification->order_id) != false) {
-          do_action( "valid-midtrans-web-request", $midtrans_notification );
+          do_action( "midtrans-handle-valid-notification", $midtrans_notification );
         }
       }
       exit;
@@ -113,6 +104,7 @@ class WC_Gateway_Midtrans_Notif_Handler
       } 
       // if or pending/challenge
       else if( !empty($sanitized['order_id']) && !empty($sanitized['transaction_status']) && $sanitized['status_code'] == 201)  {
+        // @FIXME: $this->ignore_pending_status is broken, it doesn't refer to plugin class
         if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
           wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
           exit;
@@ -173,6 +165,7 @@ class WC_Gateway_Midtrans_Notif_Handler
   }
 
   /**
+   * UNUSED
    * @TODO: Evaluate if this still required/used
    * Handle API call from payment page to update order with PDF instruction Url
    * @return void
@@ -185,6 +178,7 @@ class WC_Gateway_Midtrans_Notif_Handler
           !isset($requestObj['snap_token_id']) ){
         return;
       }
+        // @FIXME: $this is broken, it doesn't refer to plugin class
       $snapApiBaseUrl = ($this->environment) ? 'https://app.midtrans.com' : 'https://app.sandbox.midtrans.com';
       $tokenStatusUrl = $snapApiBaseUrl.'/snap/v1/transactions/'.$requestObj['snap_token_id'].'/status';
       $tokenStatusResponse = wp_remote_get( $tokenStatusUrl);
@@ -222,7 +216,7 @@ class WC_Gateway_Midtrans_Notif_Handler
    * notification
    * @return void
    */
-  public function successful_request( $midtrans_notification ) {
+  public function handleMidtransValidNotificationRequest( $midtrans_notification ) {
     global $woocommerce;
 
     $order = new WC_Order( $midtrans_notification->order_id );
@@ -232,7 +226,9 @@ class WC_Gateway_Midtrans_Notif_Handler
     if ($midtrans_notification->transaction_status == 'capture') {
       if ($midtrans_notification->fraud_status == 'accept') {
         // Procces subscription transaction if contains subsctription
-        if( class_exists( 'WC_Subscriptions' ) ) $this->validateSubscriptionTransaction( $midtrans_notification, $order );
+        if( class_exists( 'WC_Subscriptions' ) ){
+          $this->checkAndHandleWCSubscriptionTxnNotif( $midtrans_notification, $order );
+        }
         $order->payment_complete();
         $order->add_order_note(__('Midtrans payment completed: capture. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
 
@@ -315,7 +311,7 @@ class WC_Gateway_Midtrans_Notif_Handler
    * @param WC_Order $order 
    * @return void
    */
-  public function validateSubscriptionTransaction( $midtrans_notification, $order ) {
+  public function checkAndHandleWCSubscriptionTxnNotif( $midtrans_notification, $order ) {
     // Process if this is a subscription transaction
     if ( wcs_order_contains_subscription( $midtrans_notification->order_id ) || wcs_is_subscription( $midtrans_notification->order_id ) || wcs_order_contains_renewal( $midtrans_notification->order_id ) ) {
       // if not subscription and wc status pending, don't process (because that's a recurring transaction)
