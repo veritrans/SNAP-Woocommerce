@@ -47,14 +47,14 @@ return apply_filters(
           ),
         ),
         'client_key_v2_sandbox'       => array(
-            'title'         => __("Client Key", 'midtrans-woocommerce'),
+            'title'         => __("Client Key - Sandbox", 'midtrans-woocommerce'),
             'type'          => 'text',
             'description'   => sprintf(__('Input your <b>Sandbox</b> Midtrans Client Key. Get the key <a href="%s" target="_blank">here</a>', 'midtrans-woocommerce' ),$sandbox_key_url),
             'default'       => '',
             'class'         => 'sandbox_settings toggle-midtrans',
         ),
         'server_key_v2_sandbox'       => array(
-            'title'         => __("Server Key", 'midtrans-woocommerce'),
+            'title'         => __("Server Key - Sandbox", 'midtrans-woocommerce'),
             'type'          => 'text',
             'description'   => sprintf(__('Input your <b>Sandbox</b> Midtrans Server Key. Get the key <a href="%s" target="_blank">here</a>', 'midtrans-woocommerce' ),$sandbox_key_url),
             'default'       => '',
