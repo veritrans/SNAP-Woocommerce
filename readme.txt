@@ -70,8 +70,10 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Changelog ==
 
-= 2.18.5 - 2020-08-19 =
+= 2.19.0 - 2020-08-19 =
 * fix library incomplete update
+* bugfix save card feature
+* bugfix promo feature
 * better compatibility: prevent conflict of function & vars with other plugins
 * updated plugin descriptions
 * performance improvement on handling debit finish page
@@ -219,6 +221,14 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Fullpayment feature
 
 == Upgrade Notice ==
+
+= 2.19.0 - 2020-08-19 =
+* fix library incomplete update
+* bugfix save card feature
+* bugfix promo feature
+* better compatibility: prevent conflict of function & vars with other plugins
+* updated plugin descriptions
+* performance improvement on handling debit finish page
 
 = 2.18.4 - 2020-06-25 =
 * add acquring_bank field on credit card full payment (main payment)
