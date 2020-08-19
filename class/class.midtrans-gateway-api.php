@@ -48,7 +48,7 @@ class WC_Midtrans_API {
 	 * Get Plugin Options
 	 * @param string $plugin_id
 	 */
-	public static function getPluginOptions ( $plugin_id ) {
+	public static function getPluginOptions ( $plugin_id="midtrans" ) {
 		self::$plugin_options = get_option( 'woocommerce_' . $plugin_id . '_settings' );
 	}
 
@@ -84,7 +84,7 @@ class WC_Midtrans_API {
      * Midtrans API Configuration.
      * @return void
      */
-    public static function midtransConfiguration( $plugin_id ) {
+    public static function midtransConfiguration( $plugin_id="midtrans" ) {
 		self::getPluginOptions( $plugin_id );
         Midtrans\Config::$isProduction = (self::get_environment() == 'production') ? true : false;
         Midtrans\Config::$serverKey = self::get_server_key();     
@@ -97,7 +97,7 @@ class WC_Midtrans_API {
      * @return object Snap response (token and redirect_url).
      * @throws Exception curl error or midtrans error.
      */
-    public static function createSnapTransaction( $params, $plugin_id ) {
+    public static function createSnapTransaction( $params, $plugin_id="midtrans" ) {
         self::midtransConfiguration( $plugin_id );
 		self::setLogRequest( print_r( $params, true ), $plugin_id );
         return Midtrans\Snap::createTransaction( $params );
@@ -123,7 +123,7 @@ class WC_Midtrans_API {
      * @return object Refund response.
      * @throws Exception curl error or midtrans error.
      */
-    public static function createRefund( $order_id, $params, $plugin_id ) {
+    public static function createRefund( $order_id, $params, $plugin_id="midtrans" ) {
 		self::midtransConfiguration( $plugin_id );
 		self::setLogRequest( print_r( $params, true ), $plugin_id );
 		return Midtrans\Transaction::refund($order_id, $params);
@@ -133,17 +133,17 @@ class WC_Midtrans_API {
      * Get Midtrans Notification.
      * @return object Midtrans Notification response.
      */
-    public static function getMidtransNotif( $plugin_id) {
+    public static function getMidtransNotif( $plugin_id="midtrans") {
         self::midtransConfiguration( $plugin_id );
         return new Midtrans\Notification();
     }
 
     /**
-     * Retrieve transaction status.
+     * Retrieve transaction status. Default ID is main plugin, which is "midtrans"
      * @param string $id Order ID or transaction ID.
      * @return object Midtrans response.
      */
-    public static function getMidtransStatus( $id, $plugin_id ) {
+    public static function getMidtransStatus( $id, $plugin_id="midtrans" ) {
         self::midtransConfiguration( $plugin_id );
         return Midtrans\Transaction::status( $id );
     }
@@ -155,7 +155,7 @@ class WC_Midtrans_API {
 	 * @param string $plugin_id Plugin id.
 	 * @return object Midtrans response.
 	 */
-    public static function CancelTransaction( $id, $plugin_id ) {
+    public static function CancelTransaction( $id, $plugin_id="midtrans" ) {
 		self::midtransConfiguration( $plugin_id );
 		self::setLogRequest('Request Cancel Transaction ' . $id, $plugin_id );
         return Midtrans\Transaction::cancel( $id );
@@ -167,7 +167,7 @@ class WC_Midtrans_API {
      * @param string $message payload request.
      * @return void
      */
-	public static function setLogRequest( $message, $plugin_id ) {
+	public static function setLogRequest( $message, $plugin_id="midtrans" ) {
 		WC_Midtrans_Logger::log( $message, 'midtrans-request', $plugin_id, current_time( 'timestamp') );
 	  }
 }
