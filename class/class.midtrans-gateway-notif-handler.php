@@ -58,11 +58,15 @@ class WC_Gateway_Midtrans_Notif_Handler
     global $woocommerce;
 
     $sanitized = [];
-    $sanitized['order_id'] = sanitize_text_field($_GET['order_id']);
-    $sanitized['id'] = sanitize_text_field($_GET['id']);
+    $sanitized['order_id'] = 
+      isset($_GET['order_id'])? sanitize_text_field($_GET['order_id']): null;
+    $sanitized['id'] = 
+      isset($_GET['id'])? sanitize_text_field($_GET['id']): null;
     $sanitizedPost = [];
-    $sanitizedPost['id'] = sanitize_text_field($_POST['id']);
-    $sanitizedPost['response'] = sanitize_text_field($_POST['response']);
+    $sanitizedPost['id'] = 
+      isset($_POST['id'])? sanitize_text_field($_POST['id']): null;
+    $sanitizedPost['response'] = 
+      isset($_POST['response'])? sanitize_text_field($_POST['response']): null;
 
     // check whether the request is POST or GET, 
     // if request == POST, request is for payment notification, then update the payment status
@@ -91,9 +95,12 @@ class WC_Gateway_Midtrans_Notif_Handler
     }
     // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
     else { 
-      $sanitized['transaction_status'] = sanitize_text_field($_GET['transaction_status']);
-      $sanitized['status_code'] = sanitize_text_field($_GET['status_code']);
-      $sanitized['wc-api'] = sanitize_text_field($_GET['wc-api']);
+      $sanitized['transaction_status'] = 
+        isset($_GET['transaction_status'])? sanitize_text_field($_GET['transaction_status']): null;
+      $sanitized['status_code'] = 
+        isset($_GET['status_code'])? sanitize_text_field($_GET['status_code']): null;
+      $sanitized['wc-api'] = 
+        isset($_GET['wc-api'])? sanitize_text_field($_GET['wc-api']): null;
 
       // if capture/settlement, redirect to order received page
       if( !empty($sanitized['order_id']) && !empty($sanitized['status_code']) && $sanitized['status_code'] <= 200)  {
