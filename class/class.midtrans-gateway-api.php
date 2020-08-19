@@ -5,7 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * WC_Midtrans_API class.
- *
+ * @TODO: refactor this messy class
+ * 
  * Communicates with Midtrans API.
  */
 class WC_Midtrans_API {
@@ -45,10 +46,10 @@ class WC_Midtrans_API {
     }
 
 	/**
-	 * Get Plugin Options
+	 * Fetch Plugin Options and Set as self/private vars
 	 * @param string $plugin_id
 	 */
-	public static function getPluginOptions ( $plugin_id="midtrans" ) {
+	public static function fetchAndSetCurrentPluginOptions ( $plugin_id="midtrans" ) {
 		self::$plugin_options = get_option( 'woocommerce_' . $plugin_id . '_settings' );
 	}
 
@@ -81,11 +82,11 @@ class WC_Midtrans_API {
 	}
 
     /**
-     * Midtrans API Configuration.
+     * Fetch Midtrans API Configuration from plugin id and set as self/private vars.
      * @return void
      */
-    public static function midtransConfiguration( $plugin_id="midtrans" ) {
-		self::getPluginOptions( $plugin_id );
+    public static function fetchAndSetMidtransApiConfig( $plugin_id="midtrans" ) {
+		self::fetchAndSetCurrentPluginOptions( $plugin_id );
         Midtrans\Config::$isProduction = (self::get_environment() == 'production') ? true : false;
         Midtrans\Config::$serverKey = self::get_server_key();     
         Midtrans\Config::$isSanitized = true;
@@ -98,7 +99,7 @@ class WC_Midtrans_API {
      * @throws Exception curl error or midtrans error.
      */
     public static function createSnapTransaction( $params, $plugin_id="midtrans" ) {
-        self::midtransConfiguration( $plugin_id );
+        self::fetchAndSetMidtransApiConfig( $plugin_id );
 		self::setLogRequest( print_r( $params, true ), $plugin_id );
         return Midtrans\Snap::createTransaction( $params );
 	}
@@ -110,7 +111,7 @@ class WC_Midtrans_API {
      * @throws Exception curl error or midtrans error.
      */
     public static function createRecurringTransaction( $params, $plugin_id = 'midtrans_subscription' ) {
-		self::midtransConfiguration( $plugin_id );
+		self::fetchAndSetMidtransApiConfig( $plugin_id );
 		self::setLogRequest( print_r( $params, true ), $plugin_id );
 		return Midtrans\CoreApi::charge( $params );
     }
@@ -124,7 +125,7 @@ class WC_Midtrans_API {
      * @throws Exception curl error or midtrans error.
      */
     public static function createRefund( $order_id, $params, $plugin_id="midtrans" ) {
-		self::midtransConfiguration( $plugin_id );
+		self::fetchAndSetMidtransApiConfig( $plugin_id );
 		self::setLogRequest( print_r( $params, true ), $plugin_id );
 		return Midtrans\Transaction::refund($order_id, $params);
     }
@@ -134,7 +135,7 @@ class WC_Midtrans_API {
      * @return object Midtrans Notification response.
      */
     public static function getMidtransNotif( $plugin_id="midtrans") {
-        self::midtransConfiguration( $plugin_id );
+        self::fetchAndSetMidtransApiConfig( $plugin_id );
         return new Midtrans\Notification();
     }
 
@@ -143,9 +144,9 @@ class WC_Midtrans_API {
      * @param string $id Order ID or transaction ID.
      * @return object Midtrans response.
      */
-    public static function getMidtransStatus( $id, $plugin_id="midtrans" ) {
-        self::midtransConfiguration( $plugin_id );
-        return Midtrans\Transaction::status( $id );
+    public static function getMidtransStatus( $order_id, $plugin_id="midtrans" ) {
+        self::fetchAndSetMidtransApiConfig( $plugin_id );
+        return Midtrans\Transaction::status( $order_id );
     }
 
 	/**
@@ -156,7 +157,7 @@ class WC_Midtrans_API {
 	 * @return object Midtrans response.
 	 */
     public static function CancelTransaction( $id, $plugin_id="midtrans" ) {
-		self::midtransConfiguration( $plugin_id );
+		self::fetchAndSetMidtransApiConfig( $plugin_id );
 		self::setLogRequest('Request Cancel Transaction ' . $id, $plugin_id );
         return Midtrans\Transaction::cancel( $id );
     }
