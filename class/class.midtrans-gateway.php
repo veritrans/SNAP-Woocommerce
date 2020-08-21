@@ -38,6 +38,7 @@
          */
         $this->id           = 'midtrans';
         $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
+        $this->method_description = $this->getSettingsDescription();
         $this->has_fields   = true;
         $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans', home_url( '/' ) ) );
 
@@ -163,6 +164,13 @@
        */
       protected function getDefaultTitle () {
         return __('Online Payment via Midtrans', 'midtrans-woocommerce');
+      }
+
+      /**
+       * @return string
+       */
+      protected function getSettingsDescription() {
+        return __('Secure payment via Midtrans that accept various payment methods, with mobile friendly built-in interface, or (optionally) redirection.', 'midtrans-woocommerce');
       }
 
       /**

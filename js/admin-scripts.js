@@ -28,7 +28,7 @@
         function hideSavecard(hideSavecard = true){
             if (hideSavecard)
                 $('#woocommerce_midtrans_subscription_enable_savecard').closest('tr').hide();
-        } hideSavecard(false);
+        }
 
 	});
 })(jQuery);

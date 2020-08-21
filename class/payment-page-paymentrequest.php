@@ -8,7 +8,7 @@
   // $order_items = array();
   // $cart = $woocommerce->cart;
   $isProduction = $this->environment == 'production';
-  $snapToken = $_GET['snap_token'];
+  $snapToken = sanitize_text_field($_GET['snap_token']);
   // $snapToken = preg_match("/^[a-zA-Z0-9_-]*$/",$snapToken) ? $snapToken : '';
   $snapToken = htmlspecialchars($snapToken, ENT_COMPAT,'ISO-8859-1', true);
   $mixpanel_key = $isProduction ? $mixpanel_key_production : $mixpanel_key_sandbox;
@@ -95,7 +95,7 @@
     var CMS_NAME = "woocommerce";
     var CMS_VERSION = "<?php echo esc_js(WC_VERSION);?>";
     var PLUGIN_NAME = "<?php echo esc_js($pluginName);?>";
-    var PLUGIN_VERSION = "<?php echo esc_js(MT_PLUGIN_VERSION);?>";
+    var PLUGIN_VERSION = "<?php echo esc_js(MIDTRANS_PLUGIN_VERSION);?>";
     // Safely load the snap.js
     function loadExtScript(src) {
       // if snap.js is loaded from html script tag, don't load again

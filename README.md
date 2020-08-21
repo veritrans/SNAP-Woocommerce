@@ -71,9 +71,9 @@ If you are activating BCA Klikpay payment channel, follow this additional step. 
 
 1. Login to Wordpress Admin Panel / Dashboard
 2. Add new page by going to menu **Pages > Add new**
-3. Insert this as title: `payment-finish`. Makesure the permalink display `[your wordpress url]/payment-finish`. Click **Publish/Save**.
+3. Insert this as title: `midtrans-payment-finish`. Makesure the permalink display `[your wordpress url]/midtrans-payment-finish`. Click **Publish/Save**.
 4. Login to your [Midtrans&nbsp; Account](https://dashboard.midtrans.com), select your environment (sandbox/production), go to menu **settings > Snap Preference > System Settings**
-5. Go to menu **settings > configuration**. Then change Finish Redirect URL to `http://[your wordpress url]/payment-finish`.
+5. Go to menu **settings > configuration**. Then change Finish Redirect URL to `http://[your wordpress url]/midtrans-payment-finish`.
 
 This is to ensure we have finish page when customer has completed the payment on KlikPay page, and then the payment result will be displayed accordingly on the page. If you want to customize the finish page, edit this file `/class/finish-url-page.php`.
 

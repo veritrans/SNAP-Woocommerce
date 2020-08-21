@@ -3,12 +3,12 @@
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
 Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a  target="_blank" href="https://midtrans.com/">Midtrans</a>
-Version: 2.18.4
+Version: 2.19.0
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
 WC requires at least: 2.0.0
-WC tested up to: 4.3.1
+WC tested up to: 5.5.0
 */
 
 /*
@@ -47,8 +47,8 @@ function midtrans_gateway_init() {
     return;
   }
 
-  DEFINE ('MT_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
-  DEFINE ('MT_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
+  DEFINE ('MIDTRANS_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
+  DEFINE ('MIDTRANS_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
 
   require_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway.php';
@@ -67,7 +67,7 @@ function midtrans_gateway_init() {
   if( class_exists( 'WC_Subscriptions' ) ) require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
-  add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'plugin_action_links' );
+  add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'midtrans_plugin_action_links' );
 }
 
 function add_midtrans_payment_gateway( $methods ) {
@@ -92,43 +92,25 @@ function add_midtrans_payment_gateway( $methods ) {
  * to handle redirect after payment complete, especially BCA, may require custom finish url
  * required by BCA team as UAT process.
  */
-function handle_finish_url_page()
+function midtrans_handle_finish_url_page()
 {
-  if(is_page('payment-finish')){ 
+  if(is_page('midtrans-payment-finish')){ 
     include(dirname(__FILE__) . '/class/finish-url-page.php');
     die();
   }
 }
-add_action( 'wp', 'handle_finish_url_page' );
+add_action( 'wp', 'midtrans_handle_finish_url_page' );
 
 /**
  * Adds plugin action links
  *
  * @param array $links
  */
-function plugin_action_links($links){
+function midtrans_plugin_action_links($links){
   $plugin_links = array(
       '<a href="' . admin_url('admin.php?page=wc-settings&tab=checkout&section=midtrans') . '">' . __('Settings', 'midtrans-woocommerce') . '</a>',
-      '<a target="_blank" href="https://beta-docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce">' . __('Documentation', 'midtrans-woocommerce') . '</a>',
+      '<a target="_blank" href="https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce">' . __('Documentation', 'midtrans-woocommerce') . '</a>',
       '<a target="_blank" href="https://github.com/veritrans/SNAP-Woocommerce/wiki">' . __('Wiki', 'midtrans-woocommerce') . '</a>',
   );
   return array_merge($plugin_links, $links);
 }
-
-/**
- * Handle a custom '_mt_payment_transaction_id' query var to get orders with the '_mt_payment_transaction_id' meta.
- * @param array $query - Args for WP_Query.
- * @param array $query_vars - Query vars from WC_Order_Query.
- * @return array modified $query
- */
-function handle_custom_query_var( $query, $query_vars ) {
-	if ( ! empty( $query_vars['_mt_payment_transaction_id'] ) ) {
-		$query['meta_query'][] = array(
-			'key' => '_mt_payment_transaction_id',
-			'value' => esc_attr( $query_vars['_mt_payment_transaction_id'] ),
-		);
-	}
-
-	return $query;
-}
-add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', 'handle_custom_query_var', 10, 2 );

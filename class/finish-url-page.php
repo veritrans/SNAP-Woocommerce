@@ -6,15 +6,36 @@
  */
 
 // reference: https://www.cloudways.com/blog/creating-custom-page-template-in-wordpress/
+
+/**
+ * Handle a custom '_mt_payment_transaction_id' query var to get orders with the '_mt_payment_transaction_id' meta.
+ * @param array $query - Args for WP_Query.
+ * @param array $query_vars - Query vars from WC_Order_Query.
+ * @return array modified $query
+ */
+function midtrans_handle_custom_query_var( $query, $query_vars ) {
+	if ( ! empty( $query_vars['_mt_payment_transaction_id'] ) ) {
+		$query['meta_query'][] = array(
+			'key' => '_mt_payment_transaction_id',
+			'value' => esc_attr( $query_vars['_mt_payment_transaction_id'] ),
+		);
+	}
+
+	return $query;
+}
+add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', 'midtrans_handle_custom_query_var', 10, 2 );
+
 try {
 	if(isset($_GET['id'])){ // handler for BCA_Klikpay finish redirect
-		$trx_id = $_GET['id'];
+		$trx_id = sanitize_text_field($_GET['id']);
 		// Get order from transaction_id meta data
 		$order = wc_get_orders( array( '_mt_payment_transaction_id' => $trx_id ) );
-		$plugin_id = isset($order) ? $order[0]->get_payment_method() : 'midtrans';
+		$plugin_id = isset($order) && $order[0] ? $order[0]->get_payment_method() : 'midtrans';
 		$midtrans_notification = WC_Midtrans_API::getMidtransStatus($trx_id, $plugin_id);
 	}else if(isset($_POST['response'])){ // handler for CIMB CLICKS finish redirect
-		$response = preg_replace('/\\\\/', '', $_POST['response']);		
+		$sanitizedPost = [];
+		$sanitizedPost['response'] = sanitize_text_field($_POST['response']);
+		$response = preg_replace('/\\\\/', '', $sanitizedPost['response']);		
 		$midtrans_notification = json_decode($response);	
 	}
 } catch (Exception $e) {

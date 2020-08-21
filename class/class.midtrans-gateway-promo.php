@@ -66,7 +66,7 @@
             'title' => __( 'Promo Code', 'midtrans-woocommerce' ),
             'type' => 'text',
             'description' => __( 'Promo Code that would be used for discount. Leave blank if you are not using promo code.', 'midtrans-woocommerce' ),
-            'default' => ''
+            'default' => 'onlinepromomid'
           )
         ));
       }
@@ -77,8 +77,8 @@
         $order = new WC_Order( $order_id );
         $cart = $woocommerce->cart;
 
-        if ( strlen($this->get_option( 'min_amount' )) > 0 ) {
-          $coupon_code = $this->get_option( 'min_amount' );
+        if ( strlen($this->get_option( 'promo_code' )) > 0 ) {
+          $coupon_code = $this->get_option( 'promo_code' );
           // add coupon to $cart for discount
           $cart->add_discount($coupon_code);
           // $order->add_coupon( 'onlinepromo', WC()->cart->get_coupon_discount_amount( 'onlinepromo' ), WC()->cart->get_coupon_discount_tax_amount( 'onlinepromo' ) );
@@ -98,7 +98,8 @@
 
         // check enabled payment
         $enabled_payments = explode(',', $this->get_option( 'method_enabled' ) );
-        if (empty( $enabled_payments[0] )) $enabled_payments[] = 'credit_card';
+        if (empty( $enabled_payments[0] )) 
+          $enabled_payments[0] = 'credit_card';
         // var_dump($enabled_payments);
         $params['enabled_payments'] = $enabled_payments; // Disable customize payment method from config
   

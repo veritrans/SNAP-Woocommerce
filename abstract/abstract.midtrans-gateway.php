@@ -55,7 +55,11 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     add_filter('midtrans_to_idr_rate', function ($midtrans_rate) {
       return $midtrans_rate;
     });
-    $this->id != 'midtrans' ?: new WC_Gateway_Midtrans_Notif_Handler( $this->environment, $this->server_key );
+    if($this->id == 'midtrans') {
+      // init notif handler class, which also add action hook to handle notif on woocommerce_api_wc_gateway_midtrans
+      // @TODO refactor this
+      $notifHandler = new WC_Gateway_Midtrans_Notif_Handler();
+    }
   }
 
   /**
@@ -63,7 +67,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
    * Add JS script file to admin page
   */
   public function midtrans_admin_scripts() {
-    wp_enqueue_script( 'admin-midtrans', MT_PLUGIN_DIR . 'js/admin-scripts.js', array('jquery') );
+    wp_enqueue_script( 'admin-midtrans', MIDTRANS_PLUGIN_DIR . 'js/admin-scripts.js', array('jquery') );
   }
 
   /**
@@ -290,7 +294,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     }
     // add savecard API params
     if ($this->enable_savecard =='yes' && is_user_logged_in()){
-      $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , WC_Midtrans_API::get_server_key() );
+      $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , $this->server_key );
       $params['credit_card']['save_card'] = true;
     }
     return $params;
