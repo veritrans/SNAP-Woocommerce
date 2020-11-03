@@ -102,13 +102,13 @@ If required to change API endpoint/url, these are where you need to change:
 
 - `[plugin folder]/class/payment-page.php`
 	- Replace any Snap API domain: https://app.sandbox.midtrans.com with UAT API domain
-
 </details>
 
 #### Customizing Snap API parameters
 
 <details><summary>Click to expand info</summary>
 <br>
+
 In case you need to do [customization on Snap API parameters](https://docs.midtrans.com/en/snap/advanced-feature) that is not provided by default from this plugin.
 
 ##### For All Payments in This Plugin
@@ -134,7 +134,6 @@ If you want it to be applied to just some specific Payment Option (e.g: the defa
 	- Within function `process_payment`
 	- Before line `$woocommerce->cart->empty_cart();`
 - There you can modify the `$params` variable, it is an PHP Array representation of [Snap's API JSON param](https://docs.midtrans.com/en/snap/advanced-feature).
-
 </details>
 
 #### Get help
