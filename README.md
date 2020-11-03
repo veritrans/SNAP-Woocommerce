@@ -64,9 +64,23 @@ Payment Method Feature:
   * Insert `http://[your web]/?wc-api=WC_Gateway_Midtrans` link as Finish/Unfinish/Error Redirect URL.
 
 ### Additional Resource
+Note: This section is optional and only for advanced usage.
+
+#### Configurables
+Available for customization from plugin config:
+- Payment text label of the payment options
+- Payment text description of the payment options
+- You can also input html tags as the text, to insert something like image
+
+Additional payment options (radio button) can be activated:
+- Installment
+- Offline Installment
+- Promo / specific payment
 
 #### BCA Klikpay Specific
-Note: This section is optional.
+
+<details><summary>Click to expand info</summary>
+<br>
 If you are activating BCA Klikpay payment channel, follow this additional step. This step is required to pass BCA UAT on BCA Klikpay.
 
 1. Login to Wordpress Admin Panel / Dashboard
@@ -89,16 +103,39 @@ If required to change API endpoint/url, these are where you need to change:
 - `[plugin folder]/class/payment-page.php`
 	- Replace any Snap API domain: https://app.sandbox.midtrans.com with UAT API domain
 
-#### Configurables
-Available for customization from plugin config:
-- Payment text label of the payment options
-- Payment text description of the payment options
-- You can also input html tags as the text, to insert something like image
+</details>
 
-Additional payment options (radio button) can be activated:
-- Installment
-- Offline Installment
-- Promo / specific payment
+#### Customizing Snap API parameters
+
+<details><summary>Click to expand info</summary>
+<br>
+In case you need to do [customization on Snap API parameters](https://docs.midtrans.com/en/snap/advanced-feature) that is not provided by default from this plugin.
+
+##### For All Payments in This Plugin
+
+If you want the API params to be applied to all payment options within this plugin, you can edit: 
+- **File** `./abstract/abstract.midtrans-gateway.php`
+	- Within **function** [`getPaymentRequestData`](https://github.com/veritrans/SNAP-Woocommerce/blob/607e2b9d46dc287153921fb1630a60f9ecde9b1e/abstract/abstract.midtrans-gateway.php#L154)
+	- Before **line** [`return $params;`](https://github.com/veritrans/SNAP-Woocommerce/blob/607e2b9d46dc287153921fb1630a60f9ecde9b1e/abstract/abstract.midtrans-gateway.php#L300)
+- There you can modify the `$params` variable, it is an PHP Array representation of [Snap's API JSON param](https://docs.midtrans.com/en/snap/advanced-feature).
+
+For example, you can add "custom finish url":
+```php
+$params['callbacks'] = array();
+$params['callbacks']['finish'] = "https://mywebsite.com/my-custom-finish-url/";
+
+return $params;
+```
+##### For Specific Payment Option in This Plugin
+
+If you want it to be applied to just some specific Payment Option (e.g: the default/fullpayment only, or installment only, etc.)
+- Select the file from folder `./class/`, 
+	- Choose the file based on your desired Payment Option, for example file `./class/class.midtrans-gateway-installment.php`
+	- Within function `process_payment`
+	- Before line `$woocommerce->cart->empty_cart();`
+- There you can modify the `$params` variable, it is an PHP Array representation of [Snap's API JSON param](https://docs.midtrans.com/en/snap/advanced-feature).
+
+</details>
 
 #### Get help
 
