@@ -47,7 +47,7 @@ function midtrans_gateway_init() {
     return;
   }
 
-  DEFINE ('MIDTRANS_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
+  DEFINE ('MIDTRANS_PLUGIN_DIR_URL', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
   DEFINE ('MIDTRANS_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
 
   require_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
