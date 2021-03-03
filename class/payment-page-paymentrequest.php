@@ -49,16 +49,17 @@
   <?php } ?>
 
   <script data-cfasync="false" id="snap_script" src="<?php echo esc_attr($snap_script_url);?>" data-client-key="<?php echo esc_attr($this->client_key);?>"></script>
-  <a id="pay-button" title="Do Payment!" class="button alt">Loading Payment...</a>
-  
-  <div id="payment-instruction" style="display:none;">
-    <!-- <h3 class="alert alert-info"> Awaiting Your Payment </h3> -->
-    <!-- <br> -->
-    <p> Please complete your payment as instructed. If you have done your payment, please check your email or my "Order" menu for order status. </p>
-    <!-- <br> -->
-    <a target="_blank" href="#" id="payment-instruction-btn" title="Do Payment!" class="button alt" >
-      Payment Instruction
-    </a>
+  <div style="text-align: center;">
+    <a id="pay-button" title="Proceed To Payment!" class="button alt">Loading Payment...</a>
+
+    <div id="payment-instruction" style="display:none;">
+      <br>
+      <!-- <h3 class="alert alert-info"> Awaiting Your Payment </h3> -->
+      <p> Please complete your payment as instructed. If you have already completed your payment, please check your email or "My Order" menu to get update of your order status. </p>
+      <a target="_blank" href="#" id="payment-instruction-btn" title="Payment Instruction" class="button alt" >
+        Payment Instruction
+      </a>
+    </div>
   </div>
 
   <script data-cfasync="false" type="text/javascript">

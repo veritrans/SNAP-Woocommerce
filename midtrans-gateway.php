@@ -3,12 +3,12 @@
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
 Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a  target="_blank" href="https://midtrans.com/">Midtrans</a>
-Version: 2.19.0
+Version: 2.20.0
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
 WC requires at least: 2.0.0
-WC tested up to: 5.5.0
+WC tested up to: 5.7
 */
 
 /*
@@ -47,10 +47,12 @@ function midtrans_gateway_init() {
     return;
   }
 
-  DEFINE ('MIDTRANS_PLUGIN_DIR', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
+  DEFINE ('MIDTRANS_PLUGIN_DIR_URL', plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) . '/' );
   DEFINE ('MIDTRANS_PLUGIN_VERSION', get_file_data(__FILE__, array('Version' => 'Version'), false)['Version'] );
-
-  require_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
+  
+  if(!class_exists("Midtrans\Config")){
+    include_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
+  }
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-notif-handler.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-api.php';
@@ -64,7 +66,9 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
   // Add this payment method if WooCommerce Subscriptions plugin activated
-  if( class_exists( 'WC_Subscriptions' ) ) require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
+  if( class_exists( 'WC_Subscriptions' ) ) {
+    require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
+  }
 
   add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
   add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'midtrans_plugin_action_links' );
@@ -84,7 +88,9 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
   $methods[] = 'WC_Gateway_Midtrans_Promo';
   // Add this payment method if WooCommerce Subscriptions plugin activated
-  if( class_exists( 'WC_Subscriptions' ) ) $methods[] = 'WC_Gateway_Midtrans_Subscription';
+  if( class_exists( 'WC_Subscriptions' ) ) {
+    $methods[] = 'WC_Gateway_Midtrans_Subscription';
+  }
   return $methods;
 }
 /**
