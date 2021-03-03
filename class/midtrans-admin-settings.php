@@ -61,14 +61,14 @@ return apply_filters(
             'class'         => 'sandbox_settings toggle-midtrans'
         ),
         'client_key_v2_production'    => array(
-            'title'         => __("Client Key", 'midtrans-woocommerce'),
+            'title'         => __("Client Key - Production", 'midtrans-woocommerce'),
             'type'          => 'text',
             'description'   => sprintf(__('Input your <b>Production</b> Midtrans Client Key. Get the key <a href="%s" target="_blank">here</a>', 'midtrans-woocommerce' ),$production_key_url),
             'default'       => '',
             'class'         => 'production_settings toggle-midtrans',
         ),
         'server_key_v2_production'     => array(
-            'title'         => __("Server Key", 'midtrans-woocommerce'),
+            'title'         => __("Server Key - Production", 'midtrans-woocommerce'),
             'type'          => 'text',
             'description'   => sprintf(__('Input your <b>Production</b> Midtrans Server Key. Get the key <a href="%s" target="_blank">here</a>', 'midtrans-woocommerce' ),$production_key_url),
             'default'       => '',
