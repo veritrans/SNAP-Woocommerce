@@ -193,6 +193,9 @@
       }, 1000);
     };
 
+    var clickCount = 0;
+    // ENTRY POINT
+
     var createPaymentRequest = function(){
       var supportedPaymentMethods = [
         {
@@ -207,7 +210,7 @@
           label: 'Total',
           amount:{
             currency: 'IDR',
-            value: <?php echo esc_js($gross_amount);?>
+            value: <?php echo esc_js(isset($gross_amount)?$gross_amount:'0');?>
           }
         }
       };
@@ -225,8 +228,6 @@
       );
     };
 
-    var clickCount = 0;
-    // ENTRY POINT
     function handlePayAction() {
       if(clickCount >= 2){
         location.reload();
@@ -234,8 +235,9 @@
         return;
       }
       var ccDetails = null;
-      // Check if paymentRequest is supported
-      if(window.PaymentRequest){
+      var isPaymentRequestPlugin = <?php echo ($this->id == 'midtrans_paymentrequest') ? 'true':'false';?> ;
+      // Check if this is paymentRequest sub-plugin & paymentRequest is supported
+      if(isPaymentRequestPlugin && window.PaymentRequest){
           var payRequest = createPaymentRequest();
           payRequest
             .show()
@@ -257,7 +259,6 @@
               execSnapCont(ccDetails);
             })
       } else {
-        console.log("No Browser Payment Request support, fallback to regular Snap");
         execSnapCont(ccDetails);
       }
       clickCount++;
