@@ -1,6 +1,6 @@
 <?php
   /**
-   * HTML to display Snap Payment page
+   * Output HTML to display Snap Payment page
    */
   
   $mixpanel_key_production = "17253088ed3a39b1e2bd2cbcfeca939a";
@@ -154,7 +154,7 @@
               try{
                 result['pdf_url_update'] = true;
                 result['snap_token_id'] = SNAP_TOKEN;
-                fetch('<?php echo esc_js($wp_base_url."?wc-api=WC_Gateway_Midtrans");?>', {
+                fetch('<?php echo esc_url($wp_base_url."?wc-api=WC_Gateway_Midtrans");?>', {
                   method: 'POST',
                   headers: {
                     'Accept': 'application/json',
@@ -168,7 +168,7 @@
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'error', result);
               // console.log(result?result:'no result');
               payButton.innerHTML = "Loading...";
-              window.location = "<?php echo esc_js($error_url);?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
+              window.location = "<?php echo esc_url($error_url);?>&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
             },
             onClose: function(){
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'close', null);
