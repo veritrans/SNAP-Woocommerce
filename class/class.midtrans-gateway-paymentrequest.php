@@ -112,7 +112,7 @@
         $order = new WC_Order( $order_id );
         $gross_amount = $order->get_total();
         $pluginName = 'cc_paymentrequest';
-        require_once(dirname(__FILE__) . '/payment-page-paymentrequest.php'); 
+        require_once(dirname(__FILE__) . '/payment-page.php'); 
       }
 
       /**

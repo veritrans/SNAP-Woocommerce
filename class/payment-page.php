@@ -114,11 +114,16 @@
     var snapExecuted = false;
     var intervalFunction = 0;
     // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
-    function execSnapCont(){
+    function execSnapCont(ccDetails){
       intervalFunction = setInterval(function() {
         try{
           snap.pay(SNAP_TOKEN, 
           {
+            creditCardNumber: ccDetails ? ccDetails.creditCardNumber : '',
+            creditCardCvv: ccDetails ? ccDetails.creditCardCvv : '',
+            creditCardExpiry: ccDetails ? ccDetails.creditCardExpiry : '',
+            customerEmail: ccDetails ? ccDetails.customerEmail : '',
+            customerPhone: ccDetails ? ccDetails.customerPhone : '',
             skipOrderSummary : true,
             onSuccess: function(result){
               MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'success', result);
@@ -188,25 +193,84 @@
       }, 1000);
     };
 
-    console.log("Loading snap JS library now!");
-    // Loading SNAP JS Library to the page    
-    loadExtScript("<?php echo esc_js($snap_script_url);?>");
-    console.log("Snap library is loaded now");
+    var createPaymentRequest = function(){
+      var supportedPaymentMethods = [
+        {
+          supportedMethods: 'basic-card',
+          data: {
+            supportedNetworks: ['visa', 'mastercard', 'jcb', 'amex'],
+          }
+        }
+      ];
+      var paymentDetails = {
+        total: {
+          label: 'Total',
+          amount:{
+            currency: 'IDR',
+            value: <?php echo esc_js(isset($gross_amount)?$gross_amount:'0');?>
+          }
+        }
+      };
+      // Options isn't required.
+      var options = {  
+        requestPayerName: false,
+        requestPayerPhone: true,
+        requestPayerEmail: true,
+      };
 
+      return  new PaymentRequest(
+        supportedPaymentMethods,
+        paymentDetails,
+        options
+      );
+    };
+
+    // ENTRY POINT
     var clickCount = 0;
-
-    payButton.onclick = function(){
+    function handlePayAction() {
       if(clickCount >= 2){
         location.reload();
         payButton.innerHTML = "Loading...";
         return;
       }
-      execSnapCont();
+      var ccDetails = null;
+      var isPaymentRequestPlugin = <?php echo ($this->id == 'midtrans_paymentrequest') ? 'true':'false';?> ;
+      // Check if this is paymentRequest sub-plugin & paymentRequest is supported
+      if(isPaymentRequestPlugin && window.PaymentRequest){
+          var payRequest = createPaymentRequest();
+          payRequest
+            .show()
+            .then(function(result){
+              result.complete('success');
+              ccDetails = {
+                creditCardNumber: result.details.cardNumber,
+                creditCardCvv: result.details.cardSecurityCode,
+                creditCardExpiry: 
+                  result.details.expiryMonth+'/'+result.details.expiryYear.slice(-2),
+                customerEmail: result.payerEmail,
+                customerPhone: result.payerPhone,
+              };
+              console.log('Browser Payment Request Completed!, passing to Snap');
+              execSnapCont(ccDetails);
+            })
+            .catch(function(err){
+              console.log('- Failed Browser Payment Request!, fallback to regular Snap');
+              execSnapCont(ccDetails);
+            })
+      } else {
+        execSnapCont(ccDetails);
+      }
       clickCount++;
     };
 
-    // Call execSnapCont() 
-    execSnapCont();
+    console.log("Loading snap JS library now!");
+    // Loading SNAP JS Library to the page    
+    loadExtScript("<?php echo esc_js($snap_script_url);?>");
+    console.log("Snap library is loaded now");
+
+    payButton.onclick = handlePayAction;
+
+    handlePayAction();
     payButton.innerHTML = "Proceed To Payment";
   });
   </script>
