@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.7
-Stable tag: 2.20.0
+Stable tag: 2.21.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,10 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 4. Configuration page
 
 == Changelog ==
+
+= 2.21.0 - 2021-03-08 =
+* improve compatibility: prepare future WP >5.7 CSP on js script tag
+* minor payment page js enhancement
 
 = 2.20.0 - 2021-03-03 =
 * ensure compatibility with WP 5.7
@@ -227,6 +231,10 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Fullpayment feature
 
 == Upgrade Notice ==
+
+= 2.21.0 - 2021-03-08 =
+* improve compatibility: prepare future WP >5.7 CSP on js script tag
+* minor payment page js enhancement
 
 = 2.20.0 - 2021-03-03 =
 * ensure compatibility with WP 5.7
