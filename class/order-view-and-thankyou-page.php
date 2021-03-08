@@ -20,6 +20,7 @@ $order = new WC_Order( $order_id );
               <td>Payment Completed</td>
           </tr>
           <?php else : ?>
+          <!-- TODO refactor this script tag to be CSP compliant -->
           <!-- Make customer focus to payment url, if order need payment -->
           <script type="text/javascript">
             setTimeout(function(){
