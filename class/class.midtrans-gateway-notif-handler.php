@@ -111,7 +111,7 @@ class WC_Gateway_Midtrans_Notif_Handler
       } 
       // if or pending/challenge
       else if( !empty($sanitized['order_id']) && !empty($sanitized['transaction_status']) && $sanitized['status_code'] == 201)  {
-        // @FIXME: $this->ignore_pending_status is broken, it doesn't refer to plugin class
+        // @FIXME: $this->ignore_pending_status is broken, it doesn't refer to plugin class, but refer to this own class
         if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
           wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
           exit;
@@ -265,6 +265,7 @@ class WC_Gateway_Midtrans_Notif_Handler
       $order->update_meta_data('_mt_payment_transaction_id',$midtrans_notification->transaction_id);
       $order->save();
 
+      // @FIXME: $this->ignore_pending_status is broken, it doesn't refer to plugin class, but refer to this own class
       if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
         exit;
       }

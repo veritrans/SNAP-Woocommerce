@@ -50,8 +50,9 @@
   var retryCount = 0;
   var snapExecuted = false;
   var intervalFunction = 0;
-  // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
+  
   function execSnapCont(ccDetails){
+    // Continously retry to execute SNAP popup if fail, periodically w/ 1000ms delay between retry
     intervalFunction = setInterval(function() {
       try{
         snap.pay(SNAP_TOKEN, 
@@ -183,6 +184,7 @@
   var clickCount = 0;
   function handlePayAction() {
     if(clickCount >= 2){
+      // refresh page, hoping reloading all frontend state will fix Snap fail to open
       location.reload();
       payButton.innerHTML = "Loading...";
       return;
@@ -191,6 +193,7 @@
     var isPaymentRequestPlugin = wc_midtrans.is_payment_request_plugin;
     // Check if this is paymentRequest sub-plugin & paymentRequest is supported
     if(isPaymentRequestPlugin && window.PaymentRequest){
+        // utilize Chrome in-built paymentRequest browser feature for Card txn
         var payRequest = createPaymentRequest();
         payRequest
           .show()
@@ -212,6 +215,7 @@
             execSnapCont(ccDetails);
           })
     } else {
+      // execute snap normally
       execSnapCont(ccDetails);
     }
     clickCount++;
