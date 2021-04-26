@@ -1,8 +1,8 @@
 // wc_midtrans var is passed from payment-page backend via inline script.
 
-var payButton = document.getElementById("pay-button");
+;(function( $, window, document ) {
+  var payButton = document.getElementById("pay-button");
 
-document.addEventListener("DOMContentLoaded", function(event) { 
   function MixpanelTrackResult(token, merchant_id, cms_name, cms_version, plugin_name, plugin_version, status, result) {
     var eventNames = {
       pay: 'pg-pay',
@@ -225,4 +225,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   handlePayAction();
   payButton.innerHTML = "Proceed To Payment";
-});
+})( jQuery, window, document );
+// well jQuery is not actually used, just for formality
