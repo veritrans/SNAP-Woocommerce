@@ -131,10 +131,12 @@
       } catch (e){ 
         retryCount++;
         if(retryCount >= 10){
-          location.reload(); payButton.innerHTML = "Loading..."; return;
+          // stop retrying, let the pay button trigger page refresh
+          payButton.innerHTML = "Proceed To Payment"; 
+          return 0;
         }
         console.log(e);
-        console.log("Snap not ready yet... Retrying in 1000ms!");
+        console.log("Snap.pay() fail to execute... Retrying in 1000ms!");
       } finally {
         if (snapExecuted) {
           clearInterval(intervalFunction);
