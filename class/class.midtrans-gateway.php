@@ -80,7 +80,7 @@
             'title' => __( 'Acquiring Bank', 'midtrans-woocommerce'),
             'type' => 'text',
             'label' => __( 'Acquiring Bank', 'midtrans-woocommerce' ),
-            'description' => __( 'Leave blank for default. </br> Specify your acquiring bank for this payment option. </br> Options: BCA, BRI, DANAMON, MAYBANK, BNI, MANDIRI, CIMB, etc (Only choose 1 bank).' , 'midtrans-woocommerce' ),
+            'description' => __( 'You should leave it empty, it will be auto configured. </br> Alternatively may specify your card-payment acquiring bank for this payment option. </br> Options: BCA, BRI, DANAMON, MAYBANK, BNI, MANDIRI, CIMB, etc (Only choose 1 bank).' , 'midtrans-woocommerce' ),
             'default' => ''
           )
         ));
