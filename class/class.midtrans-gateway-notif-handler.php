@@ -12,9 +12,7 @@ class WC_Gateway_Midtrans_Notif_Handler
 {
 	/**
 	 * Constructor.
-	 *
-	 * @param bool   $is_production Use production or not.
-	 * @param string $server_key ServerKey to receive HTTP notification from Midtrans.
+	 * 
 	 */
 	public function __construct() {
     // Register hook for handling HTTP notification (HTTP call to `http://[your web]/?wc-api=WC_Gateway_Midtrans`)
@@ -100,7 +98,7 @@ class WC_Gateway_Midtrans_Notif_Handler
       // Get current plugin id 
       else $plugin_id = $wcorder->get_payment_method();
       // Verify Midtrans notification
-      $midtrans_notification = WC_Midtrans_API::getMidtransNotif( $plugin_id );
+      $midtrans_notification = WC_Midtrans_API::getStatusFromMidtransNotif( $plugin_id );
       // If notification verified, handle it
       if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
         if (wc_get_order($midtrans_notification->order_id) != false) {
