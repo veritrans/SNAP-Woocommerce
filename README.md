@@ -70,7 +70,13 @@ Note: This section is optional and only for advanced usage.
 Available for customization from plugin config:
 - Payment text label of the payment options
 - Payment text description of the payment options
-- You can also input html tags as the text, to insert something like image
+- On both configuration fields above can also input html tags as the text, to insert something like image. For example you can input like this to show images:
+
+```html
+Online Payment via Midtrans <img src="https://docs.midtrans.com/asset/image/main/midtrans-logo.png">
+```
+
+You can change the image, like if you want to show the logo of banks or payment providers that you are accepting.
 
 Additional payment options (radio button) can be activated:
 - Installment

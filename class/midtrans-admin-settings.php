@@ -17,19 +17,6 @@ return apply_filters(
             'label'     => __( 'Enable Midtrans Payment', 'midtrans-woocommerce' ),
             'default'   => 'no'
         ),
-        'title'                     => array(
-            'title'         => __( 'Title', 'midtrans-woocommerce' ),
-            'type'          => 'text',
-            'description'   => __( 'This controls the title which the user sees during checkout.', 'midtrans-woocommerce' ),
-            'default'       => $this->getDefaultTitle(),
-            'desc_tip'      => true,
-        ),
-        'description'               => array(
-            'title' => __( 'Customer Message', 'midtrans-woocommerce' ),
-            'type' => 'textarea',
-            'description' => __( 'This controls the description which the user sees during checkout', 'midtrans-woocommerce' ),
-            'default'       => $this->getDefaultDescription(),
-          ),
         'merchant_id'                => array(
             'title'         => __("Merchant ID", 'midtrans-woocommerce'),
             'type'          => 'text',
@@ -74,11 +61,29 @@ return apply_filters(
             'default'       => '',
             'class'         => 'production_settings toggle-midtrans'
         ),
+        'title'                     => array(
+            'title'         => __( 'Payment Title', 'midtrans-woocommerce' ),
+            'type'          => 'text',
+            'description'   => __( 'This controls the payment label title which the user sees during checkout. <a href="https://github.com/veritrans/SNAP-Woocommerce#configurables"  target="_blank">This support HTML tags</a> like &lt;img&gt; tag, if you want to include images.', 'midtrans-woocommerce' ),
+            'default'       => $this->getDefaultTitle(),
+            // 'desc_tip'      => true,
+        ),
+        'description'               => array(
+            'title' => __( 'Payment Description', 'midtrans-woocommerce' ),
+            'type' => 'textarea',
+            'description' => __( 'You can customize here the expanded description which the user sees during checkout when they choose this payment. <a href="https://github.com/veritrans/SNAP-Woocommerce#configurables"  target="_blank">This support HTML tags</a> like &lt;img&gt; tag, if you want to include images.', 'midtrans-woocommerce' ),
+            'default'       => $this->getDefaultDescription(),
+          ),
+        'advanced_config_separator'             => array(
+            'title'         => __( 'Advanced Config Section - Optional, you can leave them default.', 'midtrans-woocommerce' ),
+            'type'          => 'title',
+            'description'   => __( '-- Configurations below is optional and don\'t need to be changed, you can leave them default. Unless you know you want advanced configuration --','midtrans-woocommerce'),
+        ),
         'enable_3d_secure'             => array(
             'title'         => __( 'Enable 3D Secure', 'midtrans-woocommerce' ),
             'type'          => 'checkbox',
             'label'         => __( 'Enable 3D Secure?', 'midtrans-woocommerce' ),
-            'description'   => __( 'You must enable 3D Secure.
+            'description'   => __( 'You should enable 3D Secure.
                 Please contact us if you wish to disable this feature in the Production environment.', 'midtrans-woocommerce' ),
             'default'       => 'yes'
         ),
@@ -91,10 +96,10 @@ return apply_filters(
             'default'       => 'no'
         ),
         'enable_redirect'               => array(
-            'title'         => __( 'Redirect payment page', 'midtrans-woocommerce' ),
+            'title'         => __( 'Redirect payment mode', 'midtrans-woocommerce' ),
             'type'          => 'checkbox',
-            'label'         => __( 'Enable payment page redirection?', 'midtrans-woocommerce' ),
-            'description'   => __( 'This will redirect customer to Midtrans hosted payment page instead of popup payment page on your website. <br>Leave it disabled if you are not sure', 'midtrans-woocommerce' ),
+            'label'         => __( 'Enable redirection for payment page?', 'midtrans-woocommerce' ),
+            'description'   => __( 'This will redirect customer to Midtrans hosted payment page instead of popup payment page on your website. <br>Useful if you encounter issue with payment page on your website.', 'midtrans-woocommerce' ),
             'class'         => 'toggle-advanced',
             'default'       => 'no'
         ),
@@ -114,7 +119,7 @@ return apply_filters(
             'title'         => __( 'Use Dashboard Finish url', 'midtrans-woocommerce' ),
             'type'          => 'checkbox',
             'label'         => 'Use dashboard configured payment finish url?',
-            'description'   => __( 'This will allow use of Dashboard configured payment finish url instead of auto configured url', 'midtrans-woocommerce' ),
+            'description'   => __( 'This will alternatively redirect customer to Dashboard configured payment finish url instead of auto configured url, after payment is completed', 'midtrans-woocommerce' ),
             'default'       => 'no'
         ),
         'ganalytics_id'                 => array(
@@ -130,11 +135,12 @@ return apply_filters(
             'description'   => __( 'By default, item stock only reduced if payment status on Midtrans reach pending/success (customer choose payment channel and click pay on payment pop-up). Enable this if you want to immediately reduce item stock when payment pop-up generated/displayed.', 'midtrans-woocommerce' ),
             'default'       => 'no'
         ),
+        // @Note: only main plugin class config will be applied on notif handler, sub plugin class config will not affect it, check gateway-notif-handler.php class to fix
         'ignore_pending_status'         => array(
             'title'         => __( 'Ignore Midtrans Transaction Pending Status', 'midtrans-woocommerce' ),
             'type'          => 'checkbox',
             'label'         => __( 'Ignore Midtrans Transaction Pending Status?', 'midtrans-woocommerce' ),
-            'description'   => __( 'This will prevent customer for being redirected to "order received" page, on unpaid async payment type. <br>Backend pending notification will also ignored, and not trigger change to "on-hold". <br>Leave it disabled if you are not sure', 'midtrans-woocommerce' ),
+            'description'   => __( 'This will prevent customer for being redirected to "order received" page, on unpaid async payment type. <br>Backend pending notification will also ignored, and will not change to "on-hold" status. <br>Leave it disabled if you are not sure', 'midtrans-woocommerce' ),
             'class'         => 'toggle-advanced',
             'default'       => 'no'
         ),

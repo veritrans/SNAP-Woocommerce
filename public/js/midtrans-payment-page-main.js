@@ -1,8 +1,8 @@
 // wc_midtrans var is passed from payment-page backend via inline script.
 
-var payButton = document.getElementById("pay-button");
+;(function( $, window, document ) {
+  var payButton = document.getElementById("pay-button");
 
-document.addEventListener("DOMContentLoaded", function(event) { 
   function MixpanelTrackResult(token, merchant_id, cms_name, cms_version, plugin_name, plugin_version, status, result) {
     var eventNames = {
       pay: 'pg-pay',
@@ -50,8 +50,9 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var retryCount = 0;
   var snapExecuted = false;
   var intervalFunction = 0;
-  // Continously retry to execute SNAP popup if fail, with 1000ms delay between retry
+  
   function execSnapCont(ccDetails){
+    // Continously retry to execute SNAP popup if fail, periodically w/ 1000ms delay between retry
     intervalFunction = setInterval(function() {
       try{
         snap.pay(SNAP_TOKEN, 
@@ -131,10 +132,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
       } catch (e){ 
         retryCount++;
         if(retryCount >= 10){
-          location.reload(); payButton.innerHTML = "Loading..."; return;
+          // stop retrying, let the pay button trigger page refresh
+          payButton.innerHTML = "Proceed To Payment"; 
+          return 0;
         }
         console.log(e);
-        console.log("Snap not ready yet... Retrying in 1000ms!");
+        console.log("Snap.pay() fail to execute... Retrying in 1000ms!");
       } finally {
         if (snapExecuted) {
           clearInterval(intervalFunction);
@@ -181,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var clickCount = 0;
   function handlePayAction() {
     if(clickCount >= 2){
+      // refresh page, hoping reloading all frontend state will fix Snap fail to open
       location.reload();
       payButton.innerHTML = "Loading...";
       return;
@@ -189,6 +193,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     var isPaymentRequestPlugin = wc_midtrans.is_payment_request_plugin;
     // Check if this is paymentRequest sub-plugin & paymentRequest is supported
     if(isPaymentRequestPlugin && window.PaymentRequest){
+        // utilize Chrome in-built paymentRequest browser feature for Card txn
         var payRequest = createPaymentRequest();
         payRequest
           .show()
@@ -210,6 +215,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             execSnapCont(ccDetails);
           })
     } else {
+      // execute snap normally
       execSnapCont(ccDetails);
     }
     clickCount++;
@@ -225,4 +231,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   handlePayAction();
   payButton.innerHTML = "Proceed To Payment";
-});
+})( jQuery, window, document );
+// well jQuery is not actually used, just for formality

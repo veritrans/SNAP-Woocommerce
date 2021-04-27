@@ -134,7 +134,7 @@ class WC_Midtrans_API {
      * Get Midtrans Notification.
      * @return object Midtrans Notification response.
      */
-    public static function getMidtransNotif( $plugin_id="midtrans") {
+    public static function getStatusFromMidtransNotif( $plugin_id="midtrans") {
         self::fetchAndSetMidtransApiConfig( $plugin_id );
         return new Midtrans\Notification();
     }
