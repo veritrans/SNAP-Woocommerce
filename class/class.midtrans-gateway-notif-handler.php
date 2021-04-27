@@ -50,6 +50,22 @@ class WC_Gateway_Midtrans_Notif_Handler
   }
 
   /**
+   * getPluginOptions
+   * @param  string $plugin_id plugin id of the paid order
+   * @return array  plugin options
+   */
+  public function getPluginOptions($plugin_id = 'midtrans'){
+    // Get current plugin options
+    $plugin_options = array();
+    try {
+      $plugin_options = get_option( 'woocommerce_' . $plugin_id . '_settings' );
+    } catch (Exception $e) {
+      WC_Midtrans_Logger::log( 'Fail to getPluginOptions', 'midtrans-error' );
+    };
+    return $plugin_options;
+  }
+
+  /**
    * Called by hook function when HTTP notification / API call received
    * Handle Midtrans payment notification
    */
@@ -81,14 +97,14 @@ class WC_Gateway_Midtrans_Notif_Handler
         WC_Midtrans_Logger::log( 'Can\'t find order id' . $raw_notification['order_id'] . ' on WooCommerce dashboard', 'midtrans-error' );
         exit;
       }
-      // Get plugin id 
+      // Get current plugin id 
       else $plugin_id = $wcorder->get_payment_method();
       // Verify Midtrans notification
       $midtrans_notification = WC_Midtrans_API::getMidtransNotif( $plugin_id );
       // If notification verified, handle it
       if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
         if (wc_get_order($midtrans_notification->order_id) != false) {
-          do_action( "midtrans-handle-valid-notification", $midtrans_notification );
+          do_action( "midtrans-handle-valid-notification", $midtrans_notification, $plugin_id );
         }
       }
       exit;
@@ -111,13 +127,17 @@ class WC_Gateway_Midtrans_Notif_Handler
       } 
       // if or pending/challenge
       else if( !empty($sanitized['order_id']) && !empty($sanitized['transaction_status']) && $sanitized['status_code'] == 201)  {
-        // @FIXME: $this->ignore_pending_status is broken, it doesn't refer to plugin class, but refer to this own class
-        if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
+        $order_id = $sanitized['order_id'];
+        $order = new WC_Order( $order_id );
+        $plugin_id = $order->get_payment_method();
+
+        $plugin_options = $this->getPluginOptions($plugin_id);
+        if( array_key_exists('ignore_pending_status',$plugin_options)
+          && $plugin_options['ignore_pending_status'] == 'yes'
+        ){
           wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
           exit;
         }
-        $order_id = $sanitized['order_id'];
-        $order = new WC_Order( $order_id );
         wp_redirect($order->get_checkout_order_received_url());
       } 
       //if deny, redirect to order checkout page again
@@ -223,7 +243,7 @@ class WC_Gateway_Midtrans_Notif_Handler
    * notification
    * @return void
    */
-  public function handleMidtransValidNotificationRequest( $midtrans_notification ) {
+  public function handleMidtransValidNotificationRequest( $midtrans_notification, $plugin_id = 'midtrans' ) {
     global $woocommerce;
 
     $order = new WC_Order( $midtrans_notification->order_id );
@@ -265,11 +285,14 @@ class WC_Gateway_Midtrans_Notif_Handler
       $order->update_meta_data('_mt_payment_transaction_id',$midtrans_notification->transaction_id);
       $order->save();
 
-      // @FIXME: $this->ignore_pending_status is broken, it doesn't refer to plugin class, but refer to this own class
-      if(property_exists($this,'ignore_pending_status') && $this->ignore_pending_status == 'yes'){
+      $plugin_options = $this->getPluginOptions($plugin_id);
+      if( array_key_exists('ignore_pending_status',$plugin_options)
+          && $plugin_options['ignore_pending_status'] == 'yes'
+        ){
         exit;
       }
       $order->update_status('on-hold',__('Awaiting payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      error_log($plugin_options['ignore_pending_status']);
     }
     else if ($midtrans_notification->transaction_status == 'refund' || $midtrans_notification->transaction_status == 'partial_refund') {
       $refund_request = $this->validateRefundNotif( $midtrans_notification );
