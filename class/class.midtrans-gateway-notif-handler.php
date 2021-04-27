@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * WC_Gateway_Midtrans_Notif_Handler class.
  * Handles responses from Midtrans Notification.
+ * @todo : refactor, this shouldn't be a class
+ * maybe just a bunch of function to include in main class
+ * to avoid complex param & config value passing
  */
 class WC_Gateway_Midtrans_Notif_Handler
 // extends WC_Gateway_ 
@@ -83,8 +86,9 @@ class WC_Gateway_Midtrans_Notif_Handler
       isset($_POST['response'])? sanitize_text_field($_POST['response']): null;
 
     // check whether the request is POST or GET, 
-    // if request == POST, request is for payment notification, then update the payment status
-    if(empty($sanitized['order_id']) && empty($sanitizedPost['id']) && empty($sanitized['id']) && empty($sanitizedPost['response'])) {    // Check if POST, then create new notification
+    // @TODO: refactor this conditions, this doesn't quite represent conditions for a POST request
+    if(empty($sanitized['order_id']) && empty($sanitizedPost['id']) && empty($sanitized['id']) && empty($sanitizedPost['response'])) { 
+      // Request is POST, proceed to create new notification, then update the payment status
       $raw_notification = $this->doEarlyAckResponse();
       // Handle pdf url update
       $this->handlePendingPaymentPdfUrlUpdate();
@@ -107,8 +111,8 @@ class WC_Gateway_Midtrans_Notif_Handler
       }
       exit;
     }
-    // if request == GET, request is for finish OR failed URL, then redirect to WooCommerce's order complete/failed
     else { 
+      // The request == GET, this will handle redirect url from Snap finish OR failed, proceed to redirect to WooCommerce's order complete/failed page
       $sanitized['transaction_status'] = 
         isset($_GET['transaction_status'])? sanitize_text_field($_GET['transaction_status']): null;
       $sanitized['status_code'] = 
