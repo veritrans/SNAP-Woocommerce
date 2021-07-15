@@ -72,14 +72,14 @@ return apply_filters(
             'description'   => __( '-- Configure how the payment button will appear to customer, you can leave them default.','midtrans-woocommerce'),
         ),
         'title'                     => array(
-            'title'         => __( 'Payment Title', 'midtrans-woocommerce' ),
+            'title'         => __( 'Button Title', 'midtrans-woocommerce' ),
             'type'          => 'text',
             'description'   => __( 'This controls the payment label title which the user sees during checkout. <a href="https://github.com/veritrans/SNAP-Woocommerce#configurables"  target="_blank">This support HTML tags</a> like &lt;img&gt; tag, if you want to include images.', 'midtrans-woocommerce' ),
             'default'       => $this->getDefaultTitle(),
             // 'desc_tip'      => true,
         ),
         'description'               => array(
-            'title' => __( 'Payment Description', 'midtrans-woocommerce' ),
+            'title' => __( 'Button Description', 'midtrans-woocommerce' ),
             'type' => 'textarea',
             'description' => __( 'You can customize here the expanded description which the user sees during checkout when they choose this payment. <a href="https://github.com/veritrans/SNAP-Woocommerce#configurables"  target="_blank">This support HTML tags</a> like &lt;img&gt; tag, if you want to include images.', 'midtrans-woocommerce' ),
             'default'       => $this->getDefaultDescription(),
