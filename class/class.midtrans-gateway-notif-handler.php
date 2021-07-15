@@ -101,6 +101,10 @@ class WC_Gateway_Midtrans_Notif_Handler
       }
       // Get current plugin id 
       else $plugin_id = $wcorder->get_payment_method();
+      if(strpos($plugin_id, 'midtrans_sub') !== false){
+        // for sub separated gateway buttons, use main gateway plugin id instead
+        $plugin_id = 'midtrans';
+      }
       // Verify Midtrans notification
       $midtrans_notification = WC_Midtrans_API::getStatusFromMidtransNotif( $plugin_id );
       // If notification verified, handle it

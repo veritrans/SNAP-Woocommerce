@@ -53,18 +53,23 @@ function midtrans_gateway_init() {
   if(!class_exists("Midtrans\Config")){
     include_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
   }
+  // shared imports
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-notif-handler.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-api.php';
-
+  // utils imports
   require_once dirname( __FILE__ ) . '/class/class.midtrans-utils.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-logger.php';
-
+  // main gateway imports
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway.php';
+  // sub gateway imports
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
+  // sub separated gateway buttons imports
+  require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway-sub.php';
+
   // Add this payment method if WooCommerce Subscriptions plugin activated
   if( class_exists( 'WC_Subscriptions' ) ) {
     require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
@@ -82,11 +87,15 @@ function add_midtrans_payment_gateway( $methods ) {
    * Especially Offline Installment, it requires `whitelist_bins` so it should not be combined 
    * with other payment feature.
    */
+  // main gateways
   $methods[] = 'WC_Gateway_Midtrans';
+  // sub separated gateway buttons
+  // additional gateways
   $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
   $methods[] = 'WC_Gateway_Midtrans_Installment';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
   $methods[] = 'WC_Gateway_Midtrans_Promo';
+  
   // Add this payment method if WooCommerce Subscriptions plugin activated
   if( class_exists( 'WC_Subscriptions' ) ) {
     $methods[] = 'WC_Gateway_Midtrans_Subscription';
