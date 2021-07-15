@@ -66,6 +66,11 @@ return apply_filters(
             'type'          => 'title',
             'description'   => __( 'After you have filled required config above, don\'t forget to scroll to bottom and click  <strong>Save Changes</strong> button.</br></br>Copy and use this recommended Notification URL <code>'.$this->get_main_notification_url().'</code> into "<strong><a href="https://account.midtrans.com/">Midtrans Dashboard</a> > Settings > Configuration > Notification Url</strong>". This will allow your WooCommerce to receive Midtrans payment status, which auto sync the payment status.','midtrans-woocommerce'),
         ),
+        'label_config_separator'             => array(
+            'title'         => __( 'II. Payment Buttons Appereance Section - Optional', 'midtrans-woocommerce' ),
+            'type'          => 'title',
+            'description'   => __( '-- Configure how the payment button will appear to customer, you can leave them default.','midtrans-woocommerce'),
+        ),
         'title'                     => array(
             'title'         => __( 'Payment Title', 'midtrans-woocommerce' ),
             'type'          => 'text',
@@ -80,7 +85,7 @@ return apply_filters(
             'default'       => $this->getDefaultDescription(),
           ),
         'advanced_config_separator'             => array(
-            'title'         => __( 'Advanced Config Section - Optional, you can leave them default.', 'midtrans-woocommerce' ),
+            'title'         => __( 'III. Advanced Config Section - Optional', 'midtrans-woocommerce' ),
             'type'          => 'title',
             'description'   => __( '-- Configurations below is optional and don\'t need to be changed, you can leave them default. Unless you know you want advanced configuration --','midtrans-woocommerce'),
         ),
