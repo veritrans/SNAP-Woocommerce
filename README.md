@@ -83,6 +83,17 @@ Additional payment options (radio button) can be activated:
 - Offline Installment
 - Promo / specific payment
 
+#### Customize Payment Icons
+
+You can customize icon that will be shown on payment buttons, from the plugin configuration page on your WooCommerce portal, under `Button Icons` config field.
+
+All available values for the field:
+```
+credit_card.png, gopay.png, shopeepay.png, qris.png, other_va.png, bni_va.png, bri_va.png, bca_va.png, permata_va.png, echannel.png, alfamart.png, indomaret.png, akulaku.png, bca_klikpay.png, cimb_clicks.png, danamon_online.png, midtrans.png
+```
+
+Or refer to [payment-methods folder](/public/images/payment-methods) to see the list of all available file names. The image file will be loaded from that folder.
+
 #### BCA Klikpay Specific
 
 <details><summary>Click to expand info</summary>

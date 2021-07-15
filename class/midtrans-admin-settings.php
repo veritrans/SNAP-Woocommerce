@@ -84,6 +84,12 @@ return apply_filters(
             'description' => __( 'You can customize here the expanded description which the user sees during checkout when they choose this payment. <a href="https://github.com/veritrans/SNAP-Woocommerce#configurables"  target="_blank">This support HTML tags</a> like &lt;img&gt; tag, if you want to include images.', 'midtrans-woocommerce' ),
             'default'       => $this->getDefaultDescription(),
           ),
+        'sub_payment_method_image_file_names_str' => array(
+            'title' => __( 'Button Icons', 'midtrans-woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'You can input multiple payment method names separated by coma (,). </br>See <a href="https://github.com/veritrans/SNAP-Woocommerce#customize-payment-icons">all available values here</a>, you can copy paste the value, and adjust as needed. Also support https:// url to external image.', 'midtrans-woocommerce' ),
+            'placeholder'       => 'midtrans.png,credit_card_0.png',
+          ),
         'advanced_config_separator'             => array(
             'title'         => __( 'III. Advanced Config Section - Optional', 'midtrans-woocommerce' ),
             'type'          => 'title',

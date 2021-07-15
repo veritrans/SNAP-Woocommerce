@@ -85,6 +85,8 @@
         ));
         // Make this payment method enabled by default
         $this->form_fields['enabled']['default'] = 'yes';
+        // Setup icons config placeholder
+        $this->form_fields['sub_payment_method_image_file_names_str']['placeholder'] = 'midtrans.png,credit_card_0.png';
       }
 
       /**
