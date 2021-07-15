@@ -393,4 +393,10 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
    * @return string
    */
   abstract protected function getDefaultDescription ();
+  /**
+   * @return string The main gateway plugin's Notification URL that will be displayed to config page
+   */
+  public function get_main_notification_url(){
+    return add_query_arg( 'wc-api', 'WC_Gateway_Midtrans', home_url( '/' ) );
+  }
 }

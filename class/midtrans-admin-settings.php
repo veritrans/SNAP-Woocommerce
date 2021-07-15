@@ -61,6 +61,11 @@ return apply_filters(
             'default'       => '',
             'class'         => 'production_settings toggle-midtrans'
         ),
+        'notification_url_display'             => array(
+            'title'         => __( 'Notification URL value', 'midtrans-woocommerce' ),
+            'type'          => 'title',
+            'description'   => __( 'After you have filled required config above, don\'t forget to scroll to bottom and click  <strong>Save Changes</strong> button.</br></br>Copy and use this recommended Notification URL <code>'.$this->get_main_notification_url().'</code> into "<strong><a href="https://account.midtrans.com/">Midtrans Dashboard</a> > Settings > Configuration > Notification Url</strong>". This will allow your WooCommerce to receive Midtrans payment status, which auto sync the payment status.','midtrans-woocommerce'),
+        ),
         'title'                     => array(
             'title'         => __( 'Payment Title', 'midtrans-woocommerce' ),
             'type'          => 'text',
