@@ -11,7 +11,6 @@
       $this->id           = 'midtrans_subscription';
       $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
       $this->method_description = $this->getSettingsDescription();
-      $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_Subscription', home_url( '/' ) ) );
       parent::__construct();
        $this->supports = array(
           'refunds',

@@ -13,7 +13,6 @@
       function __construct() {
         $this->id           = 'midtrans_installment';
         $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
-        $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_Installment', home_url( '/' ) ) );
 
         parent::__construct();
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) ); 

@@ -40,7 +40,6 @@
         $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
         $this->method_description = $this->getSettingsDescription();
         $this->has_fields   = true;
-        $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans', home_url( '/' ) ) );
 
         parent::__construct();
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) );
