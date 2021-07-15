@@ -258,6 +258,7 @@ class WC_Gateway_Midtrans_Notif_Handler
         if( class_exists( 'WC_Subscriptions' ) ){
           $this->checkAndHandleWCSubscriptionTxnNotif( $midtrans_notification, $order );
         }
+        // @TODO: add $midtrans_notification->transaction_id as params
         $order->payment_complete();
         $order->add_order_note(__('Midtrans payment completed: capture. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
 
@@ -278,6 +279,7 @@ class WC_Gateway_Midtrans_Notif_Handler
     }
     else if ($midtrans_notification->transaction_status == 'settlement') {
       if($midtrans_notification->payment_type != 'credit_card'){
+        // @TODO: add $midtrans_notification->transaction_id as params
         $order->payment_complete();
         $order->add_order_note(__('Midtrans payment completed: settlement. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
       }
