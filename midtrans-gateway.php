@@ -75,6 +75,7 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway-sub.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-other-va.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-gopay.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-shopeepay.php';
 
   // Add this payment method if WooCommerce Subscriptions plugin activated
   if( class_exists( 'WC_Subscriptions' ) ) {
@@ -97,6 +98,7 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans';
   // sub separated gateway buttons
   $methods[] = 'WC_Gateway_Midtrans_Sub_Gopay';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Shopeepay';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Other_VA';
   // additional gateways
   $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
