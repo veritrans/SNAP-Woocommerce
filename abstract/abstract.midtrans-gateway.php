@@ -25,6 +25,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     // Get Settings
     $this->title              = $this->get_option( 'title' );
     $this->description        = $this->get_option( 'description' );
+    $this->sub_payment_method_image_file_names_str = $this->get_option( 'sub_payment_method_image_file_names_str' );
     $this->environment        = $this->get_option( 'select_midtrans_environment' );
     $this->client_key = ($this->environment == 'production') ? $this->get_option( 'client_key_v2_production' ) : $this->get_option( 'client_key_v2_sandbox' );
     $this->server_key = ($this->environment == 'production') ? $this->get_option( 'server_key_v2_production' ) : $this->get_option( 'server_key_v2_sandbox' );
@@ -382,6 +383,37 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
 
   public function setLogError( $message ) {
     WC_Midtrans_Logger::log( $message, 'midtrans-error', $this->id, current_time( 'timestamp' ) );
+  }
+
+  /**
+   * @return string Gateway payment button html tag to render icon images. built-in hook from WC
+   */
+  public function get_icon()
+  {
+    $image_file_name_str = false;
+    if(isset($this->sub_payment_method_image_file_names_str_final)){
+      $image_file_name_str = $this->sub_payment_method_image_file_names_str_final;
+    } else if (isset($this->sub_payment_method_image_file_names_str)){
+      $image_file_name_str = $this->sub_payment_method_image_file_names_str;
+    }
+
+    $image_tag = '';
+    if( isset($image_file_name_str) && is_string($image_file_name_str) ){
+      $image_file_names = explode(',', $image_file_name_str);
+      foreach ($image_file_names as $image_file_name) {
+        if(strlen($image_file_name)<=0){ continue; }
+        // remove whitespaces
+        $image_file_name = str_replace(' ', '', $image_file_name);
+        // prefix with internal image url
+        $image_url = MIDTRANS_PLUGIN_DIR_URL.'public/images/payment-methods/'.$image_file_name;
+        if(strpos($image_file_name, '://') !== false){
+          // image is absolute url, external, don't prefix.
+          $image_url = $image_file_name;
+        }
+        $image_tag .= '<img src="'.$image_url.'" alt="Midtrans" style="/*max-height: 65px; max-width: 45px;*/"/> ';
+      }
+    }
+    return apply_filters('woocommerce_gateway_icon', $image_tag, $this->id);
   }
 
   /**
