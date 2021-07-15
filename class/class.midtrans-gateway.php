@@ -56,7 +56,7 @@
        */
       public function admin_options() { ?>
         <h3><?php _e( $this->pluginTitle(), 'midtrans-woocommerce' ); ?></h3>
-        <p><?php _e('Allows payments using Midtrans.', 'midtrans-woocommerce' ); ?></p>
+        <p><?php _e($this->getSettingsDescription(), 'midtrans-woocommerce' ); ?></p>
         <table class="form-table">
           <?php
             // Generate the HTML For the settings form. generated from `init_form_fields`
