@@ -182,7 +182,7 @@
        * @return string
        */
       protected function getDefaultTitle () {
-        return __('Various Payment Methods - Midtrans', 'midtrans-woocommerce');
+        return __('All Supported Payment', 'midtrans-woocommerce');
       }
 
       /**
@@ -196,7 +196,7 @@
        * @return string
        */
       protected function getDefaultDescription () {
-        return __('Pay via Midtrans', 'midtrans-woocommerce');
+        return __('Accept all various supported payment methods. Choose your preferred payment on the next page. Secure payment via Midtrans.', 'midtrans-woocommerce');
       }
 
     }

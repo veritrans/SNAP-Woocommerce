@@ -67,10 +67,10 @@ function midtrans_gateway_init() {
   // main gateway imports
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway.php';
   // sub gateway imports
-  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
   // shared abstract import for sub separated gateway buttons
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway-sub.php';
   // sub separated gateway buttons imports, add new methods under here
@@ -107,10 +107,10 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_Sub_QRIS';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Other_VA';
   // additional gateways
-  $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
   $methods[] = 'WC_Gateway_Midtrans_Installment';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
   $methods[] = 'WC_Gateway_Midtrans_Promo';
+  $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
   
   // Add this payment method if WooCommerce Subscriptions plugin activated
   if( class_exists( 'WC_Subscriptions' ) ) {
