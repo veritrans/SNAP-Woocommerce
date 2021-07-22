@@ -118,7 +118,7 @@
        * @return string
        */
       public function pluginTitle() {
-        return "Midtrans Optional Card in-Browser Payment UI";
+        return "Midtrans Adv: Card in-Browser Payment UI";
       }
 
       /**

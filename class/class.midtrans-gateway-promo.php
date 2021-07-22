@@ -16,6 +16,7 @@
       function __construct() {
         $this->id           = 'midtrans_promo';
         $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
+        $this->method_description = $this->getSettingsDescription();
 
         parent::__construct();
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) ); 
@@ -31,7 +32,7 @@
        */
       public function admin_options() { ?>
         <h3><?php _e( $this->pluginTitle(), 'midtrans-woocommerce' ); ?></h3>
-        <p><?php _e('Allows online payments with promo using Midtrans.', 'midtrans-woocommerce' ); ?></p>
+        <p><?php _e($this->getSettingsDescription(), 'midtrans-woocommerce' ); ?></p>
         <table class="form-table">
           <?php
             // Generate the HTML For the settings form.
@@ -154,7 +155,7 @@
        * @return string
        */
       public function pluginTitle() {
-        return "Midtrans Promo Payment";
+        return "Midtrans Adv: Promo Payment";
       }
 
       /**
@@ -162,6 +163,13 @@
        */
       protected function getDefaultTitle () {
         return __('Credit Card Promo via Midtrans', 'midtrans-woocommerce');
+      }
+
+      /**
+       * @return string
+       */
+      protected function getSettingsDescription() {
+        return __('Setup specific Midtrans <a href="https://github.com/veritrans/SNAP-Woocommerce/wiki/03--Promo---discount-payment">payment-method based promo</a>, usually only used if you have promo agreement with bank/payment provider (leave it disabled if not sure).', 'midtrans-woocommerce');
       }
 
       /**
