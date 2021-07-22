@@ -84,6 +84,8 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-permata-va.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-echannel.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-other-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-alfamart.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-indomaret.php';
 
   // Add this payment method if WooCommerce Subscriptions plugin activated
   if( class_exists( 'WC_Subscriptions' ) ) {
@@ -116,6 +118,8 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_Sub_Permata_VA';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Echannel';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Other_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Alfamart';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Indomaret';
   // additional gateways
   $methods[] = 'WC_Gateway_Midtrans_Installment';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
