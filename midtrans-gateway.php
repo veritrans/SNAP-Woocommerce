@@ -37,6 +37,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    * @link       http://docs.midtrans.com
    * (This plugin is made based on Payment Plugin Template by WooCommerce)
    */
+  
+  /**
+   * This file is the WP/WC plugin main entry point, all other files are imported and registered from within this file.
+   */
 
 // Make sure we don't expose any info if called directly
 add_action( 'plugins_loaded', 'midtrans_gateway_init', 0 );
