@@ -78,6 +78,11 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-gopay.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-shopeepay.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-qris.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bca-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bni-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bri-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-permata-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-echannel.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-other-va.php';
 
   // Add this payment method if WooCommerce Subscriptions plugin activated
@@ -105,6 +110,11 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_Sub_Gopay';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Shopeepay';
   $methods[] = 'WC_Gateway_Midtrans_Sub_QRIS';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BCA_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BNI_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BRI_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Permata_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Echannel';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Other_VA';
   // additional gateways
   $methods[] = 'WC_Gateway_Midtrans_Installment';
