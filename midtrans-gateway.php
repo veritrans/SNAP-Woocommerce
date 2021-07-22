@@ -73,6 +73,7 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
   // sub separated gateway buttons imports
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway-sub.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-card.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-other-va.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-gopay.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-shopeepay.php';
@@ -97,6 +98,7 @@ function add_midtrans_payment_gateway( $methods ) {
   // main gateways
   $methods[] = 'WC_Gateway_Midtrans';
   // sub separated gateway buttons
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Card';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Gopay';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Shopeepay';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Other_VA';
