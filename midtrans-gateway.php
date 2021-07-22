@@ -71,12 +71,13 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
-  // sub separated gateway buttons imports
+  // shared abstract import for sub separated gateway buttons
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway-sub.php';
+  // sub separated gateway buttons imports, add new methods under here
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-card.php';
-  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-other-va.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-gopay.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-shopeepay.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-other-va.php';
 
   // Add this payment method if WooCommerce Subscriptions plugin activated
   if( class_exists( 'WC_Subscriptions' ) ) {
@@ -94,10 +95,11 @@ function add_midtrans_payment_gateway( $methods ) {
    * require special backend treatment (i.e. applying discount and locking payment channel). 
    * Especially Offline Installment, it requires `whitelist_bins` so it should not be combined 
    * with other payment feature.
+   * Order of these will determine the order of gateway/button shown on WC payment config page
    */
   // main gateways
   $methods[] = 'WC_Gateway_Midtrans';
-  // sub separated gateway buttons
+  // sub separated gateway buttons, add new methods under here
   $methods[] = 'WC_Gateway_Midtrans_Sub_Card';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Gopay';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Shopeepay';

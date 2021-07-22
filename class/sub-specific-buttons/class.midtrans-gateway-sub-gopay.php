@@ -7,8 +7,6 @@ class WC_Gateway_Midtrans_Sub_Gopay extends WC_Gateway_Midtrans_Abstract_Sub {
   function __construct() {
     // used as plugin id
     $this->id = 'midtrans_sub_gopay';
-    // used as image name etc.
-    $this->sub_payment_method_name = 'gopay';
     // used as Snap enabled_payments params.
     $this->sub_payment_method_params = ['gopay'];
     // used to display icons on customer side's payment buttons.

@@ -15,7 +15,6 @@ abstract class WC_Gateway_Midtrans_Abstract_Sub extends WC_Gateway_Midtrans_Abst
    */
   function __construct() {
     // $this->id = ''; // override me. sample: 'midtrans_sub_other_va';
-    // $this->sub_payment_method_name = ''; // override me. sample: 'other_va';
     // $this->sub_payment_method_params =  []; // override me. sample: ['other_va'];
     // $this->sub_payment_method_image_file_names_str_final =  []; // override me. sample: 'other_va.png,other_va_2.png';
     // override above values when extending this class

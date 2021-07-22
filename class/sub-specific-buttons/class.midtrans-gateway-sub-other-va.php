@@ -7,13 +7,10 @@ class WC_Gateway_Midtrans_Sub_Other_VA extends WC_Gateway_Midtrans_Abstract_Sub 
   function __construct() {
     // used as plugin id
     $this->id = 'midtrans_sub_other_va';
-    // used as image name etc.
-    $this->sub_payment_method_name = 'other_va';
     // used as Snap enabled_payments params.
     $this->sub_payment_method_params = ['other_va'];
     // used to display icons on customer side's payment buttons.
     $this->sub_payment_method_image_file_names_str_final = 'other_va_3.png,other_va_2.png,other_va_1.png';
-    // $this->sub_payment_method_image_file_names_str = 'cc_jcb.png,cc_amex.png,cc_visa.png,cc_master.png';
 
     parent::__construct();
   }

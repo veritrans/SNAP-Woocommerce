@@ -7,8 +7,6 @@ class WC_Gateway_Midtrans_Sub_Shopeepay extends WC_Gateway_Midtrans_Abstract_Sub
   function __construct() {
     // used as plugin id
     $this->id = 'midtrans_sub_shopeepay';
-    // used as image name etc.
-    $this->sub_payment_method_name = 'shopeepay';
     // used as Snap enabled_payments params.
     $this->sub_payment_method_params = ['shopeepay'];
     // used to display icons on customer side's payment buttons.
