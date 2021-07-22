@@ -10,7 +10,7 @@ class WC_Gateway_Midtrans_Sub_Alfamart extends WC_Gateway_Midtrans_Abstract_Sub 
     // used as Snap enabled_payments params.
     $this->sub_payment_method_params = ['alfamart'];
     // used to display icons on customer side's payment buttons.
-    $this->sub_payment_method_image_file_names_str_final = 'alfamart.png';
+    $this->sub_payment_method_image_file_names_str_final = 'alfamart_1.png';
 
     parent::__construct();
   }
@@ -25,6 +25,6 @@ class WC_Gateway_Midtrans_Sub_Alfamart extends WC_Gateway_Midtrans_Abstract_Sub 
     return __('Alfamart Group, Alfamidi, Dan+Dan', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
-    return __('', 'midtrans-woocommerce');
+    return __('Pay from Alfamart Group, Alfamidi, Dan+Dan outlet', 'midtrans-woocommerce');
   }
 }
