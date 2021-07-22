@@ -85,6 +85,10 @@ function midtrans_gateway_init() {
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-echannel.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-other-va.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-akulaku.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bca-klikpay.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bri-epay.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-cimb-clicks.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-danamon-online.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-alfamart.php';
   require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-indomaret.php';
 
@@ -120,6 +124,10 @@ function add_midtrans_payment_gateway( $methods ) {
   $methods[] = 'WC_Gateway_Midtrans_Sub_Echannel';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Other_VA';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Akulaku';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BCA_Klikpay';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BRI_Epay';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_CIMB_Clicks';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Danamon_Online';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Alfamart';
   $methods[] = 'WC_Gateway_Midtrans_Sub_Indomaret';
   // additional gateways
