@@ -97,11 +97,11 @@ function midtrans_gateway_init() {
     require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
   }
 
-  add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
+  add_filter( 'woocommerce_payment_gateways', 'midtrans_add_payment_gateway' );
   add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'midtrans_plugin_action_links' );
 }
 
-function add_midtrans_payment_gateway( $methods ) {
+function midtrans_add_payment_gateway( $methods ) {
   /**
    * Payment methods are separated as different method/class so it will be separated
    * as different payment button. This is needed because each of 'feature' like Promo,
