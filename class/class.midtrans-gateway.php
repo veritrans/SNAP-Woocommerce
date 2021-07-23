@@ -71,10 +71,10 @@
        * See definition on the extended abstract class
        */
       function init_form_fields() {
-        /**
-         * Build array of configurations that will be displayed on Admin Panel
-         */
+        // Build array of configuration fieldss that will be displayed on Admin Panel
+        // Use config fields template from abstract class
         parent::init_form_fields();
+        // Specific config fields for this main gateway goes below
         WC_Midtrans_Utils::array_insert( $this->form_fields, 'enable_3d_secure', array(
           'acquring_bank' => array(
             'title' => __( 'Acquiring Bank', 'midtrans-woocommerce'),
@@ -84,9 +84,9 @@
             'default' => ''
           )
         ));
-        // Make this payment method enabled by default
+        // Make this payment method enabled-checkbox 'yes' by default
         $this->form_fields['enabled']['default'] = 'yes';
-        // Setup icons config placeholder
+        // Set icons config field specific placeholder
         $this->form_fields['sub_payment_method_image_file_names_str']['placeholder'] = 'midtrans.png,credit_card_0.png';
       }
 
@@ -124,6 +124,7 @@
         if($options && $options['sub_payment_method_params']){
           $params['enabled_payments'] = $options['sub_payment_method_params'];
         }
+        // @TODO: add order thank you page as snap finish url
 
         // Empty the cart because payment is initiated.
         $woocommerce->cart->empty_cart();
@@ -147,8 +148,10 @@
         $order->update_meta_data('_mt_payment_url',$snapResponse->redirect_url);
         $order->save();
 
+        // @TODO: default to yes or remove this options: enable_immediate_reduce_stock
         if(property_exists($this,'enable_immediate_reduce_stock') && $this->enable_immediate_reduce_stock == 'yes'){
           // Reduce item stock on WC, item also auto reduced on order `pending` status changes
+          // @TODO: replace with $order->update_status('on-hold',__('Midtrans payment page started','midtrans-woocommerce'));
           wc_reduce_stock_levels($order);
         }
 

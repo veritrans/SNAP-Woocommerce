@@ -19,10 +19,14 @@ Other:
   - so most of functions implemented in the code are to implement those built-in functions.
 
 #### References:
+- WC PG development guide: https://docs.woocommerce.com/document/payment-gateway-api/
 - docs WC Order: https://woocommerce.github.io/code-reference/classes/WC-Order.html
 - docs WC Payment Gateway: https://woocommerce.github.io/code-reference/classes/WC-Payment-Gateway.html
+- WC hooks guide: https://woocommerce.github.io/code-reference/hooks/hooks.html
 - official WP plugin dev guide: https://developer.wordpress.org/plugins/intro/
 - sample [PG plugin implementation](https://github.com/woocommerce/woocommerce-gateway-stripe/) from official WC team. [Some other](https://github.com/woocommerce?q=gateway&type=&language=&sort=).
+- External WC PG dev guide: https://www.skyverge.com/blog/how-to-create-a-simple-woocommerce-payment-gateway/
+- WP get_options() functions: https://developer.wordpress.org/reference/functions/get_option/
 
 ### Separted Payment Buttons
 To implement separated payment buttons (separate WC payment gateway) for each of Midtrans' supported payment methods, the following implementations are made:
@@ -75,11 +79,12 @@ Plugin WP Hosted url: https://wordpress.org/plugins/midtrans-woocommerce/
 #### Update plugin
 - On Github repo folder, update version compatibility & tested up to in these files:
   - `midtrans-gateway.php`:
-    - WC tested up to: x.x.x
+    - `Version:` {current plugin version: x.x.x}
+    - `WC tested up to:` {latest WC version: x.x.x}
   - `readme.txt`:
-    - Requires at least: x.x.x
-    - Tested up to: x.x.x
-    - Stable tag: x.x.x
+    - `Requires at least:` {min version of WP, rarely changes: x.x.x}
+    - `Tested up to:` {latest WP version: x.x.x}
+    - `Stable tag:` {latest/stable version of this plugin (must have its own /trunk folder): x.x.x}
 - Copy contents of Github root folder `Snap-Woocommerce` into your SVN folder, under `/trunk` folder
 - Create new folder under `/tags` folder, name it with the plugin version. e.g: `2.6.3`
 - Ensure `Stable tag` value within `readme.txt` in folder `trunk` have the same value as above e.g: `2.6.3`
