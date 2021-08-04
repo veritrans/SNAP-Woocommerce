@@ -149,7 +149,7 @@ return apply_filters(
             'type'          => 'checkbox',
             'label'         => 'Immediately reduce item stock on Midtrans payment pop-up?',
             'description'   => __( 'By default, item stock only reduced if payment status on Midtrans reach pending/success (customer choose payment channel and click pay on payment pop-up). Enable this if you want to immediately reduce item stock when payment pop-up generated/displayed.', 'midtrans-woocommerce' ),
-            'default'       => 'no'
+            'default'       => 'yes'
         ),
         // @Note: only main plugin class config will be applied on notif handler, sub plugin class config will not affect it, check gateway-notif-handler.php class to fix
         'ignore_pending_status'         => array(
