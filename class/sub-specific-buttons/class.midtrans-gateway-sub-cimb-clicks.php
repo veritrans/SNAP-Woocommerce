@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_CIMB_Clicks extends WC_Gateway_Midtrans_Abstract_S
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: CIMB Clicks";
+    return "Midtrans Specific: CIMB OCTO Clicks";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('CIMB Octo Clicks', 'midtrans-woocommerce');
+    return __('OCTO Clicks', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('', 'midtrans-woocommerce');

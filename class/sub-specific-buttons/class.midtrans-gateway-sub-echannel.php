@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_Echannel extends WC_Gateway_Midtrans_Abstract_Sub 
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: Bank Transfer Mandiri";
+    return "Midtrans Specific: Bank Transfer Mandiri Bill Payment";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('Bank Transfer - Mandiri', 'midtrans-woocommerce');
+    return __('Bank Transfer - Mandiri Bill Payment', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('Only accept Bill Payment from Mandiri account.', 'midtrans-woocommerce');

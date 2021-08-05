@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_BNI_VA extends WC_Gateway_Midtrans_Abstract_Sub {
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: Bank Transfer BNI";
+    return "Midtrans Specific: Bank Transfer BNI VA";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('Bank Transfer - BNI', 'midtrans-woocommerce');
+    return __('Bank Transfer - BNI VA', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('Accept transfer from any bank, and BNI account.', 'midtrans-woocommerce');

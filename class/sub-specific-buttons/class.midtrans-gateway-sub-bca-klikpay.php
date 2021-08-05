@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_BCA_Klikpay extends WC_Gateway_Midtrans_Abstract_S
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: BCA Klikpay";
+    return "Midtrans Specific: BCA KlikPay";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('BCA Klikpay', 'midtrans-woocommerce');
+    return __('BCA KlikPay', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('', 'midtrans-woocommerce');

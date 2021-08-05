@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_Shopeepay extends WC_Gateway_Midtrans_Abstract_Sub
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: Shopeepay & QRIS";
+    return "Midtrans Specific: ShopeePay & QRIS";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('Shopeepay & QRIS', 'midtrans-woocommerce');
+    return __('ShopeePay', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('', 'midtrans-woocommerce');

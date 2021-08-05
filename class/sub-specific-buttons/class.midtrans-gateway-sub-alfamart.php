@@ -22,7 +22,7 @@ class WC_Gateway_Midtrans_Sub_Alfamart extends WC_Gateway_Midtrans_Abstract_Sub 
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('Alfamart Group, Alfamidi, Dan+Dan', 'midtrans-woocommerce');
+    return __('Alfamart Group (Alfamart, Alfamidi, Dan+Dan)', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('Pay from Alfamart Group, Alfamidi, Dan+Dan outlet', 'midtrans-woocommerce');

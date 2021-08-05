@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_BRI_VA extends WC_Gateway_Midtrans_Abstract_Sub {
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: Bank Transfer BRI";
+    return "Midtrans Specific: Bank Transfer BRI VA";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('Bank Transfer - BRI', 'midtrans-woocommerce');
+    return __('Bank Transfer - BRI VA', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('Accept transfer from any bank, and BRI account.', 'midtrans-woocommerce');

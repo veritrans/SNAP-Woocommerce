@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_BCA_VA extends WC_Gateway_Midtrans_Abstract_Sub {
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: Bank Transfer BCA";
+    return "Midtrans Specific: Bank Transfer BCA VA";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('Bank Transfer - BCA', 'midtrans-woocommerce');
+    return __('Bank Transfer - BCA VA', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('Only accept transfer from BCA account.', 'midtrans-woocommerce');

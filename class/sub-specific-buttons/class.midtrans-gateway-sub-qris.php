@@ -25,6 +25,6 @@ class WC_Gateway_Midtrans_Sub_QRIS extends WC_Gateway_Midtrans_Abstract_Sub {
     return __('QRIS', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
-    return __('', 'midtrans-woocommerce');
+    return __('Pay with any QRIS compatible e-wallets or banking app (GoPay, ShopeePay, OVO, DANA, LinkAja, and other e-wallets).', 'midtrans-woocommerce');
   }
 }

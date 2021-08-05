@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_Gopay extends WC_Gateway_Midtrans_Abstract_Sub {
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: Gopay & QRIS";
+    return "Midtrans Specific: GoPay & QRIS";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('Gopay & QRIS', 'midtrans-woocommerce');
+    return __('GoPay', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('', 'midtrans-woocommerce');

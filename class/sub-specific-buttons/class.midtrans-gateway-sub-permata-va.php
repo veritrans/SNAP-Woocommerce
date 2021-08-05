@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_Permata_VA extends WC_Gateway_Midtrans_Abstract_Su
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: Bank Transfer Permata";
+    return "Midtrans Specific: Bank Transfer Permata VA";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('Bank Transfer - Permata', 'midtrans-woocommerce');
+    return __('Bank Transfer - Permata VA', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('Accept transfer from any bank, and Permata account.', 'midtrans-woocommerce');

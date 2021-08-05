@@ -16,13 +16,13 @@ class WC_Gateway_Midtrans_Sub_BRI_Epay extends WC_Gateway_Midtrans_Abstract_Sub 
   }
 
   public function pluginTitle() {
-    return "Midtrans Specific: BRI Epay";
+    return "Midtrans Specific: e-Pay BRI";
   }
   public function getSettingsDescription() {
     return "Separated payment buttons for this specific the payment methods with its own icons";
   }
   protected function getDefaultTitle () {
-    return __('BRI Epay', 'midtrans-woocommerce');
+    return __('e-Pay BRI', 'midtrans-woocommerce');
   }
   protected function getDefaultDescription () {
     return __('', 'midtrans-woocommerce');
