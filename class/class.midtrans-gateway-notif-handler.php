@@ -32,7 +32,7 @@ class WC_Gateway_Midtrans_Notif_Handler
    */
   public function doEarlyAckResponse() {
     if ( $_SERVER['REQUEST_METHOD'] == 'GET' ) {
-      die('This endpoint should not be opened using browser (HTTP GET). This endpoint is for Midtrans notification URL (HTTP POST)');
+      die('This endpoint is for Midtrans notification URL (HTTP POST). This message will be shown if opened using browser (HTTP GET). You can copy this current URL on your browser address bar and paste it to: "Midtrans Dashboard > Settings > Configuration > Notification Url". This will allow your WooCommerce to receive Midtrans payment status, which will auto sync the payment status.');
       exit();
     }
 
