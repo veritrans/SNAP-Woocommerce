@@ -87,7 +87,7 @@
         // Make this payment method enabled-checkbox 'yes' by default
         $this->form_fields['enabled']['default'] = 'yes';
         // Set icons config field specific placeholder
-        $this->form_fields['sub_payment_method_image_file_names_str']['placeholder'] = 'midtrans.png,credit_card_0.png';
+        $this->form_fields['sub_payment_method_image_file_names_str']['placeholder'] = 'midtrans.png,credit_card.png';
       }
 
       /**
