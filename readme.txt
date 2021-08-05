@@ -70,6 +70,16 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Changelog ==
 
+= 2.30.0 - 2021-08-06 =
+* major feature: sub specific gateway buttons for each supported payment methods
+* improve config page UI section separation
+* add notif url config value recommendation on config page UI
+* immediate-reduce-stock enabled by default
+* improve gateway payment button naming
+* add config field to allow customize payment button icons
+* add built in payment icon assets
+* improve UI, messaging clarity, and order of advanced config
+
 = 2.22.0 - 2021-04-27 =
 * prevent issue of 3rd party Cloudflare plugin breaking payment page (reload repetitively)
 * improve configuration page structure and description
@@ -236,6 +246,16 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Fullpayment feature
 
 == Upgrade Notice ==
+
+= 2.30.0 - 2021-08-06 =
+* major feature: sub specific gateway buttons for each supported payment methods
+* improve config page UI section separation
+* add notif url config value recommendation on config page UI
+* immediate-reduce-stock enabled by default
+* improve gateway payment button naming
+* add config field to allow customize payment button icons
+* add built in payment icon assets
+* improve UI, messaging clarity, and order of advanced config
 
 = 2.22.0 - 2021-04-27 =
 * prevent issue of 3rd party Cloudflare plugin breaking payment page (reload repetitively)
