@@ -32,7 +32,7 @@ class WC_Gateway_Midtrans_Notif_Handler
    */
   public function doEarlyAckResponse() {
     if ( $_SERVER['REQUEST_METHOD'] == 'GET' ) {
-      die('This endpoint should not be opened using browser (HTTP GET). This endpoint is for Midtrans notification URL (HTTP POST)');
+      die('This endpoint is for Midtrans notification URL (HTTP POST). This message will be shown if opened using browser (HTTP GET). You can copy this current URL on your browser address bar and paste it to: "Midtrans Dashboard > Settings > Configuration > Notification Url". This will allow your WooCommerce to receive Midtrans payment status, which will auto sync the payment status.');
       exit();
     }
 
@@ -90,8 +90,6 @@ class WC_Gateway_Midtrans_Notif_Handler
     if(empty($sanitized['order_id']) && empty($sanitizedPost['id']) && empty($sanitized['id']) && empty($sanitizedPost['response'])) { 
       // Request is POST, proceed to create new notification, then update the payment status
       $raw_notification = $this->doEarlyAckResponse();
-      // Handle pdf url update
-      $this->handlePendingPaymentPdfUrlUpdate();
       // Get WooCommerce order
       $wcorder = wc_get_order( $raw_notification['order_id'] );
       // exit if the order id doesn't exist in WooCommerce dashboard
@@ -101,6 +99,10 @@ class WC_Gateway_Midtrans_Notif_Handler
       }
       // Get current plugin id 
       else $plugin_id = $wcorder->get_payment_method();
+      if(strpos($plugin_id, 'midtrans_sub') !== false){
+        // for sub separated gateway buttons, use main gateway plugin id instead
+        $plugin_id = 'midtrans';
+      }
       // Verify Midtrans notification
       $midtrans_notification = WC_Midtrans_API::getStatusFromMidtransNotif( $plugin_id );
       // If notification verified, handle it
@@ -194,51 +196,6 @@ class WC_Gateway_Midtrans_Notif_Handler
   }
 
   /**
-   * UNUSED
-   * @TODO: Evaluate if this still required/used
-   * Handle API call from payment page to update order with PDF instruction Url
-   * @return void
-   */
-  public function handlePendingPaymentPdfUrlUpdate(){
-    try {
-      global $woocommerce;
-      $requestObj = json_decode(file_get_contents("php://input"), true);
-      if( !isset($requestObj['pdf_url_update']) || 
-          !isset($requestObj['snap_token_id']) ){
-        return;
-      }
-        // @FIXME: $this is broken, it doesn't refer to plugin class
-      $snapApiBaseUrl = ($this->environment) ? 'https://app.midtrans.com' : 'https://app.sandbox.midtrans.com';
-      $tokenStatusUrl = $snapApiBaseUrl.'/snap/v1/transactions/'.$requestObj['snap_token_id'].'/status';
-      $tokenStatusResponse = wp_remote_get( $tokenStatusUrl);
-      $tokenStatus = json_decode($tokenStatusResponse['body'], true);
-      $paymentStatus = $tokenStatus['transaction_status'];
-      $order = new WC_Order( $tokenStatus['order_id'] );
-      $orderStatus = $order->get_status();
-
-      // update order status to on-hold if current status is "pending payment"
-      if($orderStatus == 'pending' && $paymentStatus == 'pending'){
-        $order->update_status('on-hold',__('Midtrans onPending Callback received','midtrans-woocommerce'));
-
-      }
-      if( !isset($tokenStatus['pdf_url']) ){
-        return;
-      }
-
-      // store Url as $Order metadata
-      $order->update_meta_data('_mt_payment_pdf_url',$tokenStatus['pdf_url']);
-      $order->save();
-
-      echo esc_html("OK");
-      // immediately terminate notif handling, not a notification.
-      exit();
-    } catch (Exception $e) {
-      // var_dump($e); 
-      // exit();
-    }
-  }
-
-  /**
    * Handle Midtrans Notification Object, after payment status changes on Midtrans
    * Will update WC payment status accordingly
    * @param  [Object] $midtrans_notification Object representation of Midtrans JSON
@@ -251,6 +208,9 @@ class WC_Gateway_Midtrans_Notif_Handler
     $order = new WC_Order( $midtrans_notification->order_id );
     $order->add_order_note(__('Midtrans HTTP notification received: '.$midtrans_notification->transaction_status.'. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
     $order_id = $midtrans_notification->order_id;
+    
+    // allow merchant-defined custom action function to perform action on $order upon notif handling
+    do_action( 'midtrans_on_notification_received', $order, $midtrans_notification );
 
     if ($midtrans_notification->transaction_status == 'capture') {
       if ($midtrans_notification->fraud_status == 'accept') {
@@ -258,9 +218,11 @@ class WC_Gateway_Midtrans_Notif_Handler
         if( class_exists( 'WC_Subscriptions' ) ){
           $this->checkAndHandleWCSubscriptionTxnNotif( $midtrans_notification, $order );
         }
-        $order->payment_complete();
+        $order->payment_complete($midtrans_notification->transaction_id);
         $order->add_order_note(__('Midtrans payment completed: capture. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-
+        // allow merchant-defined custom action function to perform action on $order
+        do_action( 'midtrans_after_notification_payment_complete', 
+          $order, $midtrans_notification );
       }
       else if ($midtrans_notification->fraud_status == 'challenge') {
         $order->update_status('on-hold',__('Challanged payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
@@ -278,8 +240,11 @@ class WC_Gateway_Midtrans_Notif_Handler
     }
     else if ($midtrans_notification->transaction_status == 'settlement') {
       if($midtrans_notification->payment_type != 'credit_card'){
-        $order->payment_complete();
+        $order->payment_complete($midtrans_notification->transaction_id);
         $order->add_order_note(__('Midtrans payment completed: settlement. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+        // allow merchant-defined custom action function to perform action on $order
+        do_action( 'midtrans_after_notification_payment_complete', 
+          $order, $midtrans_notification );
       }
     }
     else if ($midtrans_notification->transaction_status == 'pending') {
@@ -294,7 +259,6 @@ class WC_Gateway_Midtrans_Notif_Handler
         exit;
       }
       $order->update_status('on-hold',__('Awaiting payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-      error_log($plugin_options['ignore_pending_status']);
     }
     else if ($midtrans_notification->transaction_status == 'refund' || $midtrans_notification->transaction_status == 'partial_refund') {
       $refund_request = $this->validateRefundNotif( $midtrans_notification );

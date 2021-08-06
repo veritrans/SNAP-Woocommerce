@@ -17,7 +17,6 @@
         $this->id           = 'midtrans_paymentrequest';
         $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
         $this->method_description = $this->getSettingsDescription();
-        $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_Paymentrequest', home_url( '/' ) ) );
 
         parent::__construct();
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) ); 
@@ -119,7 +118,7 @@
        * @return string
        */
       public function pluginTitle() {
-        return "Midtrans Optional Card in-Browser Payment UI";
+        return "Midtrans Adv: Card in-Browser Payment UI";
       }
 
       /**

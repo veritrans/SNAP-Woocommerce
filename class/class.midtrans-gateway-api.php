@@ -45,6 +45,7 @@ class WC_Midtrans_API {
 		self::$environment = $environment;
     }
 
+    // @TODO: maybe handle when $plugin_id is invalid (e.g: `all`), it result in invalid $plugin_options, then empty serverKey, then it will cause failure on getStatusFromMidtransNotif. Make $plugin_options default value to `midtrans` plugin when serverKey not found?.
 	/**
 	 * Fetch Plugin Options and Set as self/private vars
 	 * @param string $plugin_id

@@ -61,21 +61,37 @@ return apply_filters(
             'default'       => '',
             'class'         => 'production_settings toggle-midtrans'
         ),
+        'notification_url_display'             => array(
+            'title'         => __( 'Notification URL value', 'midtrans-woocommerce' ),
+            'type'          => 'title',
+            'description'   => __( 'After you have filled required config above, don\'t forget to scroll to bottom and click  <strong>Save Changes</strong> button.</br></br>Copy and use this recommended Notification URL <code>'.$this->get_main_notification_url().'</code> into "<strong><a href="https://account.midtrans.com/">Midtrans Dashboard</a> > Settings > Configuration > Notification Url</strong>". This will allow your WooCommerce to receive Midtrans payment status, which auto sync the payment status.','midtrans-woocommerce'),
+        ),
+        'label_config_separator'             => array(
+            'title'         => __( 'II. Payment Buttons Appereance Section - Optional', 'midtrans-woocommerce' ),
+            'type'          => 'title',
+            'description'   => __( '-- Configure how the payment button will appear to customer, you can leave them default.','midtrans-woocommerce'),
+        ),
         'title'                     => array(
-            'title'         => __( 'Payment Title', 'midtrans-woocommerce' ),
+            'title'         => __( 'Button Title', 'midtrans-woocommerce' ),
             'type'          => 'text',
             'description'   => __( 'This controls the payment label title which the user sees during checkout. <a href="https://github.com/veritrans/SNAP-Woocommerce#configurables"  target="_blank">This support HTML tags</a> like &lt;img&gt; tag, if you want to include images.', 'midtrans-woocommerce' ),
             'default'       => $this->getDefaultTitle(),
             // 'desc_tip'      => true,
         ),
         'description'               => array(
-            'title' => __( 'Payment Description', 'midtrans-woocommerce' ),
+            'title' => __( 'Button Description', 'midtrans-woocommerce' ),
             'type' => 'textarea',
             'description' => __( 'You can customize here the expanded description which the user sees during checkout when they choose this payment. <a href="https://github.com/veritrans/SNAP-Woocommerce#configurables"  target="_blank">This support HTML tags</a> like &lt;img&gt; tag, if you want to include images.', 'midtrans-woocommerce' ),
             'default'       => $this->getDefaultDescription(),
           ),
+        'sub_payment_method_image_file_names_str' => array(
+            'title' => __( 'Button Icons', 'midtrans-woocommerce' ),
+            'type' => 'text',
+            'description' => __( 'You can input multiple payment method names separated by coma (,). </br>See <a href="https://github.com/veritrans/SNAP-Woocommerce#customize-payment-icons">all available values here</a>, you can copy paste the value, and adjust as needed. Also support https:// url to external image.', 'midtrans-woocommerce' ),
+            'placeholder'       => 'midtrans.png,credit_card.png',
+          ),
         'advanced_config_separator'             => array(
-            'title'         => __( 'Advanced Config Section - Optional, you can leave them default.', 'midtrans-woocommerce' ),
+            'title'         => __( 'III. Advanced Config Section - Optional', 'midtrans-woocommerce' ),
             'type'          => 'title',
             'description'   => __( '-- Configurations below is optional and don\'t need to be changed, you can leave them default. Unless you know you want advanced configuration --','midtrans-woocommerce'),
         ),
@@ -133,7 +149,7 @@ return apply_filters(
             'type'          => 'checkbox',
             'label'         => 'Immediately reduce item stock on Midtrans payment pop-up?',
             'description'   => __( 'By default, item stock only reduced if payment status on Midtrans reach pending/success (customer choose payment channel and click pay on payment pop-up). Enable this if you want to immediately reduce item stock when payment pop-up generated/displayed.', 'midtrans-woocommerce' ),
-            'default'       => 'no'
+            'default'       => 'yes'
         ),
         // @Note: only main plugin class config will be applied on notif handler, sub plugin class config will not affect it, check gateway-notif-handler.php class to fix
         'ignore_pending_status'         => array(

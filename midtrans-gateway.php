@@ -3,12 +3,12 @@
 Plugin Name: Midtrans - WooCommerce Payment Gateway
 Plugin URI: https://github.com/veritrans/SNAP-Woocommerce
 Description: Accept all payment directly on your WooCommerce site in a seamless and secure checkout environment with <a  target="_blank" href="https://midtrans.com/">Midtrans</a>
-Version: 2.22.0
+Version: 2.30.0
 Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
 WC requires at least: 2.0.0
-WC tested up to: 5.7
+WC tested up to: 5.5.1
 */
 
 /*
@@ -37,6 +37,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
    * @link       http://docs.midtrans.com
    * (This plugin is made based on Payment Plugin Template by WooCommerce)
    */
+  
+  /**
+   * This file is the WP/WC plugin main entry point, all other files are imported and registered from within this file.
+   */
 
 // Make sure we don't expose any info if called directly
 add_action( 'plugins_loaded', 'midtrans_gateway_init', 0 );
@@ -53,40 +57,85 @@ function midtrans_gateway_init() {
   if(!class_exists("Midtrans\Config")){
     include_once dirname( __FILE__ ) . '/lib/midtrans/Midtrans.php';
   }
+  // shared imports
   require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-notif-handler.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-api.php';
-
+  // utils imports
   require_once dirname( __FILE__ ) . '/class/class.midtrans-utils.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-logger.php';
-
+  // main gateway imports
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway.php';
-  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
+  // sub gateway imports
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installment.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-installmentoff.php';
   require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-promo.php';
+  require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-paymentrequest.php';
+  // shared abstract import for sub separated gateway buttons
+  require_once dirname( __FILE__ ) . '/abstract/abstract.midtrans-gateway-sub.php';
+  // sub separated gateway buttons imports, add new methods under here
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-card.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-gopay.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-shopeepay.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-qris.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bca-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bni-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bri-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-permata-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-echannel.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-other-va.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-akulaku.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bca-klikpay.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-bri-epay.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-cimb-clicks.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-danamon-online.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-alfamart.php';
+  require_once dirname( __FILE__ ) . '/class/sub-specific-buttons/class.midtrans-gateway-sub-indomaret.php';
+
   // Add this payment method if WooCommerce Subscriptions plugin activated
   if( class_exists( 'WC_Subscriptions' ) ) {
     require_once dirname( __FILE__ ) . '/class/class.midtrans-gateway-subscription.php';
   }
 
-  add_filter( 'woocommerce_payment_gateways', 'add_midtrans_payment_gateway' );
+  add_filter( 'woocommerce_payment_gateways', 'midtrans_add_payment_gateway' );
   add_filter( 'plugin_action_links_' . plugin_basename(__FILE__), 'midtrans_plugin_action_links' );
 }
 
-function add_midtrans_payment_gateway( $methods ) {
+function midtrans_add_payment_gateway( $methods ) {
   /**
    * Payment methods are separated as different method/class so it will be separated
    * as different payment button. This is needed because each of 'feature' like Promo,
    * require special backend treatment (i.e. applying discount and locking payment channel). 
    * Especially Offline Installment, it requires `whitelist_bins` so it should not be combined 
    * with other payment feature.
+   * Order of these will determine the order of gateway/button shown on WC payment config page
    */
+  // main gateways
   $methods[] = 'WC_Gateway_Midtrans';
-  $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
+  // sub separated gateway buttons, add new methods under here
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Card';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Gopay';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Shopeepay';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_QRIS';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BCA_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BNI_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BRI_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Permata_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Echannel';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Other_VA';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Akulaku';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BCA_Klikpay';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_BRI_Epay';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_CIMB_Clicks';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Danamon_Online';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Alfamart';
+  $methods[] = 'WC_Gateway_Midtrans_Sub_Indomaret';
+  // additional gateways
   $methods[] = 'WC_Gateway_Midtrans_Installment';
   $methods[] = 'WC_Gateway_Midtrans_InstallmentOff';
   $methods[] = 'WC_Gateway_Midtrans_Promo';
+  $methods[] = 'WC_Gateway_Midtrans_Paymentrequest';
+  
   // Add this payment method if WooCommerce Subscriptions plugin activated
   if( class_exists( 'WC_Subscriptions' ) ) {
     $methods[] = 'WC_Gateway_Midtrans_Subscription';

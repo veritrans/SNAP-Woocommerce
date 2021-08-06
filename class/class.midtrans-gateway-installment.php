@@ -13,7 +13,7 @@
       function __construct() {
         $this->id           = 'midtrans_installment';
         $this->method_title = __( $this->pluginTitle(), 'midtrans-woocommerce' );
-        $this->notify_url   = str_replace( 'https:', 'http:', add_query_arg( 'wc-api', 'WC_Gateway_Midtrans_Installment', home_url( '/' ) ) );
+        $this->method_description = $this->getSettingsDescription();
 
         parent::__construct();
         add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( &$this, 'process_admin_options' ) ); 
@@ -22,7 +22,7 @@
 
       public function admin_options() { ?>
         <h3><?php _e( $this->pluginTitle(), 'midtrans-woocommerce' ); ?></h3>
-        <p><?php _e('Allows online installment payments using Midtrans.', 'midtrans-woocommerce' ); ?></p>
+        <p><?php _e($this->getSettingsDescription(), 'midtrans-woocommerce' ); ?></p>
         <table class="form-table">
           <?php
             // Generate the HTML For the settings form.
@@ -131,7 +131,7 @@
        * @return string
        */
       public function pluginTitle() {
-        return "Midtrans Online Installment";
+        return "Midtrans Adv: Online Installment";
       }
 
       /**
@@ -139,6 +139,13 @@
        */
       protected function getDefaultTitle () {
         return __('Credit Card Installment via Midtrans', 'midtrans-woocommerce');
+      }
+
+      /**
+       * @return string
+       */
+      protected function getSettingsDescription() {
+        return __('Setup Midtrans card payment with On-Us <a href="https://github.com/veritrans/SNAP-Woocommerce/wiki/02---Credit-card-online-and-offline-installment">Installment(Cicilan) feature</a>, only used if you already have agreement with bank (leave it disabled if not sure).', 'midtrans-woocommerce');
       }
 
       /**

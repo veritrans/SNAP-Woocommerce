@@ -83,6 +83,17 @@ Additional payment options (radio button) can be activated:
 - Offline Installment
 - Promo / specific payment
 
+#### Customize Payment Icons
+
+You can customize icon that will be shown on payment buttons, from the plugin configuration page on your WooCommerce portal, under `Button Icons` config field.
+
+All available values for the field:
+```
+credit_card.png, gopay.png, shopeepay.png, qris.png, other_va.png, bni_va.png, bri_va.png, bca_va.png, permata_va.png, echannel.png, alfamart.png, indomaret.png, akulaku.png, bca_klikpay.png, cimb_clicks.png, danamon_online.png, midtrans.png
+```
+
+Or refer to [payment-methods folder](/public/images/payment-methods) to see the list of all available file names. The image file will be loaded from that folder.
+
 #### BCA Klikpay Specific
 
 <details><summary>Click to expand info</summary>
@@ -108,6 +119,55 @@ If required to change API endpoint/url, these are where you need to change:
 
 - `[plugin folder]/class/payment-page.php`
 	- Replace any Snap API domain: https://app.sandbox.midtrans.com with UAT API domain
+</details>
+
+#### Available Custom Hooks
+
+<details><summary>Click to expand info</summary>
+<br>
+
+If you are a developer or know how to customize Wordpress, this section may be useful for you in case you want to customize some code/behaviour of this plugin.
+
+This plugin have few available [WP hooks](ttps://developer.wordpress.org/plugins/hooks/):
+- filter: `midtrans_snap_params_main_before_charge` (1 params)
+	- For if you want to modify Snap API JSON param on the main gateway, before transaction is created on Midtrans side.
+- action: `midtrans_after_notification_payment_complete` (2 params)
+	- For if you want to perform action/update WC Order object when the payment is declared as complete upon Midtrans notification received.
+- action: `midtrans_on_notification_received` (2 params)
+	- For if you want to perform action/update WC Order object upon Midtrans notification received.
+
+Example implementation:
+```php
+// Custom filter hook to modify Snap params
+add_filter( 'midtrans_snap_params_main_before_charge', 'my_midtrans_snap_param_hook' );
+function my_midtrans_snap_param_hook( $params ) {
+	// example: modify Snap params to add additional item with 0 price
+	$params['item_details'][] = array(
+		"name" => "My Custom Additional Item",
+		"id" => "my-item-01",
+		"price" => 0,
+		"quantity" => 3,
+	);
+	// don't forget to return the $params
+    return $params;
+}
+
+// Custom action hook to modify WC Order object after payment marked as complete
+add_action( 'midtrans_after_notification_payment_complete', 'my_midtrans_complete_hook',$priority = 10, $accepted_args = 2 );
+function my_midtrans_complete_hook( $order, $midtrans_notification ) {
+	// example: update order status to directly `completed`, instead of default `processing`.
+	$order->update_status('completed',__('Completed payment via my custom hook: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+}
+
+// Custom action hook to modify WC Order object when midtrans notification is received
+add_action( 'midtrans_on_notification_received', 'my_midtrans_on_notif_hook',$priority = 10, $accepted_args = 2 );
+function my_midtrans_on_notif_hook( $order, $midtrans_notification ) {
+	// do as you wish here
+}
+```
+
+For reference on where/which file to apply that code example, [refer here](https://blog.nexcess.net/the-right-way-to-add-custom-functions-to-your-wordpress-site/).
+
 </details>
 
 #### Customizing Snap API parameters
