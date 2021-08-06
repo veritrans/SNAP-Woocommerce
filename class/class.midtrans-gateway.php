@@ -152,7 +152,8 @@
         // @TODO: default to yes or remove this options: enable_immediate_reduce_stock
         if(property_exists($this,'enable_immediate_reduce_stock') && $this->enable_immediate_reduce_stock == 'yes'){
           // Reduce item stock on WC, item also auto reduced on order `pending` status changes
-          // @TODO: replace with $order->update_status('on-hold',__('Midtrans payment page started','midtrans-woocommerce'));
+          // @NOTE: unable to replace with this code: `$order->update_status('on-hold',__('Customer proceed to Midtrans Payment page','midtrans-woocommerce'));`
+          // because of `This order’s status is “On hold”—it cannot be paid for.` 
           wc_reduce_stock_levels($order);
         }
 
