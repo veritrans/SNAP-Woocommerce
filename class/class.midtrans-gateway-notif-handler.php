@@ -90,8 +90,6 @@ class WC_Gateway_Midtrans_Notif_Handler
     if(empty($sanitized['order_id']) && empty($sanitizedPost['id']) && empty($sanitized['id']) && empty($sanitizedPost['response'])) { 
       // Request is POST, proceed to create new notification, then update the payment status
       $raw_notification = $this->doEarlyAckResponse();
-      // Handle pdf url update
-      $this->handlePendingPaymentPdfUrlUpdate();
       // Get WooCommerce order
       $wcorder = wc_get_order( $raw_notification['order_id'] );
       // exit if the order id doesn't exist in WooCommerce dashboard
@@ -194,51 +192,6 @@ class WC_Gateway_Midtrans_Notif_Handler
       else {
         wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
       }
-    }
-  }
-
-  /**
-   * UNUSED
-   * @TODO: Evaluate if this still required/used
-   * Handle API call from payment page to update order with PDF instruction Url
-   * @return void
-   */
-  public function handlePendingPaymentPdfUrlUpdate(){
-    try {
-      global $woocommerce;
-      $requestObj = json_decode(file_get_contents("php://input"), true);
-      if( !isset($requestObj['pdf_url_update']) || 
-          !isset($requestObj['snap_token_id']) ){
-        return;
-      }
-        // @FIXME: $this is broken, it doesn't refer to plugin class
-      $snapApiBaseUrl = ($this->environment) ? 'https://app.midtrans.com' : 'https://app.sandbox.midtrans.com';
-      $tokenStatusUrl = $snapApiBaseUrl.'/snap/v1/transactions/'.$requestObj['snap_token_id'].'/status';
-      $tokenStatusResponse = wp_remote_get( $tokenStatusUrl);
-      $tokenStatus = json_decode($tokenStatusResponse['body'], true);
-      $paymentStatus = $tokenStatus['transaction_status'];
-      $order = new WC_Order( $tokenStatus['order_id'] );
-      $orderStatus = $order->get_status();
-
-      // update order status to on-hold if current status is "pending payment"
-      if($orderStatus == 'pending' && $paymentStatus == 'pending'){
-        $order->update_status('on-hold',__('Midtrans onPending Callback received','midtrans-woocommerce'));
-
-      }
-      if( !isset($tokenStatus['pdf_url']) ){
-        return;
-      }
-
-      // store Url as $Order metadata
-      $order->update_meta_data('_mt_payment_pdf_url',$tokenStatus['pdf_url']);
-      $order->save();
-
-      echo esc_html("OK");
-      // immediately terminate notif handling, not a notification.
-      exit();
-    } catch (Exception $e) {
-      // var_dump($e); 
-      // exit();
     }
   }
 

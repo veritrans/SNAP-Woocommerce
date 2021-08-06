@@ -101,21 +101,6 @@
               // if no pdf instruction, hide the btn
               document.getElementById('payment-instruction-btn').style.display = "none";
             }
-            return 0;
-            // Below code is UNUSED
-            // Update order with PDF url to backend
-            try{
-              result['pdf_url_update'] = true;
-              result['snap_token_id'] = SNAP_TOKEN;
-              fetch(wc_midtrans.plugin_backend_url, {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(result)
-              });
-            }catch(e){ console.log(e); }
           },
           onError: function(result){
             MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'error', result);
