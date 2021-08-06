@@ -298,7 +298,6 @@ class WC_Gateway_Midtrans_Notif_Handler
         exit;
       }
       $order->update_status('on-hold',__('Awaiting payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-      error_log($plugin_options['ignore_pending_status']);
     }
     else if ($midtrans_notification->transaction_status == 'refund' || $midtrans_notification->transaction_status == 'partial_refund') {
       $refund_request = $this->validateRefundNotif( $midtrans_notification );
