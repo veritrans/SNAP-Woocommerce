@@ -208,6 +208,9 @@ class WC_Gateway_Midtrans_Notif_Handler
     $order = new WC_Order( $midtrans_notification->order_id );
     $order->add_order_note(__('Midtrans HTTP notification received: '.$midtrans_notification->transaction_status.'. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
     $order_id = $midtrans_notification->order_id;
+    
+    // allow merchant-defined custom action function to perform action on $order upon notif handling
+    do_action( 'midtrans_on_notification_received', $order, $midtrans_notification );
 
     if ($midtrans_notification->transaction_status == 'capture') {
       if ($midtrans_notification->fraud_status == 'accept') {
@@ -217,7 +220,9 @@ class WC_Gateway_Midtrans_Notif_Handler
         }
         $order->payment_complete($midtrans_notification->transaction_id);
         $order->add_order_note(__('Midtrans payment completed: capture. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-
+        // allow merchant-defined custom action function to perform action on $order
+        do_action( 'midtrans_after_notification_payment_complete', 
+          $order, $midtrans_notification );
       }
       else if ($midtrans_notification->fraud_status == 'challenge') {
         $order->update_status('on-hold',__('Challanged payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
@@ -237,6 +242,9 @@ class WC_Gateway_Midtrans_Notif_Handler
       if($midtrans_notification->payment_type != 'credit_card'){
         $order->payment_complete($midtrans_notification->transaction_id);
         $order->add_order_note(__('Midtrans payment completed: settlement. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+        // allow merchant-defined custom action function to perform action on $order
+        do_action( 'midtrans_after_notification_payment_complete', 
+          $order, $midtrans_notification );
       }
     }
     else if ($midtrans_notification->transaction_status == 'pending') {
