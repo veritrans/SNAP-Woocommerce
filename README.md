@@ -121,6 +121,12 @@ If required to change API endpoint/url, these are where you need to change:
 	- Replace any Snap API domain: https://app.sandbox.midtrans.com with UAT API domain
 </details>
 
+#### Customize Order Status on Payment Paid
+
+You can configure the status that WooCommerce Order should become when an order is successfully paid. This can be useful if you want, for example, order status to become "completed" once paid.
+
+Configure it from **WooCommerce > Settings > Payment > Midtrans > Manage** under configuration field **WC Order Status on Payment Paid**. Select your preferred value from the drop down.
+
 #### Available Custom Hooks
 
 <details><summary>Click to expand info</summary>
@@ -128,7 +134,7 @@ If required to change API endpoint/url, these are where you need to change:
 
 If you are a developer or know how to customize Wordpress, this section may be useful for you in case you want to customize some code/behaviour of this plugin.
 
-This plugin have few available [WP hooks](ttps://developer.wordpress.org/plugins/hooks/):
+This plugin have few available [WP hooks](https://developer.wordpress.org/plugins/hooks/):
 - filter: `midtrans_snap_params_main_before_charge` (1 params)
 	- For if you want to modify Snap API JSON param on the main gateway, before transaction is created on Midtrans side.
 - action: `midtrans_after_notification_payment_complete` (2 params)

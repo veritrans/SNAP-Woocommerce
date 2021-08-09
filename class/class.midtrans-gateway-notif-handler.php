@@ -226,7 +226,16 @@ class WC_Gateway_Midtrans_Notif_Handler
       do_action( 'midtrans_after_notification_payment_complete', 
         $order, $midtrans_notification );
 
-      // @TODO: check if plugin settings: custom_payment_complete_status !== 'default', then $order->update_status() according to choosen custom status
+      // apply custom order status mapping coming from custom_payment_complete_status config value
+      $plugin_options = $this->getPluginOptions($plugin_id);
+      if( array_key_exists('custom_payment_complete_status',$plugin_options)
+          && $plugin_options['custom_payment_complete_status'] !== 'default'
+        ){
+        $order->update_status(
+          $plugin_options['custom_payment_complete_status'],
+          __('Status auto-updated via custom status mapping config: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce')
+        );
+      }
     }
     else if ($midtrans_notification->transaction_status == 'capture' && $midtrans_notification->fraud_status == 'challenge') {
       $order->update_status('on-hold',__('Challanged payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
