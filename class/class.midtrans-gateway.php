@@ -196,7 +196,7 @@
        * @return string
        */
       protected function getSettingsDescription() {
-        return __('Secure payment via Midtrans that accept various payment methods, with mobile friendly built-in interface, or (optionally) redirection. This is the main payment button, 1 single button for multiple available payments methods', 'midtrans-woocommerce');
+        return __('Secure payment via Midtrans that accept various payment methods, with mobile friendly built-in interface, or (optionally) redirection. This is the main payment button, 1 single button for multiple available payments methods. <a href="https://docs.midtrans.com/en/snap/with-plugins?id=woocommerce-plugin-configuration" target="_blank">Please follow "how-to configure guide" here.</a>', 'midtrans-woocommerce');
       }
 
       /**
