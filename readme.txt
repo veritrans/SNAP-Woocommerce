@@ -16,6 +16,8 @@ This plugin will allow secure online payment on your WooCommerce store, without 
 Midtrans-WooCommerce is official plugin from [Midtrans](https://midtrans.com), Indonesian Payment Gateway. Brings safety and highly dedicated to customer experience (UX) to WooCommerce.Support various online payment channel.
 Support WooCommerce v3 & v2.
 
+Please follow [this step by step guide](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce) for complete configuration.
+
 Payment Method Feature:
 
 * Credit card fullpayment and other payment methods.
@@ -31,7 +33,7 @@ Payment Method Feature:
 
 1. Upload the plugin files to the `wp-content/plugins/midtrans-woocommerce` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the `Plugins` screen in WordPress
-3. Go to **WooCommerce - Settings - Checkout - Midtrans** menu, fill the configuration fields.
+3. Go to **WooCommerce - Settings - Payments - Midtrans** menu, fill the configuration fields.
 
 ### Midtrans MAP Configuration
 
@@ -39,8 +41,8 @@ Payment Method Feature:
 2. Select the environment (sandbox or production).
 3. Go to **settings - configuration**
 
-    - Insert `http://[yourweb]/?wc-api=WC_Gateway_Midtrans` as your Payment Notification URL
-    - Insert `http://[yourweb]/?wc-api=WC_Gateway_Midtrans` as your Finish, Pending and Error Redirect URL
+    - Insert `[YourWebHomepageUrl]/?wc-api=WC_Gateway_Midtrans` as your Payment Notification URL
+    - Insert `[YourWebHomepageUrl]/?wc-api=WC_Gateway_Midtrans` as your Finish, Pending and Error Redirect URL
 
 
 == Frequently Asked Questions ==
@@ -48,13 +50,13 @@ Payment Method Feature:
 = Where can find my access key (client & server key)? How to get Started? =
 
 Register first to [Midtrans](https://account.midtrans.com/register), you will get the access key on Midtrans Dashboard.
-Also please refere to this official [documentation](http://docs.midtrans.com/en/snap/integration_woocommerce.html).
+Also please refere to this official [documentation](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce).
 
 = How to configure installment and other additional feature ? =
 
 Please refer to [Wiki](https://github.com/veritrans/SNAP-Woocommerce/wiki) for full documentation and tutorial.
 
-= Where can I report bugs? =
+= Where can I report bugs and request feature? =
 
 The best way please email to support@midtrans.com, but bugs can be reported in our [repo](https://github.com/veritrans/SNAP-Woocommerce/issues), or you can also use WordPress plugins support for reporting bugs and error. 
 
@@ -395,7 +397,7 @@ Update for better experince with BCA KlikPay payment methods
 Support additional feature like installment, MIGS acq, and bin promo.
 
 == Get Help ==
-
+*	[Midtrans WooCommerce Configuration Guide](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce)
 *	[Midtrans registration](https://account.midtrans.com/register)
 *	[Midtrans Documentation](https://docs.midtrans.com)
 *	[Midtrans Snap API Documentation](https://snap-docs.midtrans.com)
