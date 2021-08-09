@@ -124,14 +124,16 @@ abstract class WC_Gateway_Midtrans_Abstract_Sub extends WC_Gateway_Midtrans_Abst
   abstract public function getSettingsDescription ();
 
   /**
+   * Commented out to prevent this issue: https://www.php.net/manual/en/language.oop5.abstract.php#78388 on likely specific PHP version bug only https://stackoverflow.com/a/22521203
    * @return string Config field: Title for pay button label for customer
    */
-  abstract protected function getDefaultTitle ();
+  // abstract protected function getDefaultTitle ();
 
   /**
+   * Commented out to prevent this issue: https://www.php.net/manual/en/language.oop5.abstract.php#78388 on likely specific PHP version bug only https://stackoverflow.com/a/22521203
    * @return string Config field: Description for pay button label for customer
    */
-  abstract protected function getDefaultDescription ();
+  // abstract protected function getDefaultDescription ();
 
   /**
    * @return WC_Gateway_Midtrans
