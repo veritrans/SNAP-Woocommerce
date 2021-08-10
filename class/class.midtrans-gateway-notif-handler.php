@@ -51,6 +51,21 @@ class WC_Gateway_Midtrans_Notif_Handler
   }
 
   /**
+   * Redirect transacting-user to the finish url set when they were checking out
+   * if they were the authorized transacting-user, they will have the finish_url on cookie
+   * @TAG: finish_url_user_cookies
+   */
+  public function checkAndRedirectUserToFinishUrl(){
+    if(isset($_COOKIE['wc_midtrans_last_order_finish_url'])){
+      // authorized transacting-user
+      wp_redirect($_COOKIE['wc_midtrans_last_order_finish_url']);
+    }else{
+      // else, unauthorized user, redirect to shop homepage by default.
+      wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
+    }
+  }
+
+  /**
    * getPluginOptions
    * @param  string $plugin_id plugin id of the paid order
    * @return array  plugin options
@@ -126,8 +141,7 @@ class WC_Gateway_Midtrans_Notif_Handler
       if( !empty($sanitized['order_id']) && !empty($sanitized['status_code']) && $sanitized['status_code'] <= 200)  {
         $order_id = $sanitized['order_id'];
         // error_log($this->get_return_url( $order )); //debug
-        $order = new WC_Order( $order_id );
-        wp_redirect($order->get_checkout_order_received_url());
+        $this->checkAndRedirectUserToFinishUrl();
       } 
       // if or pending/challenge
       else if( !empty($sanitized['order_id']) && !empty($sanitized['transaction_status']) && $sanitized['status_code'] == 201)  {
@@ -142,7 +156,7 @@ class WC_Gateway_Midtrans_Notif_Handler
           wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
           exit;
         }
-        wp_redirect($order->get_checkout_order_received_url());
+        $this->checkAndRedirectUserToFinishUrl();
       } 
       //if deny, redirect to order checkout page again
       else if( !empty($sanitized['order_id']) && !empty($sanitized['transaction_status']) && $sanitized['status_code'] >= 202){
@@ -157,7 +171,7 @@ class WC_Gateway_Midtrans_Notif_Handler
         $order = new WC_Order( $responses['order_id'] );
         // if async payment paid
         if ( $responses['status_code'] == 200) { 
-          wp_redirect($order->get_checkout_order_received_url());
+          $this->checkAndRedirectUserToFinishUrl();
         } 
         // if async payment not paid
         else {
@@ -180,8 +194,7 @@ class WC_Gateway_Midtrans_Notif_Handler
         $order_id = $midtrans_notification->order_id;
         // if async payment paid
         if ($midtrans_notification->transaction_status == 'settlement'){
-          $order = new WC_Order( $order_id );
-          wp_redirect($order->get_checkout_order_received_url());              
+          $this->checkAndRedirectUserToFinishUrl();
         } 
         // if async payment not paid
         else {

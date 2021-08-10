@@ -387,6 +387,20 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
   }
 
   /**
+   * Custom helper function to set customer web session cookies of WC order's finish_url
+   * That will be used by finish url handler to redirect customer to upon finish url is reached
+   * Cookies is used to strictly allow only the transacting-customer 
+   * to access the order's finish url
+   * @TAG: finish_url_user_cookies
+   * @param WC_Order $order WC Order instance of the current transaction
+   */
+  public function set_finish_url_user_cookies( $order ) {
+    $cookie_name = 'wc_midtrans_last_order_finish_url';
+    $order_finish_url = $order->get_checkout_order_received_url();
+    setcookie($cookie_name, $order_finish_url);
+  }
+
+  /**
    * Custom helper function to write messages to WP/WC error log. 
    * @TODO: refactor name to make it more descriptive?
    * @param string $message the error message that will be recorded
