@@ -239,6 +239,7 @@ class WC_Gateway_Midtrans_Notif_Handler
     }
     else if ($midtrans_notification->transaction_status == 'capture' && $midtrans_notification->fraud_status == 'challenge') {
       $order->update_status('on-hold',__('Challanged payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      $order->set_transaction_id($midtrans_notification->transaction_id);
     }
     else if ($midtrans_notification->transaction_status == 'cancel') {
       $order->update_status('cancelled',__('Cancelled payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
@@ -262,6 +263,7 @@ class WC_Gateway_Midtrans_Notif_Handler
         exit;
       }
       $order->update_status('on-hold',__('Awaiting payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      $order->set_transaction_id($midtrans_notification->transaction_id);
     }
     else if ($midtrans_notification->transaction_status == 'refund' || $midtrans_notification->transaction_status == 'partial_refund') {
       $refund_request = $this->validateRefundNotif( $midtrans_notification );
