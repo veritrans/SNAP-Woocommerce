@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.8
-Stable tag: 2.30.1
+Stable tag: 2.31.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,10 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 4. Configuration page
 
 == Changelog ==
+
+= 2.31.0 - 2021-08-10 =
+* improvement on finish url redirect flow, to prevent issue
+* handle uncaught error on finish url
 
 = 2.30.1 - 2021-08-09 =
 * prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8 & v7.0.0 - v7.1.x
