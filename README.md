@@ -174,6 +174,8 @@ function my_midtrans_on_notif_hook( $order, $midtrans_notification ) {
 
 For reference on where/which file to apply that code example, [refer here](https://blog.nexcess.net/the-right-way-to-add-custom-functions-to-your-wordpress-site/).
 
+Note: for `midtrans_after_notification_payment_complete` & `midtrans_on_notification_received` hooks, if you are using [custom "WC Order Status on Payment Paid"](https://docs.midtrans.com/en/snap/with-plugins?id=advanced-customize-woocommerce-order-status-upon-payment-paid) config, the final WC Order status value can get overridden by that config. As that config is executed last.
+
 </details>
 
 #### Customizing Snap API parameters
