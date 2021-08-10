@@ -64,7 +64,7 @@ return apply_filters(
         'notification_url_display'             => array(
             'title'         => __( 'Notification URL value', 'midtrans-woocommerce' ),
             'type'          => 'title',
-            'description'   => __( 'After you have filled required config above, don\'t forget to scroll to bottom and click  <strong>Save Changes</strong> button.</br></br>Copy and use this recommended Notification URL <code>'.$this->get_main_notification_url().'</code> into "<strong><a href="https://account.midtrans.com/">Midtrans Dashboard</a> > Settings > Configuration > Notification Url</strong>". This will allow your WooCommerce to receive Midtrans payment status, which auto sync the payment status.','midtrans-woocommerce'),
+            'description'   => __( 'After you have filled required config above, don\'t forget to scroll to bottom and click  <strong>Save Changes</strong> button.</br></br>Copy and use this recommended Notification URL <code>'.$this->get_main_notification_url().'</code> into "<strong><a href="https://account.midtrans.com/" target="_blank">Midtrans Dashboard</a> > Settings > Configuration > Notification Url</strong>". This will allow your WooCommerce to receive Midtrans payment status, which auto sync the payment status.','midtrans-woocommerce'),
         ),
         'label_config_separator'             => array(
             'title'         => __( 'II. Payment Buttons Appereance Section - Optional', 'midtrans-woocommerce' ),
@@ -87,7 +87,7 @@ return apply_filters(
         'sub_payment_method_image_file_names_str' => array(
             'title' => __( 'Button Icons', 'midtrans-woocommerce' ),
             'type' => 'text',
-            'description' => __( 'You can input multiple payment method names separated by coma (,). </br>See <a href="https://github.com/veritrans/SNAP-Woocommerce#customize-payment-icons">all available values here</a>, you can copy paste the value, and adjust as needed. Also support https:// url to external image.', 'midtrans-woocommerce' ),
+            'description' => __( 'You can input multiple payment method names separated by coma (,). </br>See <a href="https://github.com/veritrans/SNAP-Woocommerce#customize-payment-icons" target="_blank">all available values here</a>, you can copy paste the value, and adjust as needed. Also support https:// url to external image.', 'midtrans-woocommerce' ),
             'placeholder'       => 'midtrans.png,credit_card.png',
           ),
         'advanced_config_separator'             => array(
