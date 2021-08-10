@@ -73,8 +73,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 == Changelog ==
 
 = 2.30.1 - 2021-08-09 =
-* prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8
+* prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8 & v7.0.0 - v7.1.x
 * minor description improvement
+* add config to allow [Customize WooCommerce Order Status upon Payment Paid ](https://docs.midtrans.com/en/snap/with-plugins?id=advanced-customize-woocommerce-order-status-upon-payment-paid)
 
 = 2.30.0 - 2021-08-06 =
 * major feature: sub [specific gateway buttons for each](https://docs.midtrans.com/en/snap/with-plugins?id=advanced-specific-payment-buttons) supported payment methods
@@ -255,8 +256,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 == Upgrade Notice ==
 
 = 2.30.1 - 2021-08-09 =
-* prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8
+* prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8 & v7.0.0 - v7.1.x
 * minor description improvement
+* add config to allow [Customize WooCommerce Order Status upon Payment Paid ](https://docs.midtrans.com/en/snap/with-plugins?id=advanced-customize-woocommerce-order-status-upon-payment-paid)
 
 = 2.30.0 - 2021-08-06 =
 * major feature: sub [specific gateway buttons for each](https://docs.midtrans.com/en/snap/with-plugins?id=advanced-specific-payment-buttons) supported payment methods

@@ -111,6 +111,21 @@ return apply_filters(
             'class'         => 'toggle-advanced',
             'default'       => 'no'
         ),
+        'custom_payment_complete_status' => array(
+            'title'         => __( 'WC Order Status on Payment Paid', 'midtrans-woocommerce' ),
+            'type'          => 'select',
+            'label'         => __( 'Map WC Order status to value', 'midtrans-woocommerce' ),
+            'description'   => __( 'The status that WooCommerce Order should become when an order is successfully paid. This can be useful if you want, for example, order status to become "completed" once paid.', 'midtrans-woocommerce' ),
+            'class'         => 'toggle-advanced',
+            'options' => array(
+                'default' => __('default', 'midtrans-woocommerce'),
+                'processing' => __('processing', 'midtrans-woocommerce'),
+                'completed' => __('completed', 'midtrans-woocommerce'),
+                'on-hold' => __('on-hold', 'midtrans-woocommerce'),
+                'pending' => __('pending', 'midtrans-woocommerce'),
+            ),
+            'default'       => 'default'
+        ),
         'enable_redirect'               => array(
             'title'         => __( 'Redirect payment mode', 'midtrans-woocommerce' ),
             'type'          => 'checkbox',

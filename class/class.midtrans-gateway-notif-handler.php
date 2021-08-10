@@ -212,21 +212,33 @@ class WC_Gateway_Midtrans_Notif_Handler
     // allow merchant-defined custom action function to perform action on $order upon notif handling
     do_action( 'midtrans_on_notification_received', $order, $midtrans_notification );
 
-    if ($midtrans_notification->transaction_status == 'capture') {
-      if ($midtrans_notification->fraud_status == 'accept') {
-        // Procces subscription transaction if contains subsctription
-        if( class_exists( 'WC_Subscriptions' ) ){
-          $this->checkAndHandleWCSubscriptionTxnNotif( $midtrans_notification, $order );
-        }
-        $order->payment_complete($midtrans_notification->transaction_id);
-        $order->add_order_note(__('Midtrans payment completed: capture. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-        // allow merchant-defined custom action function to perform action on $order
-        do_action( 'midtrans_after_notification_payment_complete', 
-          $order, $midtrans_notification );
+    if ( $midtrans_notification->transaction_status == 'settlement'
+      || ($midtrans_notification->transaction_status == 'capture' && $midtrans_notification->fraud_status == 'accept') ) {
+      // success scenario of payment paid
+
+      // Procces subscription transaction if contains subsctription for card transaction
+      if( $midtrans_notification->transaction_status == 'capture' && class_exists( 'WC_Subscriptions' ) ){
+        $this->checkAndHandleWCSubscriptionTxnNotif( $midtrans_notification, $order );
       }
-      else if ($midtrans_notification->fraud_status == 'challenge') {
-        $order->update_status('on-hold',__('Challanged payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      $order->payment_complete($midtrans_notification->transaction_id);
+      $order->add_order_note(__('Midtrans payment completed: '.$midtrans_notification->transaction_status.'. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      // allow merchant-defined custom action function to perform action on $order
+      do_action( 'midtrans_after_notification_payment_complete', 
+        $order, $midtrans_notification );
+
+      // apply custom order status mapping coming from custom_payment_complete_status config value
+      $plugin_options = $this->getPluginOptions($plugin_id);
+      if( array_key_exists('custom_payment_complete_status',$plugin_options)
+          && $plugin_options['custom_payment_complete_status'] !== 'default'
+        ){
+        $order->update_status(
+          $plugin_options['custom_payment_complete_status'],
+          __('Status auto-updated via custom status mapping config: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce')
+        );
       }
+    }
+    else if ($midtrans_notification->transaction_status == 'capture' && $midtrans_notification->fraud_status == 'challenge') {
+      $order->update_status('on-hold',__('Challanged payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
     }
     else if ($midtrans_notification->transaction_status == 'cancel') {
       $order->update_status('cancelled',__('Cancelled payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
@@ -237,15 +249,6 @@ class WC_Gateway_Midtrans_Notif_Handler
     else if ($midtrans_notification->transaction_status == 'deny') {
       // do nothing on deny, allow payment retries
       // $order->update_status('failed',__('Denied payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-    }
-    else if ($midtrans_notification->transaction_status == 'settlement') {
-      if($midtrans_notification->payment_type != 'credit_card'){
-        $order->payment_complete($midtrans_notification->transaction_id);
-        $order->add_order_note(__('Midtrans payment completed: settlement. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-        // allow merchant-defined custom action function to perform action on $order
-        do_action( 'midtrans_after_notification_payment_complete', 
-          $order, $midtrans_notification );
-      }
     }
     else if ($midtrans_notification->transaction_status == 'pending') {
       // Store snap token & snap redirect url to $order metadata
