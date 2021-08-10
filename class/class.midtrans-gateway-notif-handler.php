@@ -145,17 +145,19 @@ class WC_Gateway_Midtrans_Notif_Handler
       } 
       // if or pending/challenge
       else if( !empty($sanitized['order_id']) && !empty($sanitized['transaction_status']) && $sanitized['status_code'] == 201)  {
-        $order_id = $sanitized['order_id'];
-        $order = new WC_Order( $order_id );
-        $plugin_id = $order->get_payment_method();
+        try {
+          $order_id = $sanitized['order_id'];
+          $order = new WC_Order( $order_id );
+          $plugin_id = $order->get_payment_method();
 
-        $plugin_options = $this->getPluginOptions($plugin_id);
-        if( array_key_exists('ignore_pending_status',$plugin_options)
-          && $plugin_options['ignore_pending_status'] == 'yes'
-        ){
-          wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
-          exit;
-        }
+          $plugin_options = $this->getPluginOptions($plugin_id);
+          if( array_key_exists('ignore_pending_status',$plugin_options)
+            && $plugin_options['ignore_pending_status'] == 'yes'
+          ){
+            wp_redirect( get_permalink( wc_get_page_id( 'shop' ) ) );
+            exit;
+          }
+        } catch (Exception $e) { } // catch if order not exist on WC
         $this->checkAndRedirectUserToFinishUrl();
       } 
       //if deny, redirect to order checkout page again
