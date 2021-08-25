@@ -136,11 +136,13 @@ If you are a developer or know how to customize Wordpress, this section may be u
 
 This plugin have few available [WP hooks](https://developer.wordpress.org/plugins/hooks/):
 - filter: `midtrans_snap_params_main_before_charge` (1 params)
-	- For if you want to modify Snap API JSON param on the main gateway, before transaction is created on Midtrans side.
+	- For if you want to modify Snap API JSON param on the main gateway, before transaction is created on Midtrans side. The $params is PHP Array representation of [Snap API JSON param](https://snap-docs.midtrans.com/#request-body-json-parameter)
 - action: `midtrans_after_notification_payment_complete` (2 params)
 	- For if you want to perform action/update WC Order object when the payment is declared as complete upon Midtrans notification received.
 - action: `midtrans_on_notification_received` (2 params)
 	- For if you want to perform action/update WC Order object upon Midtrans notification received.
+- action: `midtrans-handle-valid-notification` (1 params)
+	- For if you want to perform something upon valid Midtrans notification received. Note: this is legacy hook, better use the hook above.
 
 Example implementation:
 ```php
