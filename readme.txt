@@ -73,6 +73,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 == Changelog ==
 
 = 2.31.0 - 2021-08-10 =
+* handle duplicated Snap order_id (incase WP is reinstalled, or DB restored) by auto-adding suffix
 * improvement on finish url redirect flow, to prevent issue
 * handle uncaught error on finish url
 * immediate-reduce-stock disabled by default
@@ -261,6 +262,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 == Upgrade Notice ==
 
 = 2.31.0 - 2021-08-10 =
+* handle duplicated Snap order_id (incase WP is reinstalled, or DB restored) by auto-adding suffix
 * improvement on finish url redirect flow, to prevent issue
 * handle uncaught error on finish url
 * immediate-reduce-stock disabled by default

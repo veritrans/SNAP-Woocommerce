@@ -132,7 +132,7 @@
         // allow merchant-defined custom filter function to modify snap $params
         $params = apply_filters( 'midtrans_snap_params_main_before_charge', $params );
         try {
-          $snapResponse = WC_Midtrans_API::createSnapTransaction( $params, $this->id );
+          $snapResponse = WC_Midtrans_API::createSnapTransactionHandleDuplicate( $order, $params, $this->id );
         } catch (Exception $e) {
             $this->setLogError( $e->getMessage() );
             WC_Midtrans_Utils::json_print_exception( $e, $this );

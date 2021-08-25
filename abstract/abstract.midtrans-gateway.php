@@ -131,16 +131,26 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
    */
   public function refund( $order, $order_id, $amount, $reason ) {
     $refund_params = array(
+      // @TODO: careful with this order_id here, which does not get deduplicated treatment
       'refund_key' => 'RefundID' . $order_id . '-' . current_time('timestamp'),
       'amount' => $amount,
       'reason' => $reason
     );
 
     try {
-      $response = WC_Midtrans_API::createRefund($order_id, $refund_params, $this->id);
+      if(strpos($this->id, 'midtrans_sub') !== false){
+        // for sub separated gateway buttons, use main gateway plugin id instead
+        $this->id = 'midtrans';
+      }
+      // @TODO: call refund API with transaction_id instead of order_id to avoid id not found for suffixed order_id. $order->get_transaction_id();
+      $transaction_id = $order->get_transaction_id() 
+        ? $order->get_transaction_id() 
+        : $order_id;
+      $response = WC_Midtrans_API::createRefund($transaction_id, $refund_params, $this->id);
     } catch (Exception $e) {
       $this->setLogError( $e->getMessage() );
-      $error_message = strpos($e->getMessage(), '412') ? $e->getMessage() . ' Note: Refund via Midtrans only for specific payment method, please consult to your midtrans PIC for more information' : $e->getMessage();
+      // error_log(var_export($e,1));
+      $error_message = strpos($e->getMessage(), '412') ? $e->getMessage() . ' Note: Refund via Midtrans API only available on some payment methods, and if the payment status is eligible. Please consult to your midtrans PIC for more information' : $e->getMessage();
       return $error_message;
     }
 
@@ -334,6 +344,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
    * @return WC_Order_Refund|WP_Error
    */
   public function midtrans_refund( $order_id, $refund_amount, $refund_reason, $isFullRefund = false ) {
+    $order_id = WC_Midtrans_Utils::check_and_restore_original_order_id();
     $order  = wc_get_order( $order_id );
     if( ! is_a( $order, 'WC_Order') ) {
       return;

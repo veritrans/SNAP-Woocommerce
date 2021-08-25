@@ -100,11 +100,19 @@ class WC_Gateway_Midtrans_Notif_Handler
     $sanitizedPost['response'] = 
       isset($_POST['response'])? sanitize_text_field($_POST['response']): null;
 
+    // @TAG: order-id-suffix-handling
+    $sanitized['order_id'] = 
+      WC_Midtrans_Utils::check_and_restore_original_order_id($sanitized['order_id']);
+
     // check whether the request is POST or GET, 
     // @TODO: refactor this conditions, this doesn't quite represent conditions for a POST request
     if(empty($sanitized['order_id']) && empty($sanitizedPost['id']) && empty($sanitized['id']) && empty($sanitizedPost['response'])) { 
       // Request is POST, proceed to create new notification, then update the payment status
       $raw_notification = $this->doEarlyAckResponse();
+      
+      // @TAG: order-id-suffix-handling
+      $raw_notification['order_id'] = 
+        WC_Midtrans_Utils::check_and_restore_original_order_id($raw_notification['order_id']);
       // Get WooCommerce order
       $wcorder = wc_get_order( $raw_notification['order_id'] );
       // exit if the order id doesn't exist in WooCommerce dashboard
@@ -122,7 +130,11 @@ class WC_Gateway_Midtrans_Notif_Handler
       $midtrans_notification = WC_Midtrans_API::getStatusFromMidtransNotif( $plugin_id );
       // If notification verified, handle it
       if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
-        if (wc_get_order($midtrans_notification->order_id) != false) {
+        // @TAG: order-id-suffix-handling
+        $order_id = 
+          WC_Midtrans_Utils::check_and_restore_original_order_id($midtrans_notification->order_id);
+        // @TODO: relocate this check into the function itself, to prevent unnecessary double DB query load
+        if (wc_get_order($order_id) != false) {
           do_action( "midtrans-handle-valid-notification", $midtrans_notification, $plugin_id );
         }
       }
@@ -170,6 +182,10 @@ class WC_Gateway_Midtrans_Notif_Handler
       // if customer redirected from async payment with POST `response` (CIMB clicks, etc)
       } else if ( !empty($sanitizedPost['response']) ){ 
         $responses = json_decode( stripslashes($sanitizedPost['response']), true);
+
+        // @TAG: order-id-suffix-handling
+        $responses['order_id'] = 
+          WC_Midtrans_Utils::check_and_restore_original_order_id($responses['order_id']);
         $order = new WC_Order( $responses['order_id'] );
         // if async payment paid
         if ( $responses['status_code'] == 200) { 
@@ -193,7 +209,11 @@ class WC_Gateway_Midtrans_Notif_Handler
         // But actually, BCA Klikpay already handled on finish-url-page.php, evaluate if this still needed
         $plugin_id = wc_get_order( $sanitized['id'] )->get_payment_method();
         $midtrans_notification = WC_Midtrans_API::getMidtransStatus($id, $plugin_id);
-        $order_id = $midtrans_notification->order_id;
+
+        // @TODO remove this order_id? seems unused
+        // @TAG: order-id-suffix-handling
+        $order_id = 
+          WC_Midtrans_Utils::check_and_restore_original_order_id($midtrans_notification->order_id);
         // if async payment paid
         if ($midtrans_notification->transaction_status == 'settlement'){
           $this->checkAndRedirectUserToFinishUrl();
@@ -219,10 +239,10 @@ class WC_Gateway_Midtrans_Notif_Handler
    */
   public function handleMidtransValidNotificationRequest( $midtrans_notification, $plugin_id = 'midtrans' ) {
     global $woocommerce;
-
-    $order = new WC_Order( $midtrans_notification->order_id );
+    // @TAG: order-id-suffix-handling
+    $order_id = WC_Midtrans_Utils::check_and_restore_original_order_id($midtrans_notification->order_id);
+    $order = new WC_Order( $order_id );
     $order->add_order_note(__('Midtrans HTTP notification received: '.$midtrans_notification->transaction_status.'. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-    $order_id = $midtrans_notification->order_id;
     
     // allow merchant-defined custom action function to perform action on $order upon notif handling
     do_action( 'midtrans_on_notification_received', $order, $midtrans_notification );
@@ -309,8 +329,11 @@ class WC_Gateway_Midtrans_Notif_Handler
     }
 
     $refund_request = $midtrans_notification->refunds[$lastArrayIndex];
+    // @TAG: order-id-suffix-handling
+    $order_id = 
+      WC_Midtrans_Utils::check_and_restore_original_order_id($midtrans_notification->order_id);
     // Validate the refund doesn't charge twice by the refund last index
-    $order_notes = wc_get_order_notes(array('order_id' => $midtrans_notification->order_id));
+    $order_notes = wc_get_order_notes(array('order_id' => $order_id));
     foreach($order_notes as $value) {
       if (strpos($value->content, $refund_request->refund_key ) !== false) {
         return false;
@@ -327,10 +350,13 @@ class WC_Gateway_Midtrans_Notif_Handler
    * @return void
    */
   public function checkAndHandleWCSubscriptionTxnNotif( $midtrans_notification, $order ) {
+    // @TAG: order-id-suffix-handling
+    $order_id = 
+      WC_Midtrans_Utils::check_and_restore_original_order_id($midtrans_notification->order_id);
     // Process if this is a subscription transaction
-    if ( wcs_order_contains_subscription( $midtrans_notification->order_id ) || wcs_is_subscription( $midtrans_notification->order_id ) || wcs_order_contains_renewal( $midtrans_notification->order_id ) ) {
+    if ( wcs_order_contains_subscription( $order_id ) || wcs_is_subscription( $order_id ) || wcs_order_contains_renewal( $order_id ) ) {
       // if not subscription and wc status pending, don't process (because that's a recurring transaction)
-      if ( wcs_order_contains_renewal( $midtrans_notification->order_id) && $order->get_status() == 'pending' ) {
+      if ( wcs_order_contains_renewal( $order_id) && $order->get_status() == 'pending' ) {
         return false;
       }
         $subscriptions = wcs_get_subscriptions_for_order( $order, array( 'order_type' => 'any' ) );
