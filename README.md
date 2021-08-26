@@ -8,21 +8,23 @@ Also [Available on Wordpress plugin store](https://wordpress.org/plugins/midtran
 
 ### Description
 
-This plugin will allow secure online payment on your WooCommerce store, without your customer ever need to leave your WooCommerce store! With beautiful responsive payment interface built-in.
-Midtrans&nbsp; is an online payment gateway. They strive to make payments simple for both the merchant and customers.
-Support various online payment channel.
-Support WooCommerce v3 & v2.
+This plugin will allow secure online payment on your WooCommerce store, without your customer ever need to leave your WooCommerce store! 
+
+Midtrans-WooCommerce is official plugin from [Midtrans](https://midtrans.com). Midtrans is an online payment gateway. We strive to make payments simple & secure for both the merchant and customers. Support various online payment channel. Support WooCommerce v3 & v2.
+
+Please follow [this step by step guide](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce) for complete configuration. If you have any feedback or request, please [do let us know here](https://docs.midtrans.com/en/snap/with-plugins?id=feedback-and-request).
 
 Payment Method Feature:
 
 * Credit card fullpayment and other payment methods.
-* Bank transfer, internet banking for various banks
+* E-wallet, Bank transfer, internet banking for various banks
 * Credit card Online & offline installment payment.
 * Credit card BIN, bank transfer, and other channel promo payment.
 * Credit card MIGS acquiring channel.
 * Custom expiry.
 * Two-click & One-click feature.
-* Midtrans Snap all payment method fullpayment.
+* Midtrans Snap all supported payment method.
+* Optional: Separated specific payment buttons with its own icons.
 
 
 ### Installation
