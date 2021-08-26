@@ -71,6 +71,7 @@
   $merchant_id = esc_js($this->get_option('merchant_id'));
   $wc_version = esc_js(WC_VERSION);
   $plugin_name = esc_js($pluginName);
+  $plugin_id = esc_js(isset($this->sub_payment_method_id)?$this->sub_payment_method_id:$this->id);
   $midtrans_plugin_version = esc_js(MIDTRANS_PLUGIN_VERSION);
 
   // Pass backend PHP variables into frontend JS variables
@@ -94,6 +95,7 @@
       merchant_id     : "$merchant_id",
       wc_version      : "$wc_version",
       plugin_name     : "$plugin_name",
+      plugin_id     : "$plugin_id",
       midtrans_plugin_version : "$midtrans_plugin_version"
     };
 EOT;

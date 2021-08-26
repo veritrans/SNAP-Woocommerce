@@ -180,6 +180,10 @@
         require_once(dirname(__FILE__) . '/payment-page.php'); 
 
       }
+
+      public function set_sub_payment_method_id($sub_payment_method_id){
+        $this->sub_payment_method_id = $sub_payment_method_id;
+      }
       
       /**
        * @return string

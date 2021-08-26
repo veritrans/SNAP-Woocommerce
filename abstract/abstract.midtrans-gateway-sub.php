@@ -110,6 +110,7 @@ abstract class WC_Gateway_Midtrans_Abstract_Sub extends WC_Gateway_Midtrans_Abst
   function receipt_page( $order_id ) {
     // pass through the real function from main gateway implementation
     $main_gateway = $this->getMainGatewayObject();
+    $main_gateway->set_sub_payment_method_id($this->id);
     return $main_gateway->receipt_page($order_id);
   }
 

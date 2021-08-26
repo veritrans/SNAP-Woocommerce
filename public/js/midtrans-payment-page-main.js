@@ -18,7 +18,7 @@
     return original_order_id;
   }
 
-  function MixpanelTrackResult(token, merchant_id, cms_name, cms_version, plugin_name, plugin_version, status, result) {
+  function MixpanelTrackResult(token, merchant_id, cms_name, cms_version, plugin_name, plugin_id, plugin_version, status, result) {
     var eventNames = {
       pay: 'pg-pay',
       success: 'pg-success',
@@ -34,6 +34,7 @@
         cms_name: cms_name,
         cms_version: cms_version,
         plugin_name: plugin_name,
+        plugin_id: plugin_id,
         plugin_version: plugin_version,
         snap_token: token,
         payment_type: result ? result.payment_type: null,
@@ -48,6 +49,7 @@
   var CMS_NAME = "woocommerce";
   var CMS_VERSION = wc_midtrans.wc_version;
   var PLUGIN_NAME = wc_midtrans.plugin_name;
+  var PLUGIN_ID = wc_midtrans.plugin_id;
   var PLUGIN_VERSION = wc_midtrans.midtrans_plugin_version;
   function loadExtScript(src,tagId) {
     // if snap.js is loaded from html script tag, don't load again
@@ -79,7 +81,7 @@
           customerPhone: ccDetails ? ccDetails.customerPhone : '',
           skipOrderSummary : true,
           onSuccess: function(result){
-            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'success', result);
+            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_ID, PLUGIN_VERSION, 'success', result);
             // console.log(result?result:'no result');
             payButton.innerHTML = "Loading...";
 
@@ -94,7 +96,7 @@
             window.location = finish_url;
           },
           onPending: function(result){ // on pending, instead of redirection, show PDF instruction link
-            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'pending', result);
+            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_ID, PLUGIN_VERSION, 'pending', result);
             // console.log(result?result:'no result');
             
             if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
@@ -125,7 +127,7 @@
             }
           },
           onError: function(result){
-            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'error', result);
+            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_ID, PLUGIN_VERSION, 'error', result);
             // console.log(result?result:'no result');
             payButton.innerHTML = "Loading...";
             // @TAG: order-id-suffix-handling
@@ -133,7 +135,7 @@
             window.location = wc_midtrans.error_url+"&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
           },
           onClose: function(){
-            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'close', null);
+            MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_ID, PLUGIN_VERSION, 'close', null);
             // console.log(result?result:'no result');
           }
         });
@@ -151,7 +153,7 @@
         if (snapExecuted) {
           clearInterval(intervalFunction);
           // record 'pay' event to Mixpanel
-          MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'pay', null);
+          MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_ID, PLUGIN_VERSION, 'pay', null);
         }
       }
     }, 1000);
