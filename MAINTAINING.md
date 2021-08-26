@@ -28,6 +28,11 @@ Other:
 - External WC PG dev guide: https://www.skyverge.com/blog/how-to-create-a-simple-woocommerce-payment-gateway/
 - WP get_options() functions: https://developer.wordpress.org/reference/functions/get_option/
 
+### Attention
+- Due to the feature of "custom order_id suffix to prevent duplicated order_id", order_id input and output may need to be handled non-traditionally, look for `@TAG: order-suffix-separator` in the code comments. e.g:
+  - when sending order_id to Midtrans, it may need to go thru func `WC_Midtrans_Utils::generate_non_duplicate_order_id`
+  - when receiving order_id, it may need to go thru func `WC_Midtrans_Utils::check_and_restore_original_order_id`
+
 ### Separted Payment Buttons
 To implement separated payment buttons (separate WC payment gateway) for each of Midtrans' supported payment methods, the following implementations are made:
 - within `/class/sub-specific-buttons` those are the class files

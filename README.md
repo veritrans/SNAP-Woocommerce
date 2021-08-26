@@ -8,21 +8,23 @@ Also [Available on Wordpress plugin store](https://wordpress.org/plugins/midtran
 
 ### Description
 
-This plugin will allow secure online payment on your WooCommerce store, without your customer ever need to leave your WooCommerce store! With beautiful responsive payment interface built-in.
-Midtrans&nbsp; is an online payment gateway. They strive to make payments simple for both the merchant and customers.
-Support various online payment channel.
-Support WooCommerce v3 & v2.
+This plugin will allow secure online payment on your WooCommerce store, without your customer ever need to leave your WooCommerce store! 
+
+Midtrans-WooCommerce is official plugin from [Midtrans](https://midtrans.com). Midtrans is an online payment gateway. We strive to make payments simple & secure for both the merchant and customers. Support various online payment channel. Support WooCommerce v3 & v2.
+
+Please follow [this step by step guide](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce) for complete configuration. If you have any feedback or request, please [do let us know here](https://docs.midtrans.com/en/snap/with-plugins?id=feedback-and-request).
 
 Payment Method Feature:
 
 * Credit card fullpayment and other payment methods.
-* Bank transfer, internet banking for various banks
+* E-wallet, Bank transfer, internet banking for various banks
 * Credit card Online & offline installment payment.
 * Credit card BIN, bank transfer, and other channel promo payment.
 * Credit card MIGS acquiring channel.
 * Custom expiry.
 * Two-click & One-click feature.
-* Midtrans Snap all payment method fullpayment.
+* Midtrans Snap all supported payment method.
+* Optional: Separated specific payment buttons with its own icons.
 
 
 ### Installation
@@ -89,7 +91,7 @@ You can customize icon that will be shown on payment buttons, from the plugin co
 
 All available values for the field:
 ```
-credit_card.png, gopay.png, shopeepay.png, qris.png, other_va.png, bni_va.png, bri_va.png, bca_va.png, permata_va.png, echannel.png, alfamart.png, indomaret.png, akulaku.png, bca_klikpay.png, cimb_clicks.png, danamon_online.png, midtrans.png
+midtrans.png, credit_card.png, gopay.png, shopeepay.png, qris.png, other_va.png, bni_va.png, bri_va.png, bca_va.png, permata_va.png, echannel.png, alfamart.png, indomaret.png, akulaku.png, bca_klikpay.png, cimb_clicks.png, danamon_online.png
 ```
 
 Or refer to [payment-methods folder](/public/images/payment-methods) to see the list of all available file names. The image file will be loaded from that folder.
@@ -136,11 +138,13 @@ If you are a developer or know how to customize Wordpress, this section may be u
 
 This plugin have few available [WP hooks](https://developer.wordpress.org/plugins/hooks/):
 - filter: `midtrans_snap_params_main_before_charge` (1 params)
-	- For if you want to modify Snap API JSON param on the main gateway, before transaction is created on Midtrans side.
+	- For if you want to modify Snap API JSON param on the main gateway, before transaction is created on Midtrans side. The $params is PHP Array representation of [Snap API JSON param](https://snap-docs.midtrans.com/#request-body-json-parameter)
 - action: `midtrans_after_notification_payment_complete` (2 params)
 	- For if you want to perform action/update WC Order object when the payment is declared as complete upon Midtrans notification received.
 - action: `midtrans_on_notification_received` (2 params)
 	- For if you want to perform action/update WC Order object upon Midtrans notification received.
+- action: `midtrans-handle-valid-notification` (1 params)
+	- For if you want to perform something upon valid Midtrans notification received. Note: this is legacy hook, better use the hook above.
 
 Example implementation:
 ```php
@@ -173,6 +177,8 @@ function my_midtrans_on_notif_hook( $order, $midtrans_notification ) {
 ```
 
 For reference on where/which file to apply that code example, [refer here](https://blog.nexcess.net/the-right-way-to-add-custom-functions-to-your-wordpress-site/).
+
+Note: for `midtrans_after_notification_payment_complete` & `midtrans_on_notification_received` hooks, if you are using [custom "WC Order Status on Payment Paid"](https://docs.midtrans.com/en/snap/with-plugins?id=advanced-customize-woocommerce-order-status-upon-payment-paid) config, the final WC Order status value can get overridden by that config. As that config is executed last.
 
 </details>
 

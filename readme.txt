@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.8
-Stable tag: 2.30.1
+Stable tag: 2.31.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,21 +13,21 @@ Midtrans-WooCommerce is plugin for Midtrans, Indonesian Payment Gateway. Brings 
 
 This plugin will allow secure online payment on your WooCommerce store, without your customer ever need to leave your WooCommerce store! 
 
-Midtrans-WooCommerce is official plugin from [Midtrans](https://midtrans.com), Indonesian Payment Gateway. Brings safety and highly dedicated to customer experience (UX) to WooCommerce.Support various online payment channel.
-Support WooCommerce v3 & v2.
+Midtrans-WooCommerce is official plugin from [Midtrans](https://midtrans.com). Midtrans is an online payment gateway. We strive to make payments simple & secure for both the merchant and customers. Support various online payment channel. Support WooCommerce v3 & v2.
 
-Please follow [this step by step guide](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce) for complete configuration.
+Please follow [this step by step guide](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce) for complete configuration. If you have any feedback or request, please [do let us know here](https://docs.midtrans.com/en/snap/with-plugins?id=feedback-and-request).
 
 Payment Method Feature:
 
 * Credit card fullpayment and other payment methods.
-* Bank transfer, internet banking for various banks
+* E-wallet, Bank transfer, internet banking for various banks
 * Credit card Online & offline installment payment.
 * Credit card BIN, bank transfer, and other channel promo payment.
 * Credit card MIGS acquiring channel.
 * Custom expiry.
 * Two-click & One-click feature.
-* Midtrans Snap all payment method fullpayment.
+* Midtrans Snap all supported payment method.
+* Optional: Separated specific payment buttons with its own icons.
 
 == Installation ==
 
@@ -71,6 +71,12 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 4. Configuration page
 
 == Changelog ==
+
+= 2.31.0 - 2021-08-26 =
+* handle duplicated Snap order_id (incase WP is reinstalled, or DB restored) by auto-adding suffix
+* improvement on finish url redirect flow, to prevent issue
+* handle uncaught error on finish url
+* immediate-reduce-stock disabled by default
 
 = 2.30.1 - 2021-08-09 =
 * prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8 & v7.0.0 - v7.1.x
@@ -255,6 +261,12 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Upgrade Notice ==
 
+= 2.31.0 - 2021-08-26 =
+* handle duplicated Snap order_id (incase WP is reinstalled, or DB restored) by auto-adding suffix
+* improvement on finish url redirect flow, to prevent issue
+* handle uncaught error on finish url
+* immediate-reduce-stock disabled by default
+
 = 2.30.1 - 2021-08-09 =
 * prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8 & v7.0.0 - v7.1.x
 * minor description improvement
@@ -409,6 +421,6 @@ Support additional feature like installment, MIGS acq, and bin promo.
 == Get Help ==
 *	[Midtrans WooCommerce Configuration Guide](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce)
 *	[Midtrans registration](https://account.midtrans.com/register)
+*	[Midtrans Support Contact](https://midtrans.com/id/contact-us)
 *	[Midtrans Documentation](https://docs.midtrans.com)
-*	[Midtrans Snap API Documentation](https://snap-docs.midtrans.com)
 *	[Midtrans-WooCommerce Wiki](https://github.com/veritrans/SNAP-Woocommerce/wiki)

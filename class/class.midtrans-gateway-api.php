@@ -87,10 +87,45 @@ class WC_Midtrans_API {
      * @return void
      */
     public static function fetchAndSetMidtransApiConfig( $plugin_id="midtrans" ) {
+        if(strpos($plugin_id, 'midtrans_sub') !== false){
+          // for sub separated gateway buttons, use main gateway plugin id instead
+          $plugin_id = 'midtrans';
+        }
 		self::fetchAndSetCurrentPluginOptions( $plugin_id );
         Midtrans\Config::$isProduction = (self::get_environment() == 'production') ? true : false;
         Midtrans\Config::$serverKey = self::get_server_key();     
         Midtrans\Config::$isSanitized = true;
+    }
+
+    /**
+     * Same as createSnapTransaction, but it will auto handle exception
+     * 406 duplicated order_id exception from Snap API, by calling WC_Midtrans_Utils::generate_non_duplicate_order_id
+     * @param  object $order the WC Order instance.
+     * @param  array $params Payment options.
+     * @param  string $plugin_id ID of the plugin class calling this function
+     * @return object Snap response (token and redirect_url).
+     * @throws Exception curl error or midtrans error.
+     */
+    public static function createSnapTransactionHandleDuplicate( $order, $params, $plugin_id="midtrans") {
+        try {
+            $response = self::createSnapTransaction($params, $plugin_id);
+        } catch (Exception $e) {
+            // Handle: Snap order_id duplicated, retry with suffixed order_id
+            if( strpos($e->getMessage(), 'transaction_details.order_id sudah digunakan') !== false) {
+                self::setLogRequest( $e->getMessage().' - Attempt to auto retry with suffixed order_id', $plugin_id );
+                // @TAG: order-id-suffix-handling
+                $params['transaction_details']['order_id'] = 
+                    WC_Midtrans_Utils::generate_non_duplicate_order_id($params['transaction_details']['order_id']);
+                $response =  self::createSnapTransaction($params, $plugin_id);
+                
+                // store the suffixed order id to order metadata
+                // @TAG: order-id-suffix-handling-meta
+                $order->update_meta_data('_mt_suffixed_midtrans_order_id', $params['transaction_details']['order_id']);
+            } else {
+                throw $e;
+            }
+        }
+        return $response;
     }
 
     /**

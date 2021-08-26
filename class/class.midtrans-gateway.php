@@ -132,7 +132,7 @@
         // allow merchant-defined custom filter function to modify snap $params
         $params = apply_filters( 'midtrans_snap_params_main_before_charge', $params );
         try {
-          $snapResponse = WC_Midtrans_API::createSnapTransaction( $params, $this->id );
+          $snapResponse = WC_Midtrans_API::createSnapTransactionHandleDuplicate( $order, $params, $this->id );
         } catch (Exception $e) {
             $this->setLogError( $e->getMessage() );
             WC_Midtrans_Utils::json_print_exception( $e, $this );
@@ -150,6 +150,9 @@
         $order->update_meta_data('_mt_payment_snap_token',$snapResponse->token);
         $order->update_meta_data('_mt_payment_url',$snapResponse->redirect_url);
         $order->save();
+
+        // set wc order's finish_url on user's session cookie
+        $this->set_finish_url_user_cookies($order);
 
         // @TODO: default to yes or remove this options: enable_immediate_reduce_stock
         if(property_exists($this,'enable_immediate_reduce_stock') && $this->enable_immediate_reduce_stock == 'yes'){
@@ -196,7 +199,7 @@
        * @return string
        */
       protected function getSettingsDescription() {
-        return __('Secure payment via Midtrans that accept various payment methods, with mobile friendly built-in interface, or (optionally) redirection. This is the main payment button, 1 single button for multiple available payments methods. <a href="https://docs.midtrans.com/en/snap/with-plugins?id=woocommerce-plugin-configuration" target="_blank">Please follow "how-to configure guide" here.</a>', 'midtrans-woocommerce');
+        return __('Secure payment via Midtrans that accept various payment methods, with mobile friendly built-in interface, or (optionally) redirection. This is the main payment button, 1 single button for multiple available payments methods. <a href="https://docs.midtrans.com/en/snap/with-plugins?id=woocommerce-plugin-configuration" target="_blank">Please follow "how-to configure guide" here</a>. Any feedback & request <a href="https://docs.midtrans.com/en/snap/with-plugins?id=feedback-and-request" target="_blank">let us know here</a>.', 'midtrans-woocommerce');
       }
 
       /**

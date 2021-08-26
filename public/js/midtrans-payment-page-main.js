@@ -3,6 +3,21 @@
 ;(function( $, window, document ) {
   var payButton = document.getElementById("pay-button");
 
+  /**
+   * JS version of func `check_and_restore_original_order_id` of class `WC_Midtrans_Utils`
+   * @TAG: order-suffix-separator
+   */
+  function check_and_restore_original_order_id(non_duplicate_order_id){
+    var suffix_separator = '-wc-mdtrs-';
+    var original_order_id = non_duplicate_order_id;
+    if(non_duplicate_order_id && non_duplicate_order_id.indexOf(suffix_separator)>0){
+      var splitted_order_id_strings = non_duplicate_order_id.split(suffix_separator);
+      // only return the left-side of the separator, ignore the rest
+      original_order_id = splitted_order_id_strings[0];
+    }
+    return original_order_id;
+  }
+
   function MixpanelTrackResult(token, merchant_id, cms_name, cms_version, plugin_name, plugin_version, status, result) {
     var eventNames = {
       pay: 'pg-pay',
@@ -71,6 +86,9 @@
             if(wc_midtrans.is_using_map_finish_url){
               var finish_url = result.finish_redirect_url;
             } else {
+              // @TODO: `&order_id=` param may no longer needed, since we use  finish_url_user_cookies
+              // @TAG: order-id-suffix-handling
+              result.order_id = check_and_restore_original_order_id(result.order_id);
               var finish_url = wc_midtrans.finish_url+"&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
             }
             window.location = finish_url;
@@ -81,6 +99,8 @@
             
             if (result.fraud_status == 'challenge'){ // if challenge redirect to finish
               payButton.innerHTML = "Loading...";
+              // @TAG: order-id-suffix-handling
+              result.order_id = check_and_restore_original_order_id(result.order_id);
               window.location = wc_midtrans.finish_url+"&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
             }
 
@@ -88,6 +108,8 @@
               // prevent redirect
               var pending_url = '#';
             } else {
+              // @TAG: order-id-suffix-handling
+              result.order_id = check_and_restore_original_order_id(result.order_id);
               var pending_url = wc_midtrans.pending_url+"&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
               // redirect to thank you page
               window.location = pending_url;
@@ -106,6 +128,8 @@
             MixpanelTrackResult(SNAP_TOKEN, MERCHANT_ID, CMS_NAME, CMS_VERSION, PLUGIN_NAME, PLUGIN_VERSION, 'error', result);
             // console.log(result?result:'no result');
             payButton.innerHTML = "Loading...";
+            // @TAG: order-id-suffix-handling
+            result.order_id = check_and_restore_original_order_id(result.order_id);
             window.location = wc_midtrans.error_url+"&order_id="+result.order_id+"&status_code="+result.status_code+"&transaction_status="+result.transaction_status;
           },
           onClose: function(){

@@ -117,7 +117,7 @@
         // Empty the cart because payment is initiated.
         $woocommerce->cart->empty_cart();
         try {
-          $snapResponse = WC_Midtrans_API::createSnapTransaction( $params, $this->id );
+          $snapResponse = WC_Midtrans_API::createSnapTransactionHandleDuplicate( $order, $params, $this->id );
         } catch (Exception $e) {
           $this->setLogError( $e->getMessage() );
           WC_Midtrans_Utils::json_print_exception( $e, $this );
@@ -135,6 +135,8 @@
         $order->update_meta_data('_mt_payment_snap_token',$snapResponse->token);
         $order->update_meta_data('_mt_payment_url',$snapResponse->redirect_url);
         $order->save();
+        // set wc order's finish_url on user's session cookie
+        $this->set_finish_url_user_cookies($order);
         if(property_exists($this,'enable_immediate_reduce_stock') && $this->enable_immediate_reduce_stock == 'yes'){
           // Reduce item stock on WC, item also auto reduced on order `pending` status changes
           wc_reduce_stock_levels($order);

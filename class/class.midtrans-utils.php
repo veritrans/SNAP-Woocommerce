@@ -130,5 +130,40 @@ class WC_Midtrans_Utils
     }
   }
 
+  /**
+   * In case Snap API return 406 duplicate order ID, this helper func will generate
+   * new order id that is to prevent duplicate, by adding suffix on the order_id string
+   * @TAG: order-suffix-separator
+   * @param  string the original WC order_id
+   * @return string the non duplicate order_id added with suffix
+   */
+  public static function generate_non_duplicate_order_id($order_id){
+    $suffix_separator = '-wc-mdtrs-';
+    $date = new DateTime();
+    $unix_timestamp = $date->getTimestamp();
+
+    $non_duplicate_order_id = $order_id.$suffix_separator.$unix_timestamp;
+    return $non_duplicate_order_id;
+  }
+
+  /**
+   * Retrieve original WC order_id from a non duplicate order_id produced by function above:
+   * generate_non_duplicate_order_id. This will check if the suffix separator exist,
+   * and split it to get the original order_id.
+   * @TAG: order-suffix-separator
+   * @param  string any order_id either original or non duplicate version
+   * @return string the original WC order_id
+   */
+  public static function check_and_restore_original_order_id($non_duplicate_order_id){
+    $suffix_separator = '-wc-mdtrs-';
+    $original_order_id = $non_duplicate_order_id;
+    if(strpos($non_duplicate_order_id, $suffix_separator) !== false){
+      $splitted_order_id_strings = explode($suffix_separator, $non_duplicate_order_id);
+      // only return the left-side of the separator, ignore the rest
+      $original_order_id = $splitted_order_id_strings[0];
+    }
+    return $original_order_id;
+  }
+
 }
 ?>
