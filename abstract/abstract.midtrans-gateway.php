@@ -313,6 +313,17 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
       $params['user_id'] = crypt( $customer_details['email'].$customer_details['phone'] , $this->server_key );
       $params['credit_card']['save_card'] = true;
     }
+    // add Snap API metadata, identifier for request coming via this plugin
+    try {
+      $params['metadata'] = array(
+        'x_midtrans_wc_plu' => array(
+          'version' => MIDTRANS_PLUGIN_VERSION,
+          'wc' => WC_VERSION,
+          'php' => phpversion()
+        )
+      );
+    } catch (Exception $e) { }
+
     return $params;
   }
 

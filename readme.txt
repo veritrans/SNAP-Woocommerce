@@ -77,6 +77,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * improvement on finish url redirect flow, to prevent issue
 * handle uncaught error on finish url
 * immediate-reduce-stock disabled by default
+* emmit custom headers & metadata on http request
 
 = 2.30.1 - 2021-08-09 =
 * prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8 & v7.0.0 - v7.1.x
@@ -266,6 +267,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * improvement on finish url redirect flow, to prevent issue
 * handle uncaught error on finish url
 * immediate-reduce-stock disabled by default
+* emmit custom headers & metadata on http request
 
 = 2.30.1 - 2021-08-09 =
 * prevent issue "cannot inherit abstract function" on outdated PHP v5.0.0 - v5.3.8 & v7.0.0 - v7.1.x

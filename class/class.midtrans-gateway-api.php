@@ -95,6 +95,14 @@ class WC_Midtrans_API {
         Midtrans\Config::$isProduction = (self::get_environment() == 'production') ? true : false;
         Midtrans\Config::$serverKey = self::get_server_key();     
         Midtrans\Config::$isSanitized = true;
+
+        // setup custom HTTP client header as identifier ref:
+        // https://github.com/omarxp/Midtrans-Drupal8/blob/3d4e4b4af46e96c742667c7a2925cf70dfaa9e2a/src/PluginForm/MidtransOfflineInstallmentForm.php#L39-L42
+        try {
+            Midtrans\Config::$curlOptions[CURLOPT_HTTPHEADER][] = 'x-midtrans-wc-plu-version: '.MIDTRANS_PLUGIN_VERSION;
+            Midtrans\Config::$curlOptions[CURLOPT_HTTPHEADER][] = 'x-midtrans-wc-plu-wc-version: '.WC_VERSION;
+            Midtrans\Config::$curlOptions[CURLOPT_HTTPHEADER][] = 'x-midtrans-wc-plu-php-version: '.phpversion();
+        } catch (Exception $e) { }
     }
 
     /**
