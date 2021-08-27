@@ -20,7 +20,7 @@ return apply_filters(
         'merchant_id'                => array(
             'title'         => __("Merchant ID", 'midtrans-woocommerce'),
             'type'          => 'text',
-            'description'   => sprintf(__('Input your Midtrans Merchant ID (e.g M012345). Get the ID <a href="%s" target="_blank">here</a>', 'midtrans-woocommerce' ),$sandbox_key_url),
+            'description'   => sprintf(__('Input your Midtrans Merchant ID (e.g G428268669 or M012345). Get the ID <a href="%s" target="_blank">here</a>', 'midtrans-woocommerce' ),$sandbox_key_url),
             'default'       => '',
         ),
         'select_midtrans_environment' => array(
