@@ -150,7 +150,7 @@ EOT;
   // output main.js script tag to html
   echo wp_get_script_tag(
     array(
-      'data-cfasync' => 'false',
+      'data-cfasync' => 'true',
       'src' => $main_script_url,
     )
   );
