@@ -1,6 +1,6 @@
 // wc_midtrans var is passed from payment-page backend via inline script.
 
-;(function( $, window, document ) {
+;(function( window, document ) {
   var payButton = document.getElementById("pay-button");
 
   /**
@@ -242,5 +242,4 @@
 
   handlePayAction();
   payButton.innerHTML = "Proceed To Payment";
-})( jQuery, window, document );
-// well jQuery is not actually used, just for formality
+})( window, document );
