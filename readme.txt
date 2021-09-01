@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.8
-Stable tag: 2.31.0
+Stable tag: 2.31.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 4. Configuration page
 
 == Changelog ==
+
+= 2.31.1 - 2021-09-01 =
+* improve compatibility with external optimizer plugins on payment page JS (remove jQuery dependency)
 
 = 2.31.0 - 2021-08-26 =
 * handle duplicated Snap order_id (incase WP is reinstalled, or DB restored) by auto-adding suffix
@@ -261,6 +264,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Fullpayment feature
 
 == Upgrade Notice ==
+
+= 2.31.1 - 2021-09-01 =
+* improve compatibility with external optimizer plugins on payment page JS (remove jQuery dependency)
 
 = 2.31.0 - 2021-08-26 =
 * handle duplicated Snap order_id (incase WP is reinstalled, or DB restored) by auto-adding suffix
