@@ -279,7 +279,11 @@ class WC_Gateway_Midtrans_Notif_Handler
       $order->update_status('cancelled',__('Cancelled payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
     }
     else if ($midtrans_notification->transaction_status == 'expire') {
-      $order->update_status('cancelled',__('Expired payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      if ($midtrans_notification->payment_type == 'credit_card'){
+        // do nothing on card status expire (happen if 3DS abandoned), allow payment retries
+      } else {
+        $order->update_status('cancelled',__('Expired payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      }
     }
     else if ($midtrans_notification->transaction_status == 'deny') {
       // do nothing on deny, allow payment retries
