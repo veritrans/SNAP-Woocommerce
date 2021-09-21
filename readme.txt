@@ -72,6 +72,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Changelog ==
 
+= unreleased 2.32.0 - 2021-09-xx =
+* improve payment icon visual: add semi transparet background & border for better compatibility with dark color theme, prevent image stretched on some themes, add spacing
+
 = 2.31.1 - 2021-09-01 =
 * improve compatibility with external optimizer plugins on payment page JS (remove jQuery dependency)
 
@@ -264,6 +267,9 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 * Fullpayment feature
 
 == Upgrade Notice ==
+
+= unreleased 2.32.0 - 2021-09-xx =
+* improve payment icon visual: add semi transparet background & border for better compatibility with dark color theme, prevent image stretched on some themes, add spacing
 
 = 2.31.1 - 2021-09-01 =
 * improve compatibility with external optimizer plugins on payment page JS (remove jQuery dependency)
