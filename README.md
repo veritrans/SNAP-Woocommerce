@@ -160,6 +160,8 @@ function my_midtrans_snap_param_hook( $params ) {
 		"price" => 0,
 		"quantity" => 3,
 	);
+	// another use case e.g. you can modify $params['transaction_details']['gross_amount'] value to convert to another currency with your own defined rate.
+	
 	// don't forget to return the $params
     return $params;
 }
