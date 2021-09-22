@@ -143,6 +143,8 @@ This plugin have few available [WP hooks](https://developer.wordpress.org/plugin
 	- For if you want to perform action/update WC Order object when the payment is declared as complete upon Midtrans notification received.
 - action: `midtrans_on_notification_received` (2 params)
 	- For if you want to perform action/update WC Order object upon Midtrans notification received.
+- filter: `midtrans_gateway_icon_before_render` (1 params)
+	- For if you want to modify payment icons HTML image tag.
 - action: `midtrans-handle-valid-notification` (1 params)
 	- For if you want to perform something upon valid Midtrans notification received. Note: this is legacy hook, better use the hook above.
 
@@ -158,6 +160,8 @@ function my_midtrans_snap_param_hook( $params ) {
 		"price" => 0,
 		"quantity" => 3,
 	);
+	// another use case e.g. you can modify $params['transaction_details']['gross_amount'] value to convert to another currency with your own defined rate.
+	
 	// don't forget to return the $params
     return $params;
 }
@@ -173,6 +177,13 @@ function my_midtrans_complete_hook( $order, $midtrans_notification ) {
 add_action( 'midtrans_on_notification_received', 'my_midtrans_on_notif_hook',$priority = 10, $accepted_args = 2 );
 function my_midtrans_on_notif_hook( $order, $midtrans_notification ) {
 	// do as you wish here
+}
+
+// Custom filter hook to modify payment icon html image tag
+add_filter( 'midtrans_gateway_icon_before_render', 'my_midtrans_gateway_icon_hook' );
+function my_midtrans_gateway_icon_hook($image_tag){
+	// example: modify payment icon's inline CSS to position it to the left
+	return str_replace('style="','style=" float: left; margin-right: 0.5em;',$image_tag);
 }
 ```
 

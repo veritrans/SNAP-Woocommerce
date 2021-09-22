@@ -457,10 +457,17 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
           // image is absolute url, external, don't prefix.
           $image_url = $image_file_name;
         }
-        $image_tag .= '<img src="'.$image_url.'" alt="Midtrans" style="/*max-height: 65px; max-width: 45px;*/"/> ';
+        $image_tag .= '<img src="'.$image_url.'" alt="Midtrans" style="max-height: 2.5em; max-width: 5em; background-color: #ffffffdd; padding: 0.2em 0.3em; border-radius: 0.3em; border: 0.5px solid #ccccccdd;"/> ';
       }
     }
-    return apply_filters('woocommerce_gateway_icon', $image_tag, $this->id);
+
+    // allow merchant-defined custom filter function to modify $image_tag
+    $image_tag_after_filter = 
+      apply_filters( 'midtrans_gateway_icon_before_render', $image_tag);
+    // default filter from WC
+    $image_tag_after_filter = 
+      apply_filters('woocommerce_gateway_icon', $image_tag_after_filter, $this->id);
+    return $image_tag_after_filter;
   }
 
   /**

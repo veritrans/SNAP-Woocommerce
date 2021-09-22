@@ -21,6 +21,7 @@ class WC_Gateway_Midtrans_Notif_Handler
     // Register hook for handling HTTP notification (HTTP call to `http://[your web]/?wc-api=WC_Gateway_Midtrans`)
 		add_action( 'woocommerce_api_wc_gateway_midtrans', array( $this, 'handleMidtransNotificationRequest' ) );
     // Create action to be called when HTTP notification is valid
+    // @TODO: rename this hook to use snake_case format
     add_action( 'midtrans-handle-valid-notification', array( $this, 'handleMidtransValidNotificationRequest' ) );
   }
     
@@ -135,6 +136,7 @@ class WC_Gateway_Midtrans_Notif_Handler
           WC_Midtrans_Utils::check_and_restore_original_order_id($midtrans_notification->order_id);
         // @TODO: relocate this check into the function itself, to prevent unnecessary double DB query load
         if (wc_get_order($order_id) != false) {
+          // @TODO: rename this hook to use snake_case format
           do_action( "midtrans-handle-valid-notification", $midtrans_notification, $plugin_id );
         }
       }
@@ -246,7 +248,13 @@ class WC_Gateway_Midtrans_Notif_Handler
     
     // allow merchant-defined custom action function to perform action on $order upon notif handling
     do_action( 'midtrans_on_notification_received', $order, $midtrans_notification );
-
+    
+    /**
+     * @TODO: maybe refactor this if-else branch, store the condition into variable e.g: 
+     * $is_payment_success = this or that etc. 
+     * $is_payment_failed, $is_payment_pending, $is_payment_refund.
+     * So the if-else branch only need to check from those var, instead of directly checking the condition.
+     */
     if ( $midtrans_notification->transaction_status == 'settlement'
       || ($midtrans_notification->transaction_status == 'capture' && $midtrans_notification->fraud_status == 'accept') ) {
       // success scenario of payment paid
@@ -279,7 +287,13 @@ class WC_Gateway_Midtrans_Notif_Handler
       $order->update_status('cancelled',__('Cancelled payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
     }
     else if ($midtrans_notification->transaction_status == 'expire') {
-      $order->update_status('cancelled',__('Expired payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      if ($midtrans_notification->payment_type == 'credit_card'){
+        // do nothing on card status expire (happen if 3DS abandoned), allow payment retries
+        // @NOTE: but it may means card txn, will never notif-based cancel-order trigger to WC.
+        // Fortunately WC seems to have auto cancel-order built in.
+      } else {
+        $order->update_status('cancelled',__('Expired payment: Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
+      }
     }
     else if ($midtrans_notification->transaction_status == 'deny') {
       // do nothing on deny, allow payment retries
