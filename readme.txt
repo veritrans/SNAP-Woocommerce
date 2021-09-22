@@ -3,7 +3,7 @@ Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
 Tested up to: 5.8
-Stable tag: 2.31.1
+Stable tag: 2.32.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,7 +72,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Changelog ==
 
-= unreleased 2.32.0 - 2021-09-xx =
+= 2.32.0 - 2021-09-22 =
 * improve payment icon visual: add semi transparet background & border for better compatibility with dark color theme, prevent image stretched on some themes, add spacing
 * improve notif handler to allow retry of 'expire' card payment (abandoned on 3DS step)
 * add WP filter hook 'midtrans_gateway_icon_before_render' modify payment icons HTML image tag
@@ -270,7 +270,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 == Upgrade Notice ==
 
-= unreleased 2.32.0 - 2021-09-xx =
+= 2.32.0 - 2021-09-22 =
 * improve payment icon visual: add semi transparet background & border for better compatibility with dark color theme, prevent image stretched on some themes, add spacing
 * improve notif handler to allow retry of 'expire' card payment (abandoned on 3DS step)
 * add WP filter hook 'midtrans_gateway_icon_before_render' modify payment icons HTML image tag
