@@ -14,7 +14,7 @@ Midtrans-WooCommerce is official plugin from [Midtrans](https://midtrans.com). M
 
 Please follow [this step by step guide](https://docs.midtrans.com/en/snap/with-plugins?id=wordpress-woocommerce) for complete configuration. If you have any feedback or request, please [do let us know here](https://docs.midtrans.com/en/snap/with-plugins?id=feedback-and-request).
 
-Want to see Midtrans-WooCommerce payment plugins in action? We have some demo web-stores for Magento that you can use to try the payment journey directly, visit the [Midtrans CMS Demo Store](https://docs.midtrans.com/en/snap/with-plugins?id=midtrans-payment-plugin-live-demonstration)
+Want to see Midtrans-WooCommerce payment plugins in action? We have some demo web-stores for WooCommerce that you can use to try the payment journey directly, visit the [Midtrans CMS Demo Store](https://docs.midtrans.com/en/snap/with-plugins?id=midtrans-payment-plugin-live-demonstration)
 
 Payment Method Feature:
 
