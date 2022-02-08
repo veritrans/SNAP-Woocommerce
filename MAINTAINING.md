@@ -9,7 +9,6 @@
   - /images/payment-methods: folder of payment method icons
     - all image directly used should not be prefixed with `alt_`
     - if filename is prefixed with `alt_`, it is not directly used, and only there as alternative image.
-- /resources: like library or helper folder, which may no longer be used? @TODO: remove this?
 - /readme: required file, act as WP plugin manifest, see [this reference](https://wordpress.org/plugins/readme.txt).
 
 Other:
