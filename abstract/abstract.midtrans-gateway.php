@@ -71,7 +71,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
    * Add JS script file to admin page
   */
   public function midtrans_admin_scripts() {
-    wp_enqueue_script( 'admin-midtrans', MIDTRANS_PLUGIN_DIR_URL . 'js/admin-scripts.js' );
+    wp_enqueue_script( 'admin-midtrans', MIDTRANS_PLUGIN_DIR_URL . 'public/js/midtrans-admin-page.js' );
   }
 
   /**

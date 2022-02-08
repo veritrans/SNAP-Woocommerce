@@ -5,12 +5,10 @@
 - /class: the concrete class implementations for each of
 - /midtrans-gateway.php: refer to that file comments.
 - /lib: Midtrans API PHP library, commited dependency, need be manually updated to latest Midtrans PHP library on github/composer
-- /js: folder for JS file asset on PG config page on WP admin panel
-- /public: public asset folder for images, css, js on customer facing UI
+- /public: public asset folder for images, css, js on user facing UI
   - /images/payment-methods: folder of payment method icons
     - all image directly used should not be prefixed with `alt_`
     - if filename is prefixed with `alt_`, it is not directly used, and only there as alternative image.
-- /resources: like library or helper folder, which may no longer be used? @TODO: remove this?
 - /readme: required file, act as WP plugin manifest, see [this reference](https://wordpress.org/plugins/readme.txt).
 
 Other:
@@ -92,6 +90,7 @@ Plugin WP Hosted url: https://wordpress.org/plugins/midtrans-woocommerce/
     - `Stable tag:` {latest/stable version of this plugin (must have its own /trunk folder): x.x.x}
 - Copy contents of Github root folder `Snap-Woocommerce` into your SVN folder, under `/trunk` folder
 - Create new folder under `/tags` folder, name it with the plugin version. e.g: `2.6.3`
+  - or alternatively, better use [SVN command to do it](https://developer.wordpress.org/plugins/wordpress-org/how-to-use-subversion/#create-tags-from-trunk) by running script `svn copy /trunk /tags/2.6.3`. SVN will copy the trunk folder into new version tag folder.
 - Ensure `Stable tag` value within `readme.txt` in folder `trunk` have the same value as above e.g: `2.6.3`
   - values that need to be consistent:
     - stable tag in readme.txt `/trunk`
