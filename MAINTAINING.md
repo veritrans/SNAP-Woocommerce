@@ -5,8 +5,7 @@
 - /class: the concrete class implementations for each of
 - /midtrans-gateway.php: refer to that file comments.
 - /lib: Midtrans API PHP library, commited dependency, need be manually updated to latest Midtrans PHP library on github/composer
-- /js: folder for JS file asset on PG config page on WP admin panel
-- /public: public asset folder for images, css, js on customer facing UI
+- /public: public asset folder for images, css, js on user facing UI
   - /images/payment-methods: folder of payment method icons
     - all image directly used should not be prefixed with `alt_`
     - if filename is prefixed with `alt_`, it is not directly used, and only there as alternative image.
