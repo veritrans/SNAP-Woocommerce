@@ -227,6 +227,26 @@ If you want it to be applied to just some specific Payment Option (e.g: the defa
 - There you can modify the `$params` variable, it is an PHP Array representation of [Snap's API JSON param](https://docs.midtrans.com/en/snap/advanced-feature).
 </details>
 
+
+#### Manual Clean Up WP Options Config Value of This Plugin
+
+<details><summary>Click to expand info</summary>
+<br>
+
+In general use-case, you don't need to do what explained in this section. This section is relevent only in case **you want to know/clean-up/remove** `wp_options` config values created by this plugin. Those config values are located under your WP's database SQL table `wp_options` with record's name prefix `woocommerce_midtrans_`. 
+	
+You can also find it by executing this SQL on your WP's database to find those values:
+```sql
+SELECT * FROM `wp_options` WHERE `option_name` LIKE '%woocommerce_midtrans%'
+```
+Then if you want, you can remove the values from the SQL database (alternatively, you can also modify the SQL `SELECT` command with `DELETE`). 
+	
+Background: 
+	
+This plugin was mainly developed by following the official guideline from WooCommerce(WC), where WooCommerce provided their internal API function to create/edit WP options, we don’t use WP options API function directly. It seems the default WC Payment Gateway behavior (when uninstalled) does not include the uninstall clean up procedure to remove wp_options config values. Though that may be by design from WC, they may have decided that Gateway Settings/options should preserved during uninstall, so that upon re-install the Settings is auto-restored. For further explanation you can also [check this link](https://wordpress.org/support/topic/no-clean-uninstall-2/#post-15287583).
+
+</details>
+
 #### Get help
 
 * [SNAP-Woocommerce Wiki](https://github.com/veritrans/SNAP-Woocommerce/wiki)
