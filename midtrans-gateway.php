@@ -8,7 +8,7 @@ Author: Midtrans
 Author URI: http://midtrans.co.id
 License: GPLv2 or later
 WC requires at least: 2.0.0
-WC tested up to: 6.1
+WC tested up to: 7.2.2
 */
 
 /*
