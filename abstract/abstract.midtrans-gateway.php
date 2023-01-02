@@ -355,7 +355,7 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
    * @return WC_Order_Refund|WP_Error
    */
   public function midtrans_refund( $order_id, $refund_amount, $refund_reason, $isFullRefund = false ) {
-    $order_id = WC_Midtrans_Utils::check_and_restore_original_order_id();
+    $order_id = WC_Midtrans_Utils::check_and_restore_original_order_id($order_id);
     $order  = wc_get_order( $order_id );
     if( ! is_a( $order, 'WC_Order') ) {
       return;
