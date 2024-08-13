@@ -188,9 +188,9 @@ class WC_Midtrans_API {
      * @param string $id Order ID or transaction ID.
      * @return object Midtrans response.
      */
-    public static function getMidtransStatus( $order_id, $plugin_id="midtrans" ) {
+    public static function getMidtransStatus( $order_id, $plugin_id="midtrans", $paymentType = null ) {
         self::fetchAndSetMidtransApiConfig( $plugin_id );
-        return Midtrans\Transaction::status( $order_id );
+        return Midtrans\Transaction::status( $order_id , $paymentType);
     }
 
 	/**

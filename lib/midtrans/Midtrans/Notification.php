@@ -23,7 +23,7 @@ class Notification
     public function __construct($input_source = "php://input")
     {
         $raw_notification = json_decode(file_get_contents($input_source), true);
-        $status_response = Transaction::status($raw_notification['transaction_id']);
+        $status_response = Transaction::status($raw_notification['transaction_id'], $raw_notification['payment_type']);
         $this->response = $status_response;
     }
 
