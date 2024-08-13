@@ -11,7 +11,8 @@ if (! defined('ABSPATH')) {
  * 
  * @extends WC_Payment_Gateway
  */
-abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {    
+#[AllowDynamicProperties]
+abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
   /**
    * Constructor
    */
