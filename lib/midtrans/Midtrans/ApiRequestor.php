@@ -17,9 +17,9 @@ class ApiRequestor
      * @param string  $server_key
      * @param mixed[] $data_hash
      */
-    public static function get($url, $server_key, $data_hash)
+    public static function get($url, $server_key, $data_hash, $additional_headers = null)
     {
-        return self::remoteCall($url, $server_key, $data_hash, false);
+        return self::remoteCall($url, $server_key, $data_hash, false, $additional_headers);
     }
 
     /**
@@ -29,9 +29,9 @@ class ApiRequestor
      * @param string  $server_key
      * @param mixed[] $data_hash
      */
-    public static function post($url, $server_key, $data_hash)
+    public static function post($url, $server_key, $data_hash, $additional_headers = null)
     {
-        return self::remoteCall($url, $server_key, $data_hash, true);
+        return self::remoteCall($url, $server_key, $data_hash, true, $additional_headers);
     }
 
     /**
@@ -42,17 +42,23 @@ class ApiRequestor
      * @param mixed[] $data_hash
      * @param bool    $post
      */
-    public static function remoteCall($url, $server_key, $data_hash, $post = true)
+    public static function remoteCall($url, $server_key, $data_hash, $post = true, $additional_headers = null)
     {
         $ch = curl_init();
 
+        $headers = array(
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'Authorization: Basic ' . base64_encode($server_key . ':')
+        );
+
+        if ($additional_headers != null){
+            $headers = array_merge($headers, $additional_headers);
+        }
+
         $curl_options = array(
             CURLOPT_URL => $url,
-            CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/json',
-                'Accept: application/json',
-                'Authorization: Basic ' . base64_encode($server_key . ':')
-            ),
+            CURLOPT_HTTPHEADER => $headers,
             CURLOPT_RETURNTRANSFER => 1
         );
 
