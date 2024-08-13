@@ -15,12 +15,19 @@ class Transaction
      * 
      * @return mixed[]
      */
-    public static function status($id)
+    public static function status($id, $payment_type = null)
     {
+        $additionalHeader = null;
+        if (self::isOpenApi($payment_type)){
+            $additionalHeader = array(
+                'transaction-source: SNAP_API');
+        }
+
         return ApiRequestor::get(
             Config::getBaseUrl() . '/' . $id . '/status',
             Config::$serverKey,
-            false
+            false,
+            $additionalHeader
         );
     }
 
@@ -124,4 +131,10 @@ class Transaction
             false
         );
     }
+
+    private static function isOpenApi($payment_type): bool
+    {
+        return strtolower($payment_type) == "dana";
+    }
+
 }
