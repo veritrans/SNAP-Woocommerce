@@ -45,6 +45,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 // Make sure we don't expose any info if called directly
 add_action( 'plugins_loaded', 'midtrans_gateway_init', 0 );
 
+//Added to remove warning message related to HPOS compatibility on the plugin settings
+add_action('before_woocommerce_init', 'before_woocommerce_hpos');
+function before_woocommerce_hpos (){
+    if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+    }
+}
+
 function midtrans_gateway_init() {
 
   if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
