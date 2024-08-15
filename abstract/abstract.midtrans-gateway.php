@@ -11,6 +11,7 @@ if (! defined('ABSPATH')) {
  * 
  * @extends WC_Payment_Gateway
  */
+//This is added to fix wordpress debug log error because of dynamic property on php 8.2
 #[AllowDynamicProperties]
 abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
   /**
