@@ -17,9 +17,9 @@ class ApiRequestor
      * @param string  $server_key
      * @param mixed[] $data_hash
      */
-    public static function get($url, $server_key, $data_hash, $additional_headers = null)
+    public static function get($url, $server_key, $data_hash, $is_open_api = false)
     {
-        return self::remoteCall($url, $server_key, $data_hash, false, $additional_headers);
+        return self::remoteCall($url, $server_key, $data_hash, false, $is_open_api);
     }
 
     /**
@@ -29,9 +29,9 @@ class ApiRequestor
      * @param string  $server_key
      * @param mixed[] $data_hash
      */
-    public static function post($url, $server_key, $data_hash, $additional_headers = null)
+    public static function post($url, $server_key, $data_hash, $is_open_api = null)
     {
-        return self::remoteCall($url, $server_key, $data_hash, true, $additional_headers);
+        return self::remoteCall($url, $server_key, $data_hash, true, $is_open_api);
     }
 
     /**
@@ -42,7 +42,7 @@ class ApiRequestor
      * @param mixed[] $data_hash
      * @param bool    $post
      */
-    public static function remoteCall($url, $server_key, $data_hash, $post = true, $additional_headers = null)
+    public static function remoteCall($url, $server_key, $data_hash, $post = true, $is_open_api = null)
     {
         $ch = curl_init();
 
@@ -51,9 +51,11 @@ class ApiRequestor
             'Accept: application/json',
             'Authorization: Basic ' . base64_encode($server_key . ':')
         );
+        $openApiHeaders =  array(
+            'transaction-source: SNAP_API');
 
-        if ($additional_headers != null){
-            $headers = array_merge($headers, $additional_headers);
+        if ($is_open_api){
+            $headers = array_merge($headers, $openApiHeaders);
         }
 
         $curl_options = array(

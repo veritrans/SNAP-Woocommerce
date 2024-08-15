@@ -17,17 +17,11 @@ class Transaction
      */
     public static function status($id, $payment_type = null)
     {
-        $additionalHeader = null;
-        if (self::isOpenApi($payment_type)){
-            $additionalHeader = array(
-                'transaction-source: SNAP_API');
-        }
-
         return ApiRequestor::get(
             Config::getBaseUrl() . '/' . $id . '/status',
             Config::$serverKey,
             false,
-            $additionalHeader
+            self::isOpenApi($payment_type)
         );
     }
 
@@ -88,12 +82,13 @@ class Transaction
      * 
      * @return mixed[]
      */
-    public static function refund($id, $params)
+    public static function refund($id, $params, $payment_type = null)
     {
         return ApiRequestor::post(
             Config::getBaseUrl() . '/' . $id . '/refund',
             Config::$serverKey,
-            $params
+            $params,
+            self::isOpenApi($payment_type)
         );
     }
 
