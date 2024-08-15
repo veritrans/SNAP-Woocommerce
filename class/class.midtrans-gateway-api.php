@@ -168,10 +168,10 @@ class WC_Midtrans_API {
      * @return object Refund response.
      * @throws Exception curl error or midtrans error.
      */
-    public static function createRefund( $order_id, $params, $plugin_id="midtrans" ) {
+    public static function createRefund( $order_id, $params, $plugin_id="midtrans" , $payment_type = null) {
 		self::fetchAndSetMidtransApiConfig( $plugin_id );
 		self::setLogRequest( print_r( $params, true ), $plugin_id );
-		return Midtrans\Transaction::refund($order_id, $params);
+		return Midtrans\Transaction::refund($order_id, $params, $payment_type);
     }
 
     /**
