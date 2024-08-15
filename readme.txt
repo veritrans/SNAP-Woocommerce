@@ -2,7 +2,7 @@
 Contributors: yocki, rizdaprasetya
 Tags: midtrans, snap, payment, payment-gateway, credit-card, commerce, e-commerce, woocommerce, veritrans
 Requires at least: 3.9.1
-Tested up to: 9.1.2
+Tested up to: 6.6.1
 Stable tag: 2.32.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
