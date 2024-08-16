@@ -49,7 +49,9 @@ class ApiRequestor
         $headers = array(
             'Content-Type: application/json',
             'Accept: application/json',
-            'Authorization: Basic ' . base64_encode($server_key . ':')
+            'Authorization: Basic ' . base64_encode($server_key . ':'),
+            'X-Source: Woocommerce',
+            'X-Source-Version: ' . MIDTRANS_PLUGIN_VERSION
         );
         $openApiHeaders =  array(
             'transaction-source: SNAP_API');
