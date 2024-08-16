@@ -74,7 +74,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 = 2.32.3 - 2024-08-15 =
 * add identifier to handle webhook, get transaction status, and refund using Dana
-* bump tested compatibility with current latest version of WordPress & WooCommerce
+* bump tested compatibility with current latest version of WordPress & WooCommerce (php 8.2, WP version 6.6, WooCommerce 9.1.2)
 
 = 2.32.2 - 2023-01-02 =
 * prevent issue of Midtrans payment webhook notification of refund status causing unexpected error on WooCommerce
@@ -284,7 +284,7 @@ The best way please email to support@midtrans.com, but bugs can be reported in o
 
 = 2.32.3 - 2024-08-15 =
 * add identifier to handle webhook, get transaction status, and refund using Dana
-* bump tested compatibility with current latest version of WordPress & WooCommerce
+* bump tested compatibility with current latest version of WordPress & WooCommerce (php 8.2, WP version 6.6, WooCommerce 9.1.2)
 
 = 2.32.2 - 2023-01-02 =
 * prevent issue of Midtrans payment webhook notification of refund status causing unexpected error on WooCommerce
