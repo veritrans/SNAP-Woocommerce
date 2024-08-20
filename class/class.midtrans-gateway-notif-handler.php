@@ -245,7 +245,9 @@ class WC_Gateway_Midtrans_Notif_Handler
     $order_id = WC_Midtrans_Utils::check_and_restore_original_order_id($midtrans_notification->order_id);
     $order = new WC_Order( $order_id );
     $order->add_order_note(__('Midtrans HTTP notification received: '.$midtrans_notification->transaction_status.'. Midtrans-'.$midtrans_notification->payment_type,'midtrans-woocommerce'));
-    
+
+    $order->update_meta_data('_mt_payment_type',$midtrans_notification->payment_type);
+    $order->save();
     // allow merchant-defined custom action function to perform action on $order upon notif handling
     do_action( 'midtrans_on_notification_received', $order, $midtrans_notification );
     

@@ -15,12 +15,13 @@ class Transaction
      * 
      * @return mixed[]
      */
-    public static function status($id)
+    public static function status($id, $payment_type = null)
     {
         return ApiRequestor::get(
             Config::getBaseUrl() . '/' . $id . '/status',
             Config::$serverKey,
-            false
+            false,
+            self::isOpenApi($payment_type)
         );
     }
 
@@ -81,12 +82,13 @@ class Transaction
      * 
      * @return mixed[]
      */
-    public static function refund($id, $params)
+    public static function refund($id, $params, $payment_type = null)
     {
         return ApiRequestor::post(
             Config::getBaseUrl() . '/' . $id . '/refund',
             Config::$serverKey,
-            $params
+            $params,
+            self::isOpenApi($payment_type)
         );
     }
 
@@ -124,4 +126,10 @@ class Transaction
             false
         );
     }
+
+    private static function isOpenApi($payment_type): bool
+    {
+        return strtolower($payment_type) == "dana";
+    }
+
 }

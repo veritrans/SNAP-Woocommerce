@@ -11,7 +11,9 @@ if (! defined('ABSPATH')) {
  * 
  * @extends WC_Payment_Gateway
  */
-abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {    
+//This is added to fix wordpress debug log error because of dynamic property on php 8.2
+#[AllowDynamicProperties]
+abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
   /**
    * Constructor
    */
@@ -146,7 +148,9 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
       $transaction_id = $order->get_transaction_id() 
         ? $order->get_transaction_id() 
         : $order_id;
-      $response = WC_Midtrans_API::createRefund($transaction_id, $refund_params, $this->id);
+
+      $payment_type = $order->get_meta("_mt_payment_type", true);
+      $response = WC_Midtrans_API::createRefund($transaction_id, $refund_params, $this->id, $payment_type);
     } catch (Exception $e) {
       $this->setLogError( $e->getMessage() );
       // error_log(var_export($e,1));
