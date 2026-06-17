@@ -129,6 +129,8 @@ class WC_Gateway_Midtrans_Notif_Handler
       }
       // Verify Midtrans notification
       $midtrans_notification = WC_Midtrans_API::getStatusFromMidtransNotif( $plugin_id );
+      // BI-SNAP & DANA payment methods return transaction_id in order_id field, restore the WooCommerce order_id back from the raw notification body
+      $midtrans_notification->getResponse()->order_id = $raw_notification['order_id'];
       // If notification verified, handle it
       if (in_array($midtrans_notification->status_code, array(200, 201, 202, 407))) {
         // @TAG: order-id-suffix-handling
