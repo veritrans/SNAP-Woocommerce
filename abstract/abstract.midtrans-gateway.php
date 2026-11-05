@@ -154,7 +154,8 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
     } catch (Exception $e) {
       $this->setLogError( $e->getMessage() );
       // error_log(var_export($e,1));
-      $error_message = strpos($e->getMessage(), '412') ? $e->getMessage() . ' Note: Refund via Midtrans API only available on some payment methods, and if the payment status is eligible. Please consult to your midtrans PIC for more information' : $e->getMessage();
+      $error_message_base = wp_strip_all_tags( $e->getMessage() );
+      $error_message = strpos($error_message_base, '412') ? $error_message_base . ' Note: Refund via Midtrans API only available on some payment methods, and if the payment status is eligible. Please consult to your midtrans PIC for more information' : $error_message_base;
       return $error_message;
     }
 

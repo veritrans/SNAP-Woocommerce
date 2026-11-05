@@ -194,7 +194,7 @@
         WC_Midtrans_Utils::json_print_exception( $e, $this );
         
         // Subscription Payment Failed.
-        $renewal_order->update_status( 'failed', __('Midtrans subscription payment failed.<br>' . $e->getMessage(), 'midtrans-woocommerce') );
+        $renewal_order->update_status( 'failed', wp_strip_all_tags(__('Midtrans subscription payment failed.' . $e->getMessage(), 'midtrans-woocommerce')) );
         $subscription->add_order_note( __( 'Midtrans subscription payment failed. <br> Please click <a href="'.$checkout_payment_url.'">here</a> to renew the payment.', 'midtrans-woocommerce'), 1 );
         return array('result' => 'failure');
         exit();
