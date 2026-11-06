@@ -98,12 +98,12 @@ class SnapApiRequestor
             try {
                 $result_array = json_decode($result);
             } catch (\Exception $e) {
-                $message = "API Request Error unable to json_decode API response: ".$result . ' | Request url: '.$url;
+                $message = "API Request Error unable to json_decode API response: ".strip_tags($result) . ' | Request url: '.$url;
                 throw new \Exception($message);
             }
             if ($info['http_code'] != 201) {
                 $message = 'Midtrans Error (' . $info['http_code'] . '): '
-                    . $result . ' | Request url: '.$url;
+                    . strip_tags($result) . ' | Request url: '.$url;
                 throw new \Exception($message, $info['http_code']);
             } else {
                 return $result_array;

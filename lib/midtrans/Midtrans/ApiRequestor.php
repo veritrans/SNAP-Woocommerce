@@ -107,16 +107,16 @@ class ApiRequestor
             try {
                 $result_array = json_decode($result);
             } catch (\Exception $e) {
-                throw new \Exception("API Request Error unable to json_decode API response: ".$result . ' | Request url: '.$url);
+                throw new \Exception("API Request Error unable to json_decode API response: ".strip_tags($result) . ' | Request url: '.$url);
             }
             if (!in_array($result_array->status_code, array(200, 201, 202, 407))) {
-                $message = 'Midtrans Error (' . $result_array->status_code . '): '
-                . $result_array->status_message;
+                $message = 'Midtrans Error (' . strip_tags($result_array->status_code) . '): '
+                . strip_tags($result_array->status_message);
                 if (isset($result_array->validation_messages)) {
-                    $message .= '. Validation Messages (' . implode(", ", $result_array->validation_messages) . ')';
+                    $message .= '. Validation Messages (' . implode(", ", array_map('strip_tags', $result_array->validation_messages)) . ')';
                 }
                 if (isset($result_array->error_messages)) {
-                    $message .= '. Error Messages (' . implode(", ", $result_array->error_messages) . ')';
+                    $message .= '. Error Messages (' . implode(", ", array_map('strip_tags', $result_array->error_messages)) . ')';
                 }
                 throw new \Exception($message, $result_array->status_code);
             } else {

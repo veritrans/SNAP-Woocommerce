@@ -50,7 +50,7 @@ class WC_Midtrans_Utils
   public static function json_print_exception ( $e, $depedency ) {
     $errorObj = array(
       'result' => "failure", 
-      'messages' => '<div class="woocommerce-error" role="alert"> Midtrans Exception: '.$e->getMessage().'. <br>Plugin Title: '.esc_html($depedency->method_title).'</div>',
+      'messages' => '<div class="woocommerce-error" role="alert"> Midtrans Exception: '.esc_html($e->getMessage()).'. <br>Plugin Title: '.esc_html($depedency->method_title).'</div>',
       'refresh' => false, 
       'reload' => false
     );
