@@ -423,7 +423,18 @@ abstract class WC_Gateway_Midtrans_Abstract extends WC_Payment_Gateway {
   public function set_finish_url_user_cookies( $order ) {
     $cookie_name = 'wc_midtrans_last_order_finish_url';
     $order_finish_url = $order->get_checkout_order_received_url();
-    setcookie($cookie_name, $order_finish_url);
+    $cookie_path = ( defined( 'COOKIEPATH' ) && COOKIEPATH ) ? COOKIEPATH : '/';
+    if ( PHP_VERSION_ID >= 70300 ) {
+      setcookie( $cookie_name, $order_finish_url, array(
+        'expires'  => 0,
+        'path'     => $cookie_path,
+        'secure'   => is_ssl(),
+        'httponly' => true,
+        'samesite' => 'Lax',
+      ) );
+    } else {
+      setcookie( $cookie_name, $order_finish_url, 0, $cookie_path, '', is_ssl(), true );
+    }
   }
 
   /**
